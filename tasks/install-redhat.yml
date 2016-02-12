@@ -1,0 +1,19 @@
+---
+- name: Install GitLab Runner dependencies
+  yum:
+    name: '{{ item }}'
+    state: present
+  with_items:
+    - pygpgme
+    - yum-utils
+
+- name: Add GitLab Runner rpm repo
+  template:
+    src: runner_gitlab-ci-multi-runner.repo.j2
+    dest: /etc/yum.repos.d/runner_gitlab-ci-multi-runner.repo
+
+- name: Install GitLab Runner
+  yum:
+    name: gitlab-ci-multi-runner
+    state: latest
+    update_cache: yes

@@ -1,2 +1,4 @@
 ---
-# tasks file for gitlab-runner
+- name: Install GitLab Runner (RedHat)
+  include: install-redhat.yml
+  when: ansible_os_family == 'RedHat'
