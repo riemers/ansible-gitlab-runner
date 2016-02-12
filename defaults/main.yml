@@ -1,2 +1,3 @@
 ---
-# defaults file for gitlab-runner
+# Maximum number of jobs to run concurrently
+gitlab_runner_concurrent: '{{ ansible_processor_cores }}'

@@ -2,3 +2,6 @@
 - name: Install GitLab Runner (RedHat)
   include: install-redhat.yml
   when: ansible_os_family == 'RedHat'
+
+- name: Set global options
+  include: global-setup.yml
