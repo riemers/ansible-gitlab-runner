@@ -1,4 +1,8 @@
 ---
+- name: Install GitLab Runner (Debian)
+  include: install-debian.yml
+  when: ansible_os_family == 'Debian'
+
 - name: Install GitLab Runner (RedHat)
   include: install-redhat.yml
   when: ansible_os_family == 'RedHat'
