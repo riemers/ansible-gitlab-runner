@@ -31,6 +31,9 @@ Defaults to the hostname.
 The executor used by the runner.
 Defaults to `shell`.
 
+`gitlab_runner_docker_image`
+The default Docker image to use. Required when executor is `docker`.
+
 `gitlab_runner_tags`
 The tags assigned to the runner,
 Defaults to an empty list.
