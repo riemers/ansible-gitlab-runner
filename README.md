@@ -16,12 +16,12 @@ Role Variables
 The maximum number of jobs to run concurrently.
 Defaults to the number of processor cores.
 
+`gitlab_runner_registration_token`
+The GitLab registration token. If this is specified, a runner will be registered to a GitLab server.
+
 `gitlab_runner_coordinator_url`
 The GitLab coordinator URL.
 Defaults to `https://gitlab.com/ci`.
-
-`gitlab_runner_registration_token`
-The GitLab registration token.
 
 `gitlab_runner_description`
 The description of the runner.
