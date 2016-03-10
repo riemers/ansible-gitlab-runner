@@ -2,6 +2,7 @@
 - name: List configured runners
   command: gitlab-runner list
   register: configured_runners
+  changed_when: False
 
 - name: Register runner to GitLab
   command: gitlab-runner register >

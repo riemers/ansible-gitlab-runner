@@ -1,4 +1,14 @@
 ---
+
+- name: RHEL | Install GitLab GPG key
+  rpm_key:
+    state: present
+    key: https://packages.gitlab.com/gpg.key
+  when: ansible_os_family == 'RedHat'
+  tags:
+    - gitlab
+    - gitlab-gpg
+
 - name: Install GitLab Runner dependencies
   yum:
     name: '{{ item }}'
