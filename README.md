@@ -2,12 +2,12 @@ GitLab Runner
 =============
 
 This role will install the [official GitLab Runner](https://gitlab.com/gitlab-org/gitlab-ci-multi-runner)
+(fork from haroldb) with updates. Needed something simple and working, this did the trick for me. Open for changes though.
 
 Requirements
 ------------
 
 This role requires Ansible 2.0 or higher.
-
 
 Role Variables
 --------------
@@ -38,11 +38,6 @@ The default Docker image to use. Required when executor is `docker`.
 The tags assigned to the runner,
 Defaults to an empty list.
 
-Dependencies
-------------
-
-None
-
 Example Playbook
 ----------------
 ```yaml
@@ -51,7 +46,7 @@ Example Playbook
   vars_files:
     - vars/main.yml
   roles:
-    - { role: haroldb.gitlab-runner }
+    - { role: riemers.gitlab-runner }
 ```
 
 Inside `vars/main.yml`
@@ -62,9 +57,7 @@ gitlab_runner_tags:
   - node
   - ruby
   - mysql
+gitlab_runner_docker_volumes:
+  - "/var/run/docker.sock:/var/run/docker.sock"
+  - "/cache"
 ```
-
-License
--------
-
-MIT
