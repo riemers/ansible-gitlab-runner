@@ -1,6 +1,6 @@
 ---
 galaxy_info:
-  author: Harold Barker
+  author: Erik-jan Riemers
   description: GitLab Runner
   license: MIT
   min_ansible_version: 2.0
@@ -15,5 +15,10 @@ galaxy_info:
     version:
     - all
   galaxy_tags:
-    - development
+    - gitlab
+    - runner
+    - ci
+
+issue_tracker_url: https://github.com/riemers/ansible-gitlab-runner/issues
+
 dependencies: []
