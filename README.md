@@ -38,6 +38,8 @@ The default Docker image to use. Required when executor is `docker`.
 The tags assigned to the runner,
 Defaults to an empty list.
 
+See the [config for more options](https://github.com/riemers/ansible-gitlab-runner/blob/master/tasks/register-runner.yml)
+
 Example Playbook
 ----------------
 ```yaml
