@@ -13,6 +13,7 @@
     --tag-list '{{ gitlab_runner_tags | join(",") }}'
     --executor '{{ gitlab_runner_executor }}'
     --docker-image '{{ gitlab_runner_docker_image }}'
+    --docker-volumes [ "{{ gitlab_runner_docker_volumes | join('", "') }}" ]
     --ssh-user '{{gitlab_runner_ssh_user}}'
     --ssh-host '{{gitlab_runner_ssh_host}}'
     --ssh-port '{{gitlab_runner_ssh_port}}'
