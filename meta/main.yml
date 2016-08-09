@@ -19,6 +19,4 @@ galaxy_info:
     - runner
     - ci
 
-issue_tracker_url: https://github.com/riemers/ansible-gitlab-runner/issues
-
 dependencies: []
