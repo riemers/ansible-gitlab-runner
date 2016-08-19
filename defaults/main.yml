@@ -2,7 +2,7 @@
 # Maximum number of jobs to run concurrently
 gitlab_runner_concurrent: '{{ ansible_processor_cores }}'
 
-gitlab_install_script_url: '{{ https://packages.gitlab.com/install/repositories/runner/gitlab-ci-multi-runner }}'
+gitlab_install_script_url: 'https://packages.gitlab.com/install/repositories/runner/gitlab-ci-multi-runner'
 
 # GitLab coordinator URL
 gitlab_runner_coordinator_url: 'https://gitlab.com/ci'
