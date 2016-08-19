@@ -4,6 +4,8 @@ gitlab_runner_concurrent: '{{ ansible_processor_cores }}'
 
 gitlab_install_script_url: 'https://packages.gitlab.com/install/repositories/runner/gitlab-ci-multi-runner'
 
+package_name: gitlab-ci-multi-runner-1.4.2-1.x86_64.rpm
+
 # GitLab coordinator URL
 gitlab_runner_coordinator_url: 'https://gitlab.com/ci'
 # GitLab registration token
