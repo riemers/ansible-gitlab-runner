@@ -6,4 +6,4 @@
 - name: Install GitLab Runner
   apt:
     name: gitlab-ci-multi-runner
-    state: latest
+    state: present
