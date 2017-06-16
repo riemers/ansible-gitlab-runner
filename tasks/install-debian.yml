@@ -10,7 +10,17 @@
   shell: bash /tmp/gitlab-runner.script.deb.sh
   become: true
 
+- set_fact:
+    gitlab_runner_package_name: "gitlab-ci-multi-runner={{ gitlab_runner_package_version }}"
+    gitlab_runner_package_state: "present"
+  when: gitlab_runner_package_version is defined
+
+- set_fact:
+    gitlab_runner_package_name: "gitlab-ci-multi-runner"
+    gitlab_runner_package_state: "latest"
+  when: gitlab_runner_package_version is not defined
+
 - name: Install GitLab Runner
   apt:
-    name: gitlab-ci-multi-runner
-    state: latest
+    name: "{{ gitlab_runner_package_name }}"
+    state: "{{ gitlab_runner_package_state }}"
