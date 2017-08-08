@@ -6,6 +6,7 @@
     line: '\1concurrent = {{ gitlab_runner_concurrent }}'
     state: present
     backrefs: yes
+  notify: restart_gitlab_runner
 
 - name: Set docker privileged option
   lineinfile:
@@ -14,4 +15,5 @@
     line: '\1privileged = {{ gitlab_runner_docker_privileged | lower}}'
     state: present
     backrefs: yes
+  notify: restart_gitlab_runner
 
