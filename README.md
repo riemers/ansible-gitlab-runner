@@ -1,7 +1,7 @@
 GitLab Runner [![Build Status](https://api.travis-ci.org/riemers/ansible-gitlab-runner.svg?branch=master)](https://travis-ci.org/riemers/ansible-gitlab-runner) [![Ansible Role](https://img.shields.io/badge/role-riemers.gitlab--runner-blue.svg?maxAge=2592000)](https://galaxy.ansible.com/riemers/gitlab-runner/)
 =============
 
-This role will install the [official GitLab Runner](https://gitlab.com/gitlab-org/gitlab-ci-multi-runner)
+This role will install the [official GitLab Runner](https://gitlab.com/gitlab-org/gitlab-runner)
 (fork from haroldb) with updates. Needed something simple and working, this did the trick for me. Open for changes though.
 
 Requirements
@@ -11,6 +11,9 @@ This role requires Ansible 2.0 or higher.
 
 Role Variables
 --------------
+
+`gitlab_runner_package_name`
+**Since Gitlab 10.x** The package name of `gitlab-ci-multi-runner` has been renamed to `gitlab-runner`. In order to install a version >= 10.x you will need to define this variable `gitlab_runner_package_name: gitlab-runner`.
 
 `gitlab_runner_concurrent`
 The maximum number of jobs to run concurrently.

@@ -2,7 +2,7 @@
 
 - name: Get Gitlab repository installation script
   get_url:
-    url: https://packages.gitlab.com/install/repositories/runner/gitlab-ci-multi-runner/script.deb.sh
+    url: "https://packages.gitlab.com/install/repositories/runner/{{ gitlab_runner_package_name }}/script.deb.sh"
     dest: /tmp/gitlab-runner.script.deb.sh
     mode: 0744
 
@@ -11,16 +11,16 @@
   become: true
 
 - set_fact:
-    gitlab_runner_package_name: "gitlab-ci-multi-runner={{ gitlab_runner_package_version }}"
+    gitlab_runner_package: "{{ gitlab_runner_package_name }}={{ gitlab_runner_package_version }}"
     gitlab_runner_package_state: "present"
   when: gitlab_runner_package_version is defined
 
 - set_fact:
-    gitlab_runner_package_name: "gitlab-ci-multi-runner"
+    gitlab_runner_package: "{{ gitlab_runner_package_name }}"
     gitlab_runner_package_state: "latest"
   when: gitlab_runner_package_version is not defined
 
 - name: Install GitLab Runner
   apt:
-    name: "{{ gitlab_runner_package_name }}"
+    name: "{{ gitlab_runner_package }}"
     state: "{{ gitlab_runner_package_state }}"
