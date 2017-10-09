@@ -1,0 +1,19 @@
+[runner_{{ gitlab_runner_package_name }}]
+name=runner_{{ gitlab_runner_package_name }}
+baseurl=https://packages.gitlab.com/runner/{{ gitlab_runner_package_name }}/el/{{ ansible_distribution_major_version }}/$basearch
+repo_gpgcheck=1
+gpgcheck=0
+enabled=1
+gpgkey=https://packages.gitlab.com/gpg.key
+sslverify=1
+sslcacert=/etc/pki/tls/certs/ca-bundle.crt
+
+[runner_{{ gitlab_runner_package_name }}-source]
+name=runner_{{ gitlab_runner_package_name }}-source
+baseurl=https://packages.gitlab.com/runner/{{ gitlab_runner_package_name }}/el/{{ ansible_distribution_major_version }}/SRPMS
+repo_gpgcheck=1
+gpgcheck=0
+enabled=1
+gpgkey=https://packages.gitlab.com/gpg.key
+sslverify=1
+sslcacert=/etc/pki/tls/certs/ca-bundle.crt

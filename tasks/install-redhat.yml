@@ -19,11 +19,11 @@
 
 - name: Add GitLab Runner rpm repo
   template:
-    src: runner_gitlab-ci-multi-runner.repo.j2
-    dest: /etc/yum.repos.d/runner_gitlab-ci-multi-runner.repo
+    src: "runner.repo.j2"
+    dest: "/etc/yum.repos.d/runner_{{ gitlab_runner_package_name }}.repo"
 
 - name: Install GitLab Runner
   yum:
-    name: gitlab-ci-multi-runner
+    name: "{{ gitlab_runner_package_name }}"
     state: latest
     update_cache: yes
