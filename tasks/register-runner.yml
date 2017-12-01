@@ -12,11 +12,14 @@
     --description '{{ gitlab_runner_description }}'
     --tag-list '{{ gitlab_runner_tags | join(",") }}'
     --executor '{{ gitlab_runner_executor }}'
+    --locked='{{gitlab_runner_locked}}'
     --docker-image '{{ gitlab_runner_docker_image }}'
-    --docker-volumes [ "{{ gitlab_runner_docker_volumes | join('", "') }}" ]
-    --ssh-user '{{gitlab_runner_ssh_user}}'
-    --ssh-host '{{gitlab_runner_ssh_host}}'
-    --ssh-port '{{gitlab_runner_ssh_port}}'
-    --ssh-password '{{gitlab_runner_ssh_password}}'
-    --ssh-identity-file '{{gitlab_runner_ssh_identity_file}}'
-  when: configured_runners.stderr.find('\n{{ gitlab_runner_description }}') == -1
+    {% if gitlab_runner_docker_volumes is defined %}
+    --docker-volumes "{{ gitlab_runner_docker_volumes | join('" "') }}"
+    {% endif %}
+    --ssh-user '{{ gitlab_runner_ssh_user }}'
+    --ssh-host '{{ gitlab_runner_ssh_host }}'
+    --ssh-port '{{ gitlab_runner_ssh_port }}'
+    --ssh-password '{{ gitlab_runner_ssh_password }}'
+    --ssh-identity-file '{{ gitlab_runner_ssh_identity_file }}'
+  when: configured_runners.stderr.find('\n' + gitlab_runner_description) == -1
