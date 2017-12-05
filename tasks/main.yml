@@ -1,15 +1,15 @@
 ---
 - name: Install GitLab Runner (Debian)
-  include: install-debian.yml
+  import_tasks: install-debian.yml
   when: ansible_os_family == 'Debian'
 
 - name: Install GitLab Runner (RedHat)
-  include: install-redhat.yml
+  import_tasks: install-redhat.yml
   when: ansible_os_family == 'RedHat'
 
 - name: Set global options
-  include: global-setup.yml
+  import_tasks: global-setup.yml
 
 - name: Register GitLab Runner
-  include: register-runner.yml
+  import_tasks: register-runner.yml
   when: gitlab_runner_registration_token != ''

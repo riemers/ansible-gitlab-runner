@@ -19,4 +19,15 @@ gitlab_runner_docker_image: ''
 gitlab_runner_tags: []
 # Docker privileged mode
 gitlab_runner_docker_privileged: false
-
+# Runner SSH user
+gitlab_runner_ssh_user: ''
+# Runner SSH host
+gitlab_runner_ssh_host: ''
+# Runner SSH port
+gitlab_runner_ssh_port: ''
+# Runner SSH password
+gitlab_runner_ssh_password: ''
+# Runner SSH identity file
+gitlab_runner_ssh_identity_file: ''
+# Runner Locked
+gitlab_runner_locked: 'false'
