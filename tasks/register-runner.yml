@@ -3,6 +3,7 @@
   command: gitlab-runner list
   register: configured_runners
   changed_when: False
+  check_mode: no
 
 - name: Register runner to GitLab
   command: gitlab-runner register >
