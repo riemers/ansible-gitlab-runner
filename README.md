@@ -16,7 +16,7 @@ Role Variables
 **Since Gitlab 10.x** The package name of `gitlab-ci-multi-runner` has been renamed to `gitlab-runner`. In order to install a version >= 10.x you will need to define this variable `gitlab_runner_package_name: gitlab-runner`.
 
 `gitlab_runner_concurrent`
-The maximum number of jobs to run concurrently.
+The maximum number of global jobs to run concurrently.
 Defaults to the number of processor cores.
 
 `gitlab_runner_registration_token`
@@ -33,6 +33,10 @@ Defaults to the hostname.
 `gitlab_runner_executor`
 The executor used by the runner.
 Defaults to `shell`.
+
+`gitlab_runner_concurrent_specific`
+The maximum number of jobs to run concurrently on this specific runner.
+Defaults to 0, simply means don't limit.
 
 `gitlab_runner_docker_image`
 The default Docker image to use. Required when executor is `docker`.
