@@ -2,7 +2,7 @@
 # Change this variable value to 'gitlab-runner' for versions >= 10.x
 gitlab_runner_package_name: 'gitlab-ci-multi-runner'
 
-# Maximum number of jobs to run concurrently
+# Maximum number of global jobs to run concurrently
 gitlab_runner_concurrent: '{{ ansible_processor_vcpus }}'
 
 # GitLab coordinator URL
@@ -13,6 +13,8 @@ gitlab_runner_registration_token: ''
 gitlab_runner_description: '{{ ansible_hostname }}'
 # Runner executor
 gitlab_runner_executor: 'shell'
+# Maximum number of jobs to run concurrently on this specific runner
+gitlab_runner_concurrent_specific: '0'
 # Default Docker image
 gitlab_runner_docker_image: ''
 # Runner tags
