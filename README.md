@@ -34,7 +34,7 @@ Defaults to the hostname.
 The executor used by the runner.
 Defaults to `shell`.
 
-`gitlab_runner_concurrent_specific`
+`gitlab_runner_concurrent`
 The maximum number of jobs to run concurrently on this specific runner.
 Defaults to 0, simply means don't limit.
 
