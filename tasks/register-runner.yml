@@ -24,4 +24,13 @@
     --ssh-port '{{ gitlab_runner_ssh_port }}'
     --ssh-password '{{ gitlab_runner_ssh_password }}'
     --ssh-identity-file '{{ gitlab_runner_ssh_identity_file }}'
+    {% if gitlab_runner_cache_type is defined %}
+    --cache-type '{{ gitlab_runner_cache_type }}'
+    --cache-s3-server-address '{{ gitlab_runner_cache_s3_server_address }}'
+    --cache-s3-access-key '{{ gitlab_runner_cache_s3_access_key }}'
+    --cache-s3-secret-key '{{ gitlab_runner_cache_s3_access_key }}'
+    --cache-s3-bucket-name '{{ gitlab_runner_cache_s3_bucket_name }}'
+    --cache-s3-insecure '{{ gitlab_runner_cache_s3_insecure }}'
+    --cache-cache-shared '{{ gitlab_runner_cache_cache_shared }}'
+    {% endif %}
   when: configured_runners.stderr.find('\n' + gitlab_runner_description) == -1
