@@ -45,6 +45,15 @@ The default Docker image to use. Required when executor is `docker`.
 The tags assigned to the runner,
 Defaults to an empty list.
 
+`gitlab_runner_cache_type`
+Variables to set s3 as a shared cache server. If set it requires variables listed below:
+`gitlab_runner_cache_s3_server_address`
+`gitlab_runner_cache_s3_access_key`
+`gitlab_runner_cache_s3_access_key`
+`gitlab_runner_cache_s3_bucket_name`
+`gitlab_runner_cache_s3_insecure`
+`gitlab_runner_cache_cache_shared`
+
 See the [config for more options](https://github.com/riemers/ansible-gitlab-runner/blob/master/tasks/register-runner.yml)
 
 Example Playbook
