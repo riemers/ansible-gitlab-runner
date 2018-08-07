@@ -6,7 +6,8 @@
   check_mode: no
 
 - name: Register runner to GitLab
-  command: gitlab-runner register >
+  command: >
+    gitlab-runner register
     --non-interactive
     --url '{{ gitlab_runner_coordinator_url }}'
     --registration-token '{{ gitlab_runner_registration_token }}'
