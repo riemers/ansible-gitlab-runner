@@ -16,6 +16,9 @@
     --executor '{{ gitlab_runner_executor }}'
     --limit '{{ gitlab_runner_concurrent_specific }}'
     --locked='{{gitlab_runner_locked}}'
+    {% for env_var in gitlab_runner_env_vars %}
+    --env '{{ env_var }}'
+    {% endfor %}
     --docker-image '{{ gitlab_runner_docker_image }}'
     {% if gitlab_runner_docker_privileged %}
     --docker-privileged
