@@ -50,8 +50,8 @@
     --machine-off-peak-idle_count '{{ gitlab_runner_machine_off_peak_idle_count }}'
     --machine-machine-driver '{{ gitlab_runner_machine_machine_driver }}'
     --machine-machine-name '{{ gitlab_runner_machine_machine_name }}'
-    {% for option in gitlab_runner_machine_options | default([]) %}
-    --machine-machine-options "{{ option }}"
+    {% for key, option in gitlab_runner_machine_options | default([]) %}
+    --machine-machine-options "{{ key }}={{ option }}"
     {% endfor %}
     {% endif %}
   when: configured_runners.stderr.find('\n' + gitlab_runner_description) == -1
