@@ -53,4 +53,4 @@
     --machine-machine-options '{{ gitlab_runner_machine_options }}'
     {% endif %}
   when: configured_runners.stderr.find('\n' + gitlab_runner_description) == -1
-  no_log: yes
+  #no_log: yes
