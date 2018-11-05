@@ -47,7 +47,7 @@
     --machine-max-builds '{{ gitlab_runner_machine_max_builds }}'
     --machine-off-peak-periods '{{ gitlab_runner_machine_off_peak_periods }}'
     --machine-off-peak-idle_time '{{ gitlab_runner_machine_off_peak_idle_time }}'
-    --machine-off-peak-idle_count '{{ gitlab_runner_machine_off_peak_idle_count }}
+    --machine-off-peak-idle_count '{{ gitlab_runner_machine_off_peak_idle_count }}'
     --machine-machine-driver '{{ gitlab_runner_machine_machine_driver }}'
     --machine-machine-name '{{ gitlab_runner_machine_machine_name }}'
     --machine-machine-options '{{ gitlab_runner_machine_options }}'
