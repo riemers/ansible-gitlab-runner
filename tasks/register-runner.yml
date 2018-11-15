@@ -44,9 +44,6 @@
     --machine-idle-nodes '{{ gitlab_runner_machine_idle_count }}'
     --machine-idle-time '{{ gitlab_runner_machine_idle_time }}'
     --machine-max-builds '{{ gitlab_runner_machine_max_builds }}'
-    --machine-off-peak-periods '{{ gitlab_runner_machine_off_peak_periods }}'
-    --machine-off-peak-idle-time '{{ gitlab_runner_machine_off_peak_idle_time }}'
-    --machine-off-peak-idle-count '{{ gitlab_runner_machine_off_peak_idle_count }}'
     --machine-machine-driver '{{ gitlab_runner_machine_machine_driver }}'
     --machine-machine-name '{{ gitlab_runner_machine_machine_name }}'
     {% for key, option in gitlab_runner_machine_options.items() %}
