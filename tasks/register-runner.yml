@@ -38,8 +38,8 @@
     --cache-s3-secret-key '{{ gitlab_runner_cache_s3_secret_key }}'
     --cache-s3-bucket-location '{{ gitlab_runner_cache_s3_bucket_location }}'
     --cache-s3-bucket-name '{{ gitlab_runner_cache_s3_bucket_name }}'
-    --cache-s3-insecure '{{ gitlab_runner_cache_s3_insecure }}'
-    --cache-cache-shared '{{ gitlab_runner_cache_cache_shared }}'
+    --cache-s3-insecure='{{ gitlab_runner_cache_s3_insecure }}'
+    --cache-cache-shared='{{ gitlab_runner_cache_cache_shared }}'
     {% endif %}
     {% if gitlab_runner_machine_machine_name is defined %}
     --machine-idle-nodes '{{ gitlab_runner_machine_idle_count }}'
