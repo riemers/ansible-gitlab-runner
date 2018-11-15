@@ -41,7 +41,6 @@
     --cache-s3-insecure='{{ gitlab_runner_cache_s3_insecure }}'
     --cache-cache-shared='{{ gitlab_runner_cache_cache_shared }}'
     {% endif %}
-    {% if gitlab_runner_machine_machine_name is defined %}
     --machine-idle-nodes '{{ gitlab_runner_machine_idle_count }}'
     --machine-idle-time '{{ gitlab_runner_machine_idle_time }}'
     --machine-max-builds '{{ gitlab_runner_machine_max_builds }}'
@@ -53,6 +52,5 @@
     {% for key, option in gitlab_runner_machine_options.items() %}
     --machine-machine-options '"{{ key }}={{ option }}"'
     {% endfor %}
-    {% endif %}
   when: configured_runners.stderr.find('\n' + gitlab_runner_description) == -1
   #no_log: yes
