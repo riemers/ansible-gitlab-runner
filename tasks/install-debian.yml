@@ -5,10 +5,12 @@
     url: "https://packages.gitlab.com/install/repositories/runner/{{ gitlab_runner_package_name }}/script.deb.sh"
     dest: /tmp/gitlab-runner.script.deb.sh
     mode: 0744
+  environment: "{{ proxy_env }}"
 
 - name: Install Gitlab repository
   shell: bash /tmp/gitlab-runner.script.deb.sh
   become: true
+  environment: "{{ proxy_env }}"
 
 - set_fact:
     gitlab_runner_package: "{{ gitlab_runner_package_name }}={{ gitlab_runner_package_version }}"
@@ -24,3 +26,4 @@
   apt:
     name: "{{ gitlab_runner_package }}"
     state: "{{ gitlab_runner_package_state }}"
+  environment: "{{ proxy_env }}"

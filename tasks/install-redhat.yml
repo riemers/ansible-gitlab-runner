@@ -8,6 +8,7 @@
   tags:
     - gitlab
     - gitlab-gpg
+  environment: "{{ proxy_env }}"
 
 - name: Install GitLab Runner dependencies
   yum:
@@ -16,6 +17,7 @@
   with_items:
     - pygpgme
     - yum-utils
+  environment: "{{ proxy_env }}"
 
 - name: Add GitLab Runner rpm repo
   template:
@@ -27,3 +29,4 @@
     name: "{{ gitlab_runner_package_name }}"
     state: latest
     update_cache: yes
+  environment: "{{ proxy_env }}"

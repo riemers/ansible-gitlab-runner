@@ -59,12 +59,18 @@ See the [config for more options](https://github.com/riemers/ansible-gitlab-runn
 Example Playbook
 ----------------
 ```yaml
-- hosts: all
-  remote_user: root
+- hosts: gitlab-runner
+  become: yes
   vars_files:
     - vars/main.yml
   roles:
     - { role: riemers.gitlab-runner }
+  vars:
+    proxy_env:
+      http_proxy: 'http://proxy-squid:3128'
+      https_proxy: 'http://proxy-squid:3128'
+    gitlab_runner_coordinator_url: 'gitlab ci url'
+    gitlab_runner_registration_token: 'gitlab token'
 ```
 
 Inside `vars/main.yml`
