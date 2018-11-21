@@ -58,31 +58,34 @@ See the [config for more options](https://github.com/riemers/ansible-gitlab-runn
 
 Example Playbook
 ----------------
+Inside `gitlab-runner.yaml`
 ```yaml
 - hosts: gitlab-runner
   become: yes
-  vars_files:
-    - vars/main.yml
   roles:
     - { role: riemers.gitlab-runner }
+  vars_files: myvars.yaml
 ```
 
 Example Inventory
 ```
 [gitlab-runner]
-node1 ansible_host=192.168.0.1 gitlab_runner_executor=shell
-node1 ansible_host=192.168.0.1 gitlab_runner_executor=docker
+gitlab-runner1 ansible_host=192.168.0.1
 ```
 
-Inside `vars/main.yml`
+Inside `myvars.yaml`
 ```yaml
 proxy_env:
   http_proxy: http://proxy-squid:3128
   https_proxy: http://proxy-squid:3128
-  no_proxy: 10.0.0.0/8,domain.local
-
+  no_proxy: 10.0.0.0/8,172.16.0.0/12,192.168.0.0/16
 gitlab_runner_coordinator_url: 'gitlab ci url'
 gitlab_runner_registration_token: 'gitlab token'
+```
+
+Inside `host_vars/gitlab-runner1.yml`
+```yaml
+gitlab_runner_executor: shell
 gitlab_runner_description: 'Example Gitlab Runner'
 gitlab_runner_tags:
   - node
