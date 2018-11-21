@@ -1,2 +1,18 @@
 ---
 # vars file for gitlab-runner
+
+#proxy_env:
+#  http_proxy: http://proxy-squid:3128
+#  https_proxy: http://proxy-squid:3128
+#  no_proxy: 10.0.0.0/8,domain.local
+
+#gitlab_runner_coordinator_url: 'gitlab ci url'
+#gitlab_runner_registration_token: 'gitlab token'
+#gitlab_runner_description: 'Example Gitlab Runner'
+#gitlab_runner_tags:
+#  - node
+#  - ruby
+#  - mysql
+#gitlab_runner_docker_volumes:
+#  - "/var/run/docker.sock:/var/run/docker.sock"
+#  - "/cache"
