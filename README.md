@@ -80,11 +80,11 @@ node1 ansible_host=192.168.0.1 gitlab_runner_executor=shell
 node1 ansible_host=192.168.0.1 gitlab_runner_executor=docker
 
 [gitlab-runner:vars]
-http_proxy: 'http://proxy-squid:3128'
-https_proxy: 'http://proxy-squid:3128'
-gitlab_runner_coordinator_url: 'https://gitlab.com/ci'
-gitlab_runner_registration_token: 'HUzTMgnxk17YV8Rj8ucQ'
-gitlab_runner_description: 'Example GitLab Runner'
+http_proxy='http://proxy-squid:3128'
+https_proxy='http://proxy-squid:3128'
+gitlab_runner_coordinator_url='https://gitlab.com/ci'
+gitlab_runner_registration_token='HUzTMgnxk17YV8Rj8ucQ'
+gitlab_runner_description='Example GitLab Runner'
 ```
 
 Inside `vars/main.yml`
