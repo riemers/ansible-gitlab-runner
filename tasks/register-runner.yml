@@ -40,5 +40,8 @@
     --cache-s3-insecure '{{ gitlab_runner_cache_s3_insecure }}'
     --cache-cache-shared '{{ gitlab_runner_cache_cache_shared }}'
     {% endif %}
+    {% if gitlab_runner_extra_options is defined %}
+    '{{ gitlab_runner_extra_options }}'
+    {% endif %}
   when: configured_runners.stderr.find('\n' + gitlab_runner_description) == -1
   no_log: yes
