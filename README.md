@@ -54,6 +54,11 @@ Variables to set s3 as a shared cache server. If set it requires variables liste
 `gitlab_runner_cache_s3_insecure`
 `gitlab_runner_cache_cache_shared`
 
+`gitlab_runner_extra_options`
+The extra options to the runner.
+For example:  
+gitlab_runner_extra_options: '--maximum-timeout=3600'
+
 See the [config for more options](https://github.com/riemers/ansible-gitlab-runner/blob/master/tasks/register-runner.yml)
 
 Example Playbook

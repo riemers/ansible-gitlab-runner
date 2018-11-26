@@ -35,3 +35,5 @@ gitlab_runner_ssh_identity_file: ''
 gitlab_runner_locked: 'false'
 # Custom environment variables injected to build environment
 gitlab_runner_env_vars: []
+# Custom parameters for gitlab-runner register command
+gitlab_runner_extra_options: ''
