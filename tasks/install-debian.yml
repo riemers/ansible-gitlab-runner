@@ -8,6 +8,8 @@
 
 - name: Install Gitlab repository
   shell: bash /tmp/gitlab-runner.script.deb.sh
+  args:
+    creates: "/etc/apt/sources.list.d/runner_{{ gitlab_runner_package_name }}.list"
   become: true
 
 - set_fact:
