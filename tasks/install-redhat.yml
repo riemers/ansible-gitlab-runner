@@ -11,11 +11,10 @@
 
 - name: Install GitLab Runner dependencies
   yum:
-    name: '{{ item }}'
+    name:
+      - pygpgme
+      - yum-utils
     state: present
-  with_items:
-    - pygpgme
-    - yum-utils
 
 - name: Add GitLab Runner rpm repo
   template:
