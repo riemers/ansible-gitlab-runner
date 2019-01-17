@@ -53,4 +53,10 @@ gitlab_runner_runners:
     docker_volumes:
       - "/var/run/docker.sock:/var/run/docker.sock"
       - "/cache"
+    extra_configs:
+      runners.docker:
+        memory: 512m
+        allowed_images: ["ruby:*", "python:*", "php:*"]
+      runners.docker.sysctls:
+        net.ipv4.ip_forward: "1"
 ```

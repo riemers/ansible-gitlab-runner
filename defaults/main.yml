@@ -78,3 +78,15 @@ gitlab_runner_runners:
     #
     # Extra registration option
     # extra_registration_option: '--maximum-timeout=3600'
+    #
+    # Extra configuration options to change in the config.toml file
+    # This parameter is a dictionnary where the first level keys are TOML section names
+    # Full list of configuration are available on Gitlab Runner documentation:
+    # See https://docs.gitlab.com/runner/configuration/advanced-configuration.html
+    #
+    # extra_configs:
+    #   runners.docker:
+    #     memory: 512m
+    #     allowed_images: ["ruby:*", "python:*", "php:*"]
+    #   runners.docker.sysctls:
+    #     net.ipv4.ip_forward: "1"

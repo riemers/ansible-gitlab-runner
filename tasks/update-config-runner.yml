@@ -134,3 +134,11 @@
     backrefs: yes
   check_mode: no
   notify: reload_gitlab_runner
+
+- include: section-config-runner.yml
+  loop: "{{ gitlab_runner.extra_configs|list }}"
+  loop_control:
+    loop_var: section
+  when:
+    - gitlab_runner.extra_configs is defined
+    - gitlab_runner.extra_configs|list|length > 0

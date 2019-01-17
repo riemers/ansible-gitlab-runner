@@ -1,0 +1,5 @@
+---
+- include: line-config-runner.yml
+  loop: "{{ gitlab_runner.extra_configs[section] | list }}"
+  loop_control:
+    loop_var: line
