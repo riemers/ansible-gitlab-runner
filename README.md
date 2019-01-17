@@ -26,40 +26,8 @@ The GitLab registration token. If this is specified, a runner will be registered
 The GitLab coordinator URL.
 Defaults to `https://gitlab.com/ci`.
 
-`gitlab_runner_description`
-The description of the runner.
-Defaults to the hostname.
-
-`gitlab_runner_executor`
-The executor used by the runner.
-Defaults to `shell`.
-
-`gitlab_runner_concurrent_specific`
-The maximum number of jobs to run concurrently on this specific runner.
-Defaults to 0, simply means don't limit.
-
-`gitlab_runner_docker_image`
-The default Docker image to use. Required when executor is `docker`.
-
-`gitlab_runner_tags`
-The tags assigned to the runner,
-Defaults to an empty list.
-
-`gitlab_runner_cache_type`
-Variables to set s3 as a shared cache server. If set it requires variables listed below:
-`gitlab_runner_cache_s3_server_address`
-`gitlab_runner_cache_s3_access_key`
-`gitlab_runner_cache_s3_access_key`
-`gitlab_runner_cache_s3_bucket_name`
-`gitlab_runner_cache_s3_insecure`
-`gitlab_runner_cache_cache_shared`
-
-`gitlab_runner_extra_options`
-The extra options to the runner.
-For example:  
-gitlab_runner_extra_options: '--maximum-timeout=3600'
-
-See the [config for more options](https://github.com/riemers/ansible-gitlab-runner/blob/master/tasks/register-runner.yml)
+`gitlab_runner_runners`
+A list of gitlab runners to register & configure. Defaults to a single shell executor. See the [`defaults/main.yml`](https://github.com/riemers/ansible-gitlab-runner/blob/master/defaults/main.yml) file listing all possible options which you can be passed to a runner registration command.
 
 Example Playbook
 ----------------
@@ -75,12 +43,14 @@ Example Playbook
 Inside `vars/main.yml`
 ```yaml
 gitlab_runner_registration_token: 'HUzTMgnxk17YV8Rj8ucQ'
-gitlab_runner_description: 'Example GitLab Runner'
-gitlab_runner_tags:
-  - node
-  - ruby
-  - mysql
-gitlab_runner_docker_volumes:
-  - "/var/run/docker.sock:/var/run/docker.sock"
-  - "/cache"
+gitlab_runner_runners:
+  - name: 'Example Docker GitLab Runner'
+    executor: docker
+    tags:
+      - node
+      - ruby
+      - mysql
+    docker_volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
+      - "/cache"
 ```

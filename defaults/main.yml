@@ -9,31 +9,72 @@ gitlab_runner_concurrent: '{{ ansible_processor_vcpus }}'
 gitlab_runner_coordinator_url: 'https://gitlab.com/ci'
 # GitLab registration token
 gitlab_runner_registration_token: ''
-# Runner description
-gitlab_runner_description: '{{ ansible_hostname }}'
-# Runner executor
-gitlab_runner_executor: 'shell'
-# Maximum number of jobs to run concurrently on this specific runner
-gitlab_runner_concurrent_specific: '0'
-# Default Docker image
-gitlab_runner_docker_image: ''
-# Runner tags
-gitlab_runner_tags: []
-# Docker privileged mode
-gitlab_runner_docker_privileged: false
-# Runner SSH user
-gitlab_runner_ssh_user: ''
-# Runner SSH host
-gitlab_runner_ssh_host: ''
-# Runner SSH port
-gitlab_runner_ssh_port: ''
-# Runner SSH password
-gitlab_runner_ssh_password: ''
-# Runner SSH identity file
-gitlab_runner_ssh_identity_file: ''
-# Runner Locked
-gitlab_runner_locked: 'false'
-# Custom environment variables injected to build environment
-gitlab_runner_env_vars: []
-# Custom parameters for gitlab-runner register command
-gitlab_runner_extra_options: ''
+
+# A list of runners to register and configure
+gitlab_runner_runners:
+    # The identifier of the runner.
+  - name: '{{ ansible_hostname }}'
+    # set to 'absent' if you want to delete the runner. Defaults to 'present'.
+    state: present
+    # The executor used by the runner.
+    executor: 'shell'
+    # Maximum number of jobs to run concurrently on this specific runner.
+    # Defaults to 0, simply means don't limit.
+    concurrent_specific: '0'
+    # The default Docker image to use. Required when executor is `docker`.
+    docker_image: ''
+    # The tags assigned to the runner.
+    tags: []
+    # Indicates whether this runner can pick jobs without tags.
+    run_untagged: true
+    # Docker privileged mode
+    docker_privileged: false
+    # Runner Locked. When a runner is locked, it cannot be assigned to other projects
+    locked: 'false'
+    # Custom environment variables injected to registration command
+    env_vars: []
+    #
+    # Runner SSH user
+    # ssh_user: ''
+    #
+    # Runner SSH host
+    # ssh_host: ''
+    #
+    # Runner SSH port
+    # ssh_port: ''
+    #
+    # Runner SSH password
+    # ssh_password: ''
+    #
+    # Runner SSH identity file
+    # ssh_identity_file: ''
+    #
+    # Cache type
+    # cache_type: 's3'
+    #
+    # Cache path
+    # cache_path: prefix/key
+    #
+    # Cache shared
+    # cache_shared: false
+    #
+    # Cache S3 server address
+    # cache_s3_server_address: "s3.amazonaws.com"
+    #
+    # Cache S3 access key
+    # cache_s3_access_key: "AMAZON_S3_ACCESS_KEY"
+    #
+    # Cache S3 secret key
+    # cache_s3_secret_key: "AMAZON_S3_SECRET_KEY"
+    #
+    # Cache S3 bucket name
+    # cache_s3_bucket_name: "my-bucket"
+    #
+    # Cache S3 bucket location
+    # cache_s3_bucket_location: "eu-west-1"
+    #
+    # Cache S3 insecure
+    # cache_s3_insecure: false
+    #
+    # Extra registration option
+    # extra_registration_option: '--maximum-timeout=3600'
