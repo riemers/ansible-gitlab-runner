@@ -1,4 +1,8 @@
 ---
+- name: reload_gitlab_runner
+  service: name=gitlab-runner state=reloaded
+  become: yes
+
 - name: restart_gitlab_runner
   service: name=gitlab-runner state=restarted
   become: yes

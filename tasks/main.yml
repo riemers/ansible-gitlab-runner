@@ -22,3 +22,6 @@
   loop: "{{ gitlab_runner_runners }}"
   loop_control:
     loop_var: gitlab_runner
+
+- name: Configure GitLab Runner
+  import_tasks: config-runners.yml
