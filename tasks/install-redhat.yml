@@ -1,28 +1,28 @@
 ---
 
-- name: RHEL | Install GitLab GPG key
-  rpm_key:
-    state: present
-    key: https://packages.gitlab.com/gpg.key
-  when: ansible_os_family == 'RedHat'
-  tags:
-    - gitlab
-    - gitlab-gpg
+- name: Get Gitlab repository installation script
+  get_url:
+    url: "https://packages.gitlab.com/install/repositories/runner/{{ gitlab_runner_package_name }}/script.rpm.sh"
+    dest: /tmp/gitlab-runner.script.rpm.sh
+    mode: 0744
 
-- name: Install GitLab Runner dependencies
-  yum:
-    name:
-      - pygpgme
-      - yum-utils
-    state: present
+- name: Install Gitlab repository
+  shell: bash /tmp/gitlab-runner.script.rpm.sh
+  args:
+    creates: "/etc/yum.repos.d/runner_{{ gitlab_runner_package_name }}.repo"
+  become: true
 
-- name: Add GitLab Runner rpm repo
-  template:
-    src: "runner.repo.j2"
-    dest: "/etc/yum.repos.d/runner_{{ gitlab_runner_package_name }}.repo"
+- set_fact:
+    gitlab_runner_package: "{{ gitlab_runner_package_name }}-{{ gitlab_runner_package_version }}"
+    gitlab_runner_package_state: "present"
+  when: gitlab_runner_package_version is defined
+
+- set_fact:
+    gitlab_runner_package: "{{ gitlab_runner_package_name }}"
+    gitlab_runner_package_state: "latest"
+  when: gitlab_runner_package_version is not defined
 
 - name: Install GitLab Runner
-  yum:
-    name: "{{ gitlab_runner_package_name }}"
-    state: latest
-    update_cache: yes
+  package:
+    name: "{{ gitlab_runner_package }}"
+    state: "{{ gitlab_runner_package_state }}"
