@@ -1,0 +1,144 @@
+---
+- name: Create temporary file
+  tempfile:
+    state: file
+    path: "{{ temp_runner_config_dir.path }}"
+    prefix: "gitlab-runner.{{ gitlab_runner_index }}{{ runner_config_index }}."
+  register: temp_runner_config_keyword
+  check_mode: no
+  changed_when: false
+
+- name: Isolate runner configuration
+  copy:
+    dest: "{{ temp_runner_config_keyword.path }}"
+    content: "[[runners]]"
+  check_mode: no
+  changed_when: false
+
+- name: Set concurrent limit option
+  lineinfile:
+    dest: "{{ temp_runner_config.path }}"
+    regexp: '^(\s*)limit ='
+    line: '\1limit = {{ gitlab_runner.concurrent_specific|default(0) }}'
+    state: present
+    backrefs: yes
+  check_mode: no
+  notify: reload_gitlab_runner
+
+- name: Set coordinator URL
+  lineinfile:
+    dest: "{{ temp_runner_config.path }}"
+    regexp: '^(\s*)url ='
+    line: '\1url = {{ gitlab_runner_coordinator_url | to_json }}'
+    state: present
+    backrefs: yes
+  check_mode: no
+  notify: reload_gitlab_runner
+
+- name: Set runner executor option
+  lineinfile:
+    dest: "{{ temp_runner_config.path }}"
+    regexp: '^(\s*)executor ='
+    line: '\1executor = {{ gitlab_runner.executor|default("shell") | to_json}}'
+    state: present
+    backrefs: yes
+  check_mode: no
+  notify: reload_gitlab_runner
+
+- name: Set runner docker image option
+  lineinfile:
+    dest: "{{ temp_runner_config.path }}"
+    regexp: '^(\s*)image ='
+    line: '\1image = {{ gitlab_runner.docker_image|default("") | to_json }}'
+    state: "{{ 'present' if gitlab_runner.docker_image is defined else 'absent' }}"
+    backrefs: yes
+  check_mode: no
+  notify: reload_gitlab_runner
+
+- name: Set docker privileged option
+  lineinfile:
+    dest: "{{ temp_runner_config.path }}"
+    regexp: '^(\s*)privileged ='
+    line: '\1privileged = {{ gitlab_runner.docker_privileged|default(false) | lower }}'
+    state: "{{ 'present' if gitlab_runner.docker_privileged is defined else 'absent' }}"
+    backrefs: yes
+  check_mode: no
+  notify: reload_gitlab_runner
+
+- name: Set docker volumes option
+  lineinfile:
+    dest: "{{ temp_runner_config.path }}"
+    regexp: '^(\s*)volumes ='
+    line: '\1volumes = {{ gitlab_runner.docker_volumes|default([])|to_json }}'
+    state: "{{ 'present' if gitlab_runner.docker_volumes is defined else 'absent' }}"
+    backrefs: yes
+  check_mode: no
+  notify: reload_gitlab_runner
+
+- name: Set cache type option
+  lineinfile:
+    dest: "{{ temp_runner_config.path }}"
+    regexp: '^(\s*)Type ='
+    line: '\1Type = {{ gitlab_runner.cache_type|default("") | to_json }}'
+    state: "{{ 'present' if gitlab_runner.cache_type is defined else 'absent' }}"
+    backrefs: yes
+  check_mode: no
+  notify: reload_gitlab_runner
+
+- name: Set cache path option
+  lineinfile:
+    dest: "{{ temp_runner_config.path }}"
+    regexp: '^(\s*)Path ='
+    line: '\1Path = {{ gitlab_runner.cache_path|default("") | to_json }}'
+    state: "{{ 'present' if gitlab_runner.cache_path is defined else 'absent' }}"
+    backrefs: yes
+  check_mode: no
+  notify: reload_gitlab_runner
+
+- name: Set cache shared option
+  lineinfile:
+    dest: "{{ temp_runner_config.path }}"
+    regexp: '^(\s*)Shared ='
+    line: '\1Shared = {{ gitlab_runner.cache_shared|default("") | lower }}'
+    state: "{{ 'present' if gitlab_runner.cache_shared is defined else 'absent' }}"
+    backrefs: yes
+  check_mode: no
+  notify: reload_gitlab_runner
+
+- name: Set cache s3 bucket name option
+  lineinfile:
+    dest: "{{ temp_runner_config.path }}"
+    regexp: '^(\s*)BucketName ='
+    line: '\1BucketName = {{ gitlab_runner.cache_s3_bucket_name|default("")  | to_json }}'
+    state: "{{ 'present' if gitlab_runner.cache_s3_bucket_name is defined else 'absent' }}"
+    backrefs: yes
+  check_mode: no
+  notify: reload_gitlab_runner
+
+- name: Set cache s3 bucket location option
+  lineinfile:
+    dest: "{{ temp_runner_config.path }}"
+    regexp: '^(\s*)BucketLocation ='
+    line: '\1BucketLocation = {{ gitlab_runner.cache_s3_bucket_location|default("") | to_json }}'
+    state: "{{ 'present' if gitlab_runner.cache_s3_bucket_location is defined else 'absent' }}"
+    backrefs: yes
+  check_mode: no
+  notify: reload_gitlab_runner
+
+- name: Set cache s3 insecure option
+  lineinfile:
+    dest: "{{ temp_runner_config.path }}"
+    regexp: '^(\s*)Insecure ='
+    line: '\1Insecure = {{ gitlab_runner.cache_s3_insecure|default("") | lower }}'
+    state: "{{ 'present' if gitlab_runner.cache_s3_insecure is defined else 'absent' }}"
+    backrefs: yes
+  check_mode: no
+  notify: reload_gitlab_runner
+
+- include: section-config-runner.yml
+  loop: "{{ gitlab_runner.extra_configs|list }}"
+  loop_control:
+    loop_var: section
+  when:
+    - gitlab_runner.extra_configs is defined
+    - gitlab_runner.extra_configs|list|length > 0

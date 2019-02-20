@@ -1,0 +1,36 @@
+---
+- name: Get existing config
+  slurp:
+    src: /etc/gitlab-runner/config.toml
+  register: runner_config_file
+
+- set_fact:
+    runner_configs: "{{ (runner_config_file['content'] | b64decode).split('[[runners]]\n') }}"
+
+- name: Create temporary directory
+  tempfile:
+    state: directory
+    suffix: gitlab-runner-config
+  register: temp_runner_config_dir
+  check_mode: no
+  changed_when: false
+
+- include_tasks: config-runner.yml
+  loop: "{{ runner_configs }}"
+  loop_control:
+    index_var: runner_config_index
+    loop_var: runner_config
+
+- copy:
+    src: gitlab-runner-wrapper.sh
+    dest: /tmp/gitlab-runner-wrapper.sh
+    mode: 0700
+  become: true
+
+- assemble:
+    src: "{{ temp_runner_config_dir.path }}"
+    dest: /etc/gitlab-runner/config.toml
+    backup: yes
+    validate: "/tmp/gitlab-runner-wrapper.sh %s"
+    mode: 0600
+  become: true

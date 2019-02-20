@@ -1,0 +1,14 @@
+---
+- name: Ensure section exists
+  lineinfile:
+    path: "{{ temp_runner_config.path }}"
+    regexp: '^(\s*)\[{{ section|regex_escape }}\]$'
+    line: '{{ "  " * (section.split(".")|length -1) }}[{{ section }}]'
+
+- name: Modify existing line
+  lineinfile:
+    path: "{{ temp_runner_config.path }}"
+    insertafter: '\s+\[{{ section | regex_escape }}\]'
+    regexp: '^(\s*){{ line|regex_escape }} ='
+    line: '{{ "  " * (section.split(".")|length) }}{{ line }} = {{ gitlab_runner.extra_configs[section][line] | to_json }}'
+  register: modified_config_line

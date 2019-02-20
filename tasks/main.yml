@@ -10,6 +10,18 @@
 - name: Set global options
   import_tasks: global-setup.yml
 
+- name: List configured runners
+  command: gitlab-runner list
+  register: configured_runners
+  changed_when: False
+  check_mode: no
+
 - name: Register GitLab Runner
-  import_tasks: register-runner.yml
+  include_tasks: register-runner.yml
   when: gitlab_runner_registration_token != ''
+  loop: "{{ gitlab_runner_runners }}"
+  loop_control:
+    loop_var: gitlab_runner
+
+- name: Configure GitLab Runner
+  import_tasks: config-runners.yml
