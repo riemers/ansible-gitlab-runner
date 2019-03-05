@@ -21,6 +21,7 @@
   when: gitlab_runner_registration_token != ''
   loop: "{{ gitlab_runner_runners }}"
   loop_control:
+    index_var: gitlab_runner_index
     loop_var: gitlab_runner
 
 - name: Configure GitLab Runner

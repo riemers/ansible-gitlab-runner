@@ -5,7 +5,7 @@
     --non-interactive
     --url '{{ gitlab_runner_coordinator_url }}'
     --registration-token '{{ gitlab_runner_registration_token }}'
-    --description '{{ gitlab_runner.name|default(ansible_hostname) }}'
+    --description '{{ gitlab_runner.name|default(ansible_hostname+"-"+gitlab_runner_index|string) }}'
     --tag-list '{{ gitlab_runner.tags|default([]) | join(",") }}'
     {% if gitlab_runner.run_untagged|default(true) %}
     --run-untagged
@@ -47,6 +47,6 @@
     {{ gitlab_runner.extra_registration_option }}
     {% endif %}
   when:
-    - configured_runners.stderr.find('\n' + gitlab_runner.name) == -1
+    - configured_runners.stderr.find('\n' + gitlab_runner.name|default(ansible_hostname+'-'+gitlab_runner_index|string)) == -1
     - gitlab_runner.state|default('present') == 'present'
   no_log: true
