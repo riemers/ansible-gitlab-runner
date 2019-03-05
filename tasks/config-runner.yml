@@ -17,7 +17,7 @@
 
 - include_tasks: update-config-runner.yml
   when:
-    - ('name = "'+gitlab_runner.name+'"') in runner_config
+    - ('name = "'+gitlab_runner.name|default(ansible_hostname+'-'+gitlab_runner_index|string)+'"') in runner_config
     - gitlab_runner.state|default('present') == 'present'
   loop: "{{ gitlab_runner_runners }}"
   loop_control:
@@ -29,8 +29,9 @@
     path: "{{ temp_runner_config.path }}"
     state: absent
   when:
-    - ('name = "'+gitlab_runner.name+'"') in runner_config
+    - ('name = "'+gitlab_runner.name|default(ansible_hostname+'-'+gitlab_runner_index|string)+'"') in runner_config
     - gitlab_runner.state|default('present') == 'absent'
   loop: "{{ gitlab_runner_runners }}"
   loop_control:
+    index_var: gitlab_runner_index
     loop_var: gitlab_runner
