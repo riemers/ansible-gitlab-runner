@@ -23,7 +23,7 @@
     state: present
     backrefs: yes
   check_mode: no
-  notify: reload_gitlab_runner
+  notify: restart_gitlab_runner
 
 - name: Set coordinator URL
   lineinfile:
@@ -33,7 +33,7 @@
     state: present
     backrefs: yes
   check_mode: no
-  notify: reload_gitlab_runner
+  notify: restart_gitlab_runner
 
 - name: Set runner executor option
   lineinfile:
@@ -43,7 +43,7 @@
     state: present
     backrefs: yes
   check_mode: no
-  notify: reload_gitlab_runner
+  notify: restart_gitlab_runner
 
 - name: Set runner docker image option
   lineinfile:
@@ -53,7 +53,7 @@
     state: "{{ 'present' if gitlab_runner.docker_image is defined else 'absent' }}"
     backrefs: yes
   check_mode: no
-  notify: reload_gitlab_runner
+  notify: restart_gitlab_runner
 
 - name: Set docker privileged option
   lineinfile:
@@ -63,7 +63,7 @@
     state: "{{ 'present' if gitlab_runner.docker_privileged is defined else 'absent' }}"
     backrefs: yes
   check_mode: no
-  notify: reload_gitlab_runner
+  notify: restart_gitlab_runner
 
 - name: Set docker volumes option
   lineinfile:
@@ -73,7 +73,7 @@
     state: "{{ 'present' if gitlab_runner.docker_volumes is defined else 'absent' }}"
     backrefs: yes
   check_mode: no
-  notify: reload_gitlab_runner
+  notify: restart_gitlab_runner
 
 - name: Set cache type option
   lineinfile:
@@ -83,7 +83,7 @@
     state: "{{ 'present' if gitlab_runner.cache_type is defined else 'absent' }}"
     backrefs: yes
   check_mode: no
-  notify: reload_gitlab_runner
+  notify: restart_gitlab_runner
 
 - name: Set cache path option
   lineinfile:
@@ -93,7 +93,7 @@
     state: "{{ 'present' if gitlab_runner.cache_path is defined else 'absent' }}"
     backrefs: yes
   check_mode: no
-  notify: reload_gitlab_runner
+  notify: restart_gitlab_runner
 
 - name: Set cache shared option
   lineinfile:
@@ -103,7 +103,7 @@
     state: "{{ 'present' if gitlab_runner.cache_shared is defined else 'absent' }}"
     backrefs: yes
   check_mode: no
-  notify: reload_gitlab_runner
+  notify: restart_gitlab_runner
 
 - name: Set cache s3 bucket name option
   lineinfile:
@@ -113,7 +113,7 @@
     state: "{{ 'present' if gitlab_runner.cache_s3_bucket_name is defined else 'absent' }}"
     backrefs: yes
   check_mode: no
-  notify: reload_gitlab_runner
+  notify: restart_gitlab_runner
 
 - name: Set cache s3 bucket location option
   lineinfile:
@@ -123,7 +123,7 @@
     state: "{{ 'present' if gitlab_runner.cache_s3_bucket_location is defined else 'absent' }}"
     backrefs: yes
   check_mode: no
-  notify: reload_gitlab_runner
+  notify: restart_gitlab_runner
 
 - name: Set cache s3 insecure option
   lineinfile:
@@ -133,7 +133,7 @@
     state: "{{ 'present' if gitlab_runner.cache_s3_insecure is defined else 'absent' }}"
     backrefs: yes
   check_mode: no
-  notify: reload_gitlab_runner
+  notify: restart_gitlab_runner
 
 - include: section-config-runner.yml
   loop: "{{ gitlab_runner.extra_configs|list }}"
