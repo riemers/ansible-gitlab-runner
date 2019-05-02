@@ -19,15 +19,12 @@ Role Variables
 The maximum number of global jobs to run concurrently.
 Defaults to the number of processor cores.
 
-`gitlab_runner_registration_token`
-The GitLab registration token. If this is specified, a runner will be registered to a GitLab server.
-
 `gitlab_runner_coordinator_url`
 The GitLab coordinator URL.
 Defaults to `https://gitlab.com/ci`.
 
 `gitlab_runner_runners`
-A list of gitlab runners to register & configure. Defaults to a single shell executor. See the [`defaults/main.yml`](https://github.com/riemers/ansible-gitlab-runner/blob/master/defaults/main.yml) file listing all possible options which you can be passed to a runner registration command.
+A list of gitlab runners to register & configure. Defaults to a single shell executor. See the [`defaults/main.yml`](https://github.com/riemers/ansible-gitlab-runner/blob/master/defaults/main.yml) file for a listing of all possible options which can be passed to a runner registration command.
 
 Example Playbook
 ----------------
@@ -42,10 +39,10 @@ Example Playbook
 
 Inside `vars/main.yml`
 ```yaml
-gitlab_runner_registration_token: 'HUzTMgnxk17YV8Rj8ucQ'
 gitlab_runner_runners:
-  - name: 'Example Docker GitLab Runner'
+  - name: 'Runner for GitLab Group 1'
     executor: docker
+    registration_token: 'HUzTMgnxk17YV8Rj8ucQ'
     tags:
       - node
       - ruby
@@ -57,6 +54,18 @@ gitlab_runner_runners:
       runners.docker:
         memory: 512m
         allowed_images: ["ruby:*", "python:*", "php:*"]
-      runners.docker.sysctls:
-        net.ipv4.ip_forward: "1"
+  - name: 'Runner for GitLab Group 2'
+    executor: docker
+    registration_token: 'wootiSha6aeWoo9yungi'
+    tags:
+      - node
+      - ruby
+      - mysql
+    docker_volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
+      - "/cache"
+    extra_configs:
+      runners.docker:
+        memory: 512m
+        allowed_images: ["ruby:*", "python:*", "php:*"]
 ```

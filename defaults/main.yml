@@ -7,8 +7,6 @@ gitlab_runner_concurrent: '{{ ansible_processor_vcpus }}'
 
 # GitLab coordinator URL
 gitlab_runner_coordinator_url: 'https://gitlab.com/ci'
-# GitLab registration token
-gitlab_runner_registration_token: ''
 
 # A list of runners to register and configure
 gitlab_runner_runners:
@@ -16,6 +14,8 @@ gitlab_runner_runners:
   - name: '{{ ansible_hostname }}'
     # set to 'absent' if you want to delete the runner. Defaults to 'present'.
     state: present
+    # GitLab registration token
+    registration_token: ''
     # The executor used by the runner.
     executor: 'shell'
     # Maximum number of jobs to run concurrently on this specific runner.

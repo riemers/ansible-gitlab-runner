@@ -4,7 +4,7 @@
     gitlab-runner register
     --non-interactive
     --url '{{ gitlab_runner_coordinator_url }}'
-    --registration-token '{{ gitlab_runner_registration_token }}'
+    --registration-token '{{ gitlab_runner.registration_token }}'
     --description '{{ gitlab_runner.name|default(ansible_hostname+"-"+gitlab_runner_index|string) }}'
     --tag-list '{{ gitlab_runner.tags|default([]) | join(",") }}'
     {% if gitlab_runner.run_untagged|default(true) %}
