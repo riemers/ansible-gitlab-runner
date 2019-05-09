@@ -12,9 +12,9 @@
   lineinfile:
     dest: /etc/gitlab-runner/config.toml
     regexp: '^sentry_dsn ='
-    line: 'sentry_dsn = "{{ sentry_dsn }}"'
+    line: 'sentry_dsn = "{{ gitlab_runner_sentry_dsn }}"'
     insertafter: '\s*concurrent.*'
     state: present
-  when: sentry_dsn is defined
+  when: gitlab_runner_sentry_dsn != ""
   notify: restart_gitlab_runner
 - 

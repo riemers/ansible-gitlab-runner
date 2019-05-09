@@ -10,6 +10,8 @@ gitlab_runner_coordinator_url: 'https://gitlab.com/ci'
 # GitLab registration token
 gitlab_runner_registration_token: ''
 
+gitlab_runner_sentry_dsn: ''
+
 # A list of runners to register and configure
 gitlab_runner_runners:
     # The identifier of the runner.

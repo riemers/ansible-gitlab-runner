@@ -26,6 +26,9 @@ The GitLab registration token. If this is specified, a runner will be registered
 The GitLab coordinator URL.
 Defaults to `https://gitlab.com/ci`.
 
+`gitlab_runner_sentry_dsn`
+Enable tracking of all system level errors to Sentry
+
 `gitlab_runner_runners`
 A list of gitlab runners to register & configure. Defaults to a single shell executor. See the [`defaults/main.yml`](https://github.com/riemers/ansible-gitlab-runner/blob/master/defaults/main.yml) file listing all possible options which you can be passed to a runner registration command.
 
