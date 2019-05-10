@@ -7,3 +7,14 @@
     state: present
     backrefs: yes
   notify: restart_gitlab_runner
+
+- name: Add sentry dsn to config
+  lineinfile:
+    dest: /etc/gitlab-runner/config.toml
+    regexp: '^sentry_dsn ='
+    line: 'sentry_dsn = "{{ gitlab_runner_sentry_dsn }}"'
+    insertafter: '\s*concurrent.*'
+    state: present
+  when: gitlab_runner_sentry_dsn != ""
+  notify: restart_gitlab_runner
+- 
