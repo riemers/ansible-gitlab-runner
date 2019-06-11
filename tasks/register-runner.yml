@@ -30,7 +30,9 @@
     --ssh-identity-file '{{ gitlab_runner.ssh_identity_file|default("") }}'
     {% if gitlab_runner.cache_type is defined %}
     --cache-type '{{ gitlab_runner.cache_type }}'
-    --cache-shared '{{ gitlab_runner.cache_shared }}'
+    {% if gitlab_runner.cache_shared == true %}
+    --cache-shared
+    {% endif %}
     {% if gitlab_runner.cache_path is defined %}
     --cache-path '{{ gitlab_runner.cache_path }}'
     {% endif %}
@@ -43,7 +45,8 @@
     {% if gitlab_runner.cache_s3_bucket_location is defined %}
     --cache-s3-bucket-location '{{ gitlab_runner.cache_s3_bucket_location }}'
     {% endif %}
-    --cache-s3-insecure '{{ gitlab_runner.cache_s3_insecure }}'
+    {% if gitlab_runner.cache_s3_insecure == true %}
+    --cache-s3-insecure
     {% endif %}
     {% if gitlab_runner.extra_registration_option is defined %}
     {{ gitlab_runner.extra_registration_option }}
