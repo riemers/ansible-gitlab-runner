@@ -4,7 +4,7 @@
     gitlab-runner register
     --non-interactive
     --url '{{ gitlab_runner_coordinator_url }}'
-    --registration-token '{{ gitlab_runner_registration_token }}'
+    --registration-token '{{ gitlab_runner.token|default(gitlab_runner_registration_token) }}'
     --description '{{ gitlab_runner.name|default(ansible_hostname+"-"+gitlab_runner_index|string) }}'
     --tag-list '{{ gitlab_runner.tags|default([]) | join(",") }}'
     {% if gitlab_runner.run_untagged|default(true) %}
@@ -42,10 +42,11 @@
     --cache-s3-secret-key '{{ gitlab_runner.cache_s3_secret_key }}'
     {% endif %}
     --cache-s3-bucket-name '{{ gitlab_runner.cache_s3_bucket_name }}'
+    {% if gitlab_runner.cache_s3_bucket_location is defined %}
     --cache-s3-bucket-location '{{ gitlab_runner.cache_s3_bucket_location }}'
+    {% endif %}
     {% if gitlab_runner.cache_s3_insecure == true %}
     --cache-s3-insecure
-    {% endif %}
     {% endif %}
     {% if gitlab_runner.extra_registration_option is defined %}
     {{ gitlab_runner.extra_registration_option }}
