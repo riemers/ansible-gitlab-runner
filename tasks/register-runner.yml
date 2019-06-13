@@ -30,6 +30,7 @@
     --ssh-identity-file '{{ gitlab_runner.ssh_identity_file|default("") }}'
     {% if gitlab_runner.cache_type is defined %}
     --cache-type '{{ gitlab_runner.cache_type }}'
+    {% endif %}
     {% if gitlab_runner.cache_shared == true %}
     --cache-shared
     {% endif %}
