@@ -42,7 +42,9 @@
     --cache-s3-access-key '{{ gitlab_runner.cache_s3_access_key }}'
     --cache-s3-secret-key '{{ gitlab_runner.cache_s3_secret_key }}'
     {% endif %}
+    {% if gitlab_runner.cache_s3_bucket_name is defined %}
     --cache-s3-bucket-name '{{ gitlab_runner.cache_s3_bucket_name }}'
+    {% endif %}
     {% if gitlab_runner.cache_s3_bucket_location is defined %}
     --cache-s3-bucket-location '{{ gitlab_runner.cache_s3_bucket_location }}'
     {% endif %}
