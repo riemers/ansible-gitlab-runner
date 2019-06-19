@@ -23,7 +23,7 @@
 
 - copy:
     src: gitlab-runner-wrapper.sh
-    dest: /tmp/gitlab-runner-wrapper.sh
+    dest: "{{ gitlab_runner_temp_dir|default('/tmp', true) }}/gitlab-runner-wrapper.sh"
     mode: 0700
   become: true
 
@@ -31,6 +31,6 @@
     src: "{{ temp_runner_config_dir.path }}"
     dest: /etc/gitlab-runner/config.toml
     backup: yes
-    validate: "/tmp/gitlab-runner-wrapper.sh %s"
+    validate: "{{ gitlab_runner_temp_dir|default('/tmp', true) }}/gitlab-runner-wrapper.sh %s"
     mode: 0600
   become: true
