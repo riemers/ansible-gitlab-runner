@@ -95,6 +95,37 @@
   check_mode: no
   notify: restart_gitlab_runner
 
+- name: Set cache s3 server addresss
+  lineinfile:
+    dest: "{{ temp_runner_config.path }}"
+    regexp: '^(\s*)ServerAddress ='
+    line: '\1ServerAddress = {{ gitlab_runner.cache_s3_server_address|default("") | to_json }}'
+    state: "{{ 'present' if gitlab_runner.cache_s3_server_address is defined else 'absent' }}"
+    backrefs: yes
+  check_mode: no
+  notify: restart_gitlab_runner
+
+- name: Set cache s3 access key
+  lineinfile:
+    dest: "{{ temp_runner_config.path }}"
+    regexp: '^(\s*)AccessKey ='
+    line: '\1AccessKey = {{ gitlab_runner.cache_s3_access_key|default("") | to_json }}'
+    state: "{{ 'present' if gitlab_runner.cache_s3_access_key is defined else 'absent' }}"
+    backrefs: yes
+  check_mode: no
+  notify: restart_gitlab_runner
+
+- name: Set cache s3 secret key
+  lineinfile:
+    dest: "{{ temp_runner_config.path }}"
+    regexp: '^(\s*)SecretKey ='
+    line: '\1SecretKey = {{ gitlab_runner.cache_s3_secret_key|default("") | to_json }}'
+    state: "{{ 'present' if gitlab_runner.cache_s3_secret_key is defined else 'absent' }}"
+    backrefs: yes
+  check_mode: no
+  notify: restart_gitlab_runner
+
+
 - name: Set cache shared option
   lineinfile:
     dest: "{{ temp_runner_config.path }}"
@@ -131,6 +162,56 @@
     regexp: '^(\s*)Insecure ='
     line: '\1Insecure = {{ gitlab_runner.cache_s3_insecure|default("") | lower }}'
     state: "{{ 'present' if gitlab_runner.cache_s3_insecure is defined else 'absent' }}"
+    backrefs: yes
+  check_mode: no
+  notify: restart_gitlab_runner
+
+- name: Set ssh user option
+  lineinfile:
+    dest: "{{ temp_runner_config.path }}"
+    regexp: '^(\s*)user ='
+    line: '\1user = {{ gitlab_runner.ssh_user|default("") | to_json }}'
+    state: "{{ 'present' if gitlab_runner.cache_s3_insecure is defined else 'absent' }}"
+    backrefs: yes
+  check_mode: no
+  notify: restart_gitlab_runner
+
+- name: Set ssh host option
+  lineinfile:
+    dest: "{{ temp_runner_config.path }}"
+    regexp: '^(\s*)host ='
+    line: '\1host = {{ gitlab_runner.ssh_host|default("") | to_json }}'
+    state: "{{ 'present' if gitlab_runner.ssh_host is defined else 'absent' }}"
+    backrefs: yes
+  check_mode: no
+  notify: restart_gitlab_runner
+
+- name: Set ssh port option
+  lineinfile:
+    dest: "{{ temp_runner_config.path }}"
+    regexp: '^(\s*)port ='
+    line: '\1port = {{ gitlab_runner.ssh_port|default("") | to_json }}'
+    state: "{{ 'present' if gitlab_runner.ssh_port is defined else 'absent' }}"
+    backrefs: yes
+  check_mode: no
+  notify: restart_gitlab_runner
+
+- name: Set ssh password option
+  lineinfile:
+    dest: "{{ temp_runner_config.path }}"
+    regexp: '^(\s*)password ='
+    line: '\1password = {{ gitlab_runner.ssh_password|default("") | to_json }}'
+    state: "{{ 'present' if gitlab_runner.ssh_password is defined else 'absent' }}"
+    backrefs: yes
+  check_mode: no
+  notify: restart_gitlab_runner
+
+- name: Set ssh identity file option
+  lineinfile:
+    dest: "{{ temp_runner_config.path }}"
+    regexp: '^(\s*)identity_file ='
+    line: '\1identity_file = {{ gitlab_runner.ssh_identity_file|default("") | to_json }}'
+    state: "{{ 'present' if gitlab_runner.ssh_identity_file is defined else 'absent' }}"
     backrefs: yes
   check_mode: no
   notify: restart_gitlab_runner
