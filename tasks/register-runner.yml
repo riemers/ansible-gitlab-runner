@@ -31,7 +31,7 @@
     {% if gitlab_runner.cache_type is defined %}
     --cache-type '{{ gitlab_runner.cache_type }}'
     {% endif %}
-    {% if gitlab_runner.cache_shared == true %}
+    {% if gitlab_runner.cache_shared|default(false) %}
     --cache-shared
     {% endif %}
     {% if gitlab_runner.cache_path is defined %}
@@ -48,7 +48,7 @@
     {% if gitlab_runner.cache_s3_bucket_location is defined %}
     --cache-s3-bucket-location '{{ gitlab_runner.cache_s3_bucket_location }}'
     {% endif %}
-    {% if gitlab_runner.cache_s3_insecure == true %}
+    {% if gitlab_runner.cache_s3_insecure|default(false) %}
     --cache-s3-insecure
     {% endif %}
     {% if gitlab_runner.extra_registration_option is defined %}

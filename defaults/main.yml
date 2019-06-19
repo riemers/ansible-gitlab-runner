@@ -92,3 +92,5 @@ gitlab_runner_runners:
     #     allowed_images: ["ruby:*", "python:*", "php:*"]
     #   runners.docker.sysctls:
     #     net.ipv4.ip_forward: "1"
+
+gitlab_runner_temp_dir: /tmp
