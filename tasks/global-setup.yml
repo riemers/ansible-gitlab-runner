@@ -17,4 +17,3 @@
     state: present
   when: gitlab_runner_sentry_dsn != ""
   notify: restart_gitlab_runner
-- 
