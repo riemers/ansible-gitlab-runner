@@ -1,20 +1,4 @@
 ---
-- name: Create temporary file
-  tempfile:
-    state: file
-    path: "{{ temp_runner_config_dir.path }}"
-    prefix: "gitlab-runner.{{ gitlab_runner_index }}{{ runner_config_index }}."
-  register: temp_runner_config_keyword
-  check_mode: no
-  changed_when: false
-
-- name: Isolate runner configuration
-  copy:
-    dest: "{{ temp_runner_config_keyword.path }}"
-    content: "[[runners]]"
-  check_mode: no
-  changed_when: false
-
 - name: Set concurrent limit option
   lineinfile:
     dest: "{{ temp_runner_config.path }}"
