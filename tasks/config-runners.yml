@@ -34,6 +34,7 @@
   assemble:
     src: "{{ temp_runner_config_dir.path }}"
     dest: /etc/gitlab-runner/config.toml
+    delimiter: '[[runners]]\n'
     backup: yes
     validate: "{{ gitlab_runner_temp_dir|default('/tmp', true) }}/gitlab-runner-wrapper.sh %s"
     mode: 0600
