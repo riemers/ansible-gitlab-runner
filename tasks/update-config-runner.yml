@@ -39,7 +39,7 @@
   lineinfile:
     dest: "{{ temp_runner_config.path }}"
     regexp: '^(\s*)executor ='
-    line: '\1executor = {{ gitlab_runner.executor|default("shell") | to_json}}'
+    line: '\1executor = {{ gitlab_runner.executor|default("shell") | to_json }}'
     state: present
     backrefs: yes
   check_mode: no
