@@ -15,5 +15,5 @@
     line: 'sentry_dsn = "{{ gitlab_runner_sentry_dsn }}"'
     insertafter: '\s*concurrent.*'
     state: present
-  when: gitlab_runner_sentry_dsn != ""
+  when: gitlab_runner_sentry_dsn | length > 0  # Ensure value is set
   notify: restart_gitlab_runner

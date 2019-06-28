@@ -18,7 +18,7 @@
 
 - name: Register GitLab Runner
   include_tasks: register-runner.yml
-  when: gitlab_runner_registration_token != ''
+  when: gitlab_runner_registration_token | length > 0  # Ensure value is set
   loop: "{{ gitlab_runner_runners }}"
   loop_control:
     index_var: gitlab_runner_index
