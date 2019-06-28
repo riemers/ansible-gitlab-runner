@@ -1,4 +1,11 @@
 ---
+- name: Ensure config.toml exists
+  file:
+    path: /etc/gitlab-runner/config.toml
+    state: touch
+    modification_time: preserve
+    access_time: preserve
+
 - name: Set concurrent option
   lineinfile:
     dest: /etc/gitlab-runner/config.toml
