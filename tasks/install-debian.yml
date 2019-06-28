@@ -1,28 +1,30 @@
 ---
 
-- name: Get Gitlab repository installation script
+- name: (Debian) Get Gitlab repository installation script
   get_url:
     url: "https://packages.gitlab.com/install/repositories/runner/{{ gitlab_runner_package_name }}/script.deb.sh"
     dest: /tmp/gitlab-runner.script.deb.sh
     mode: 0744
 
-- name: Install Gitlab repository
-  shell: bash /tmp/gitlab-runner.script.deb.sh
+- name: (Debian) Install Gitlab repository
+  command: bash /tmp/gitlab-runner.script.deb.sh
   args:
     creates: "/etc/apt/sources.list.d/runner_{{ gitlab_runner_package_name }}.list"
   become: true
 
-- set_fact:
+- name: (Debian) Update gitlab_runner_package_name
+  set_fact:
     gitlab_runner_package: "{{ gitlab_runner_package_name }}={{ gitlab_runner_package_version }}"
     gitlab_runner_package_state: "present"
   when: gitlab_runner_package_version is defined
 
-- set_fact:
+- name: (Debian) Set gitlab_runner_package_name
+  set_fact:
     gitlab_runner_package: "{{ gitlab_runner_package_name }}"
     gitlab_runner_package_state: "latest"
   when: gitlab_runner_package_version is not defined
 
-- name: Install GitLab Runner
+- name: (Debian) Install GitLab Runner
   apt:
     name: "{{ gitlab_runner_package }}"
     state: "{{ gitlab_runner_package_state }}"

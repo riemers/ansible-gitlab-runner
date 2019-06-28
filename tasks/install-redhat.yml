@@ -1,28 +1,30 @@
 ---
 
-- name: Get Gitlab repository installation script
+- name: (RedHat) Get Gitlab repository installation script
   get_url:
     url: "https://packages.gitlab.com/install/repositories/runner/{{ gitlab_runner_package_name }}/script.rpm.sh"
     dest: /tmp/gitlab-runner.script.rpm.sh
     mode: 0744
 
-- name: Install Gitlab repository
-  shell: bash /tmp/gitlab-runner.script.rpm.sh
+- name: (RedHat) Install Gitlab repository
+  command: bash /tmp/gitlab-runner.script.rpm.sh
   args:
     creates: "/etc/yum.repos.d/runner_{{ gitlab_runner_package_name }}.repo"
   become: true
 
-- set_fact:
+- name: (RedHat) Update gitlab_runner_package_name
+  set_fact:
     gitlab_runner_package: "{{ gitlab_runner_package_name }}-{{ gitlab_runner_package_version }}"
     gitlab_runner_package_state: "present"
   when: gitlab_runner_package_version is defined
 
-- set_fact:
+- name: (RedHat) Set gitlab_runner_package_name
+  set_fact:
     gitlab_runner_package: "{{ gitlab_runner_package_name }}"
     gitlab_runner_package_state: "latest"
   when: gitlab_runner_package_version is not defined
 
-- name: Install GitLab Runner
+- name: (RedHat) Install GitLab Runner
   package:
     name: "{{ gitlab_runner_package }}"
     state: "{{ gitlab_runner_package_state }}"
