@@ -78,6 +78,12 @@ gitlab_runner_runners:
     # Cache S3 insecure
     # cache_s3_insecure: false
     #
+    # Builds directory
+    # builds_dir: '/builds_dir'
+    #
+    # Cache directory
+    # cache_dir: '/cache'
+    #
     # Extra registration option
     # extra_registration_option: '--maximum-timeout=3600'
     #

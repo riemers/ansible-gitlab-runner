@@ -220,6 +220,62 @@
   check_mode: no
   notify: restart_gitlab_runner
 
+- name: Set builds dir file option
+  lineinfile:
+    dest: "{{ temp_runner_config.path }}"
+    regexp: '^\s*builds_dir ='
+    line: '  builds_dir = {{ gitlab_runner.builds_dir|default("") | to_json }}'
+    state: "{{ 'present' if gitlab_runner.builds_dir is defined else 'absent' }}"
+    insertafter: '^\s*executor ='
+    backrefs: no
+  check_mode: no
+  notify: restart_gitlab_runner
+
+- name: Set cache dir file option
+  lineinfile:
+    dest: "{{ temp_runner_config.path }}"
+    regexp: '^\s*cache_dir ='
+    line: '  cache_dir = {{ gitlab_runner.cache_dir|default("") | to_json }}'
+    state: "{{ 'present' if gitlab_runner.cache_dir is defined else 'absent' }}"
+    insertafter: '^\s*executor ='
+    backrefs: no
+  check_mode: no
+  notify: restart_gitlab_runner
+
+- name: Ensure directory permissions
+  file:
+    dest: "{{ item }}"
+    state: directory
+    owner: gitlab-runner
+    group: gitlab-runner
+    mode: 0770
+    modification_time: preserve
+    access_time: preserve
+    recurse: yes
+  loop:
+    - "{{ gitlab_runner.builds_dir | default(\"\") }}"
+    - "{{ gitlab_runner.cache_dir | default(\"\") }}"
+  when: item|length
+
+- name: Ensure directory access test
+  command: "/usr/bin/test -r {{ item }}"
+  loop:
+    - "{{ gitlab_runner.builds_dir | default(\"\") }}"
+    - "{{ gitlab_runner.cache_dir | default(\"\") }}"
+  when: item|length
+  changed_when: False
+  become: yes
+  become_user: gitlab-runner
+  register: ensure_directory_access
+  ignore_errors: true
+
+- name: Ensure directory access fail on error
+  fail:
+    msg: "Error: user gitlab-runner failed to test access to {{ item.item }}. Check parent folder(s) permissions"
+  loop: "{{ ensure_directory_access.results }}"
+  when:
+    - item.rc is defined and item.rc != 0
+
 - include: section-config-runner.yml
   loop: "{{ gitlab_runner.extra_configs|list }}"
   loop_control:
