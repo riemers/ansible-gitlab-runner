@@ -2,110 +2,121 @@
 - name: Set concurrent limit option
   lineinfile:
     dest: "{{ temp_runner_config.path }}"
-    regexp: '^(\s*)limit ='
-    line: '\1limit = {{ gitlab_runner.concurrent_specific|default(0) }}'
+    regexp: '^\s*limit ='
+    line: '  limit = {{ gitlab_runner.concurrent_specific|default(0) }}'
     state: present
-    backrefs: yes
+    insertafter: '^\s*name ='
+    backrefs: no
   check_mode: no
   notify: restart_gitlab_runner
 
 - name: Set coordinator URL
   lineinfile:
     dest: "{{ temp_runner_config.path }}"
-    regexp: '^(\s*)url ='
-    line: '\1url = {{ gitlab_runner_coordinator_url | to_json }}'
+    regexp: '^\s*url ='
+    line: '  url = {{ gitlab_runner_coordinator_url | to_json }}'
     state: present
-    backrefs: yes
+    insertafter: '^\s*limit ='
+    backrefs: no
   check_mode: no
   notify: restart_gitlab_runner
 
 - name: Set runner executor option
   lineinfile:
     dest: "{{ temp_runner_config.path }}"
-    regexp: '^(\s*)executor ='
-    line: '\1executor = {{ gitlab_runner.executor|default("shell") | to_json }}'
+    regexp: '^\s*executor ='
+    line: '  executor = {{ gitlab_runner.executor|default("shell") | to_json }}'
     state: present
-    backrefs: yes
+    insertafter: '^\s*url ='
+    backrefs: no
   check_mode: no
   notify: restart_gitlab_runner
 
 - name: Set runner docker image option
   lineinfile:
     dest: "{{ temp_runner_config.path }}"
-    regexp: '^(\s*)image ='
-    line: '\1image = {{ gitlab_runner.docker_image|default("") | to_json }}'
+    regexp: '^\s*image ='
+    line: '  image = {{ gitlab_runner.docker_image|default("") | to_json }}'
     state: "{{ 'present' if gitlab_runner.docker_image is defined else 'absent' }}"
-    backrefs: yes
+    insertafter: '^\s*executor ='
+    backrefs: no
   check_mode: no
   notify: restart_gitlab_runner
 
 - name: Set docker privileged option
   lineinfile:
     dest: "{{ temp_runner_config.path }}"
-    regexp: '^(\s*)privileged ='
-    line: '\1privileged = {{ gitlab_runner.docker_privileged|default(false) | lower }}'
+    regexp: '^\s*privileged ='
+    line: '  privileged = {{ gitlab_runner.docker_privileged|default(false) | lower }}'
     state: "{{ 'present' if gitlab_runner.docker_privileged is defined else 'absent' }}"
-    backrefs: yes
+    insertafter: '^\s*executor ='
+    backrefs: no
   check_mode: no
   notify: restart_gitlab_runner
 
 - name: Set docker volumes option
   lineinfile:
     dest: "{{ temp_runner_config.path }}"
-    regexp: '^(\s*)volumes ='
-    line: '\1volumes = {{ gitlab_runner.docker_volumes|default([])|to_json }}'
+    regexp: '^\s*volumes ='
+    line: '  volumes = {{ gitlab_runner.docker_volumes|default([])|to_json }}'
     state: "{{ 'present' if gitlab_runner.docker_volumes is defined else 'absent' }}"
-    backrefs: yes
+    insertafter: '^\s*executor ='
+    backrefs: no
   check_mode: no
   notify: restart_gitlab_runner
 
 - name: Set cache type option
   lineinfile:
     dest: "{{ temp_runner_config.path }}"
-    regexp: '^(\s*)Type ='
-    line: '\1Type = {{ gitlab_runner.cache_type|default("") | to_json }}'
+    regexp: '^\s*Type ='
+    line: '  Type = {{ gitlab_runner.cache_type|default("") | to_json }}'
     state: "{{ 'present' if gitlab_runner.cache_type is defined else 'absent' }}"
-    backrefs: yes
+    insertafter: '^\s*executor ='
+    backrefs: no
   check_mode: no
   notify: restart_gitlab_runner
 
 - name: Set cache path option
   lineinfile:
     dest: "{{ temp_runner_config.path }}"
-    regexp: '^(\s*)Path ='
-    line: '\1Path = {{ gitlab_runner.cache_path|default("") | to_json }}'
+    regexp: '^\s*Path ='
+    line: '  Path = {{ gitlab_runner.cache_path|default("") | to_json }}'
     state: "{{ 'present' if gitlab_runner.cache_path is defined else 'absent' }}"
-    backrefs: yes
+    insertafter: '^\s*executor ='
+    backrefs: no
   check_mode: no
   notify: restart_gitlab_runner
 
 - name: Set cache s3 server addresss
   lineinfile:
     dest: "{{ temp_runner_config.path }}"
-    regexp: '^(\s*)ServerAddress ='
-    line: '\1ServerAddress = {{ gitlab_runner.cache_s3_server_address|default("") | to_json }}'
+    regexp: '^\s*ServerAddress ='
+    line: '  ServerAddress = {{ gitlab_runner.cache_s3_server_address|default("") | to_json }}'
     state: "{{ 'present' if gitlab_runner.cache_s3_server_address is defined else 'absent' }}"
-    backrefs: yes
+    insertafter: '^\s*executor ='
+    backrefs: no
   check_mode: no
   notify: restart_gitlab_runner
 
 - name: Set cache s3 access key
   lineinfile:
     dest: "{{ temp_runner_config.path }}"
-    regexp: '^(\s*)AccessKey ='
-    line: '\1AccessKey = {{ gitlab_runner.cache_s3_access_key|default("") | to_json }}'
+    regexp: '^\s*AccessKey ='
+    line: '  AccessKey = {{ gitlab_runner.cache_s3_access_key|default("") | to_json }}'
     state: "{{ 'present' if gitlab_runner.cache_s3_access_key is defined else 'absent' }}"
-    backrefs: yes
+    insertafter: '^\s*executor ='
+    backrefs: no
   check_mode: no
   notify: restart_gitlab_runner
 
 - name: Set cache s3 secret key
   lineinfile:
     dest: "{{ temp_runner_config.path }}"
-    regexp: '^(\s*)SecretKey ='
-    line: '\1SecretKey = {{ gitlab_runner.cache_s3_secret_key|default("") | to_json }}'
+    regexp: '^\s*SecretKey ='
+    line: '  SecretKey = {{ gitlab_runner.cache_s3_secret_key|default("") | to_json }}'
     state: "{{ 'present' if gitlab_runner.cache_s3_secret_key is defined else 'absent' }}"
-    backrefs: yes
+    insertafter: '^\s*executor ='
+    backrefs: no
   check_mode: no
   notify: restart_gitlab_runner
 
@@ -113,92 +124,157 @@
 - name: Set cache shared option
   lineinfile:
     dest: "{{ temp_runner_config.path }}"
-    regexp: '^(\s*)Shared ='
-    line: '\1Shared = {{ gitlab_runner.cache_shared|default("") | lower }}'
+    regexp: '^\s*Shared ='
+    line: '  Shared = {{ gitlab_runner.cache_shared|default("") | lower }}'
     state: "{{ 'present' if gitlab_runner.cache_shared is defined else 'absent' }}"
-    backrefs: yes
+    insertafter: '^\s*executor ='
+    backrefs: no
   check_mode: no
   notify: restart_gitlab_runner
 
 - name: Set cache s3 bucket name option
   lineinfile:
     dest: "{{ temp_runner_config.path }}"
-    regexp: '^(\s*)BucketName ='
-    line: '\1BucketName = {{ gitlab_runner.cache_s3_bucket_name|default("")  | to_json }}'
+    regexp: '^\s*BucketName ='
+    line: '  BucketName = {{ gitlab_runner.cache_s3_bucket_name|default("")  | to_json }}'
     state: "{{ 'present' if gitlab_runner.cache_s3_bucket_name is defined else 'absent' }}"
-    backrefs: yes
+    insertafter: '^\s*executor ='
+    backrefs: no
   check_mode: no
   notify: restart_gitlab_runner
 
 - name: Set cache s3 bucket location option
   lineinfile:
     dest: "{{ temp_runner_config.path }}"
-    regexp: '^(\s*)BucketLocation ='
-    line: '\1BucketLocation = {{ gitlab_runner.cache_s3_bucket_location|default("") | to_json }}'
+    regexp: '^\s*BucketLocation ='
+    line: '  BucketLocation = {{ gitlab_runner.cache_s3_bucket_location|default("") | to_json }}'
     state: "{{ 'present' if gitlab_runner.cache_s3_bucket_location is defined else 'absent' }}"
-    backrefs: yes
+    insertafter: '^\s*executor ='
+    backrefs: no
   check_mode: no
   notify: restart_gitlab_runner
 
 - name: Set cache s3 insecure option
   lineinfile:
     dest: "{{ temp_runner_config.path }}"
-    regexp: '^(\s*)Insecure ='
-    line: '\1Insecure = {{ gitlab_runner.cache_s3_insecure|default("") | lower }}'
+    regexp: '^\s*Insecure ='
+    line: '  Insecure = {{ gitlab_runner.cache_s3_insecure|default("") | lower }}'
     state: "{{ 'present' if gitlab_runner.cache_s3_insecure is defined else 'absent' }}"
-    backrefs: yes
+    insertafter: '^\s*executor ='
+    backrefs: no
   check_mode: no
   notify: restart_gitlab_runner
 
 - name: Set ssh user option
   lineinfile:
     dest: "{{ temp_runner_config.path }}"
-    regexp: '^(\s*)user ='
-    line: '\1user = {{ gitlab_runner.ssh_user|default("") | to_json }}'
+    regexp: '^\s*user ='
+    line: '  user = {{ gitlab_runner.ssh_user|default("") | to_json }}'
     state: "{{ 'present' if gitlab_runner.cache_s3_insecure is defined else 'absent' }}"
-    backrefs: yes
+    insertafter: '^\s*executor ='
+    backrefs: no
   check_mode: no
   notify: restart_gitlab_runner
 
 - name: Set ssh host option
   lineinfile:
     dest: "{{ temp_runner_config.path }}"
-    regexp: '^(\s*)host ='
-    line: '\1host = {{ gitlab_runner.ssh_host|default("") | to_json }}'
+    regexp: '^\s*host ='
+    line: '  host = {{ gitlab_runner.ssh_host|default("") | to_json }}'
     state: "{{ 'present' if gitlab_runner.ssh_host is defined else 'absent' }}"
-    backrefs: yes
+    insertafter: '^\s*executor ='
+    backrefs: no
   check_mode: no
   notify: restart_gitlab_runner
 
 - name: Set ssh port option
   lineinfile:
     dest: "{{ temp_runner_config.path }}"
-    regexp: '^(\s*)port ='
-    line: '\1port = {{ gitlab_runner.ssh_port|default("") | to_json }}'
+    regexp: '^\s*port ='
+    line: '  port = {{ gitlab_runner.ssh_port|default("") | to_json }}'
     state: "{{ 'present' if gitlab_runner.ssh_port is defined else 'absent' }}"
-    backrefs: yes
+    insertafter: '^\s*executor ='
+    backrefs: no
   check_mode: no
   notify: restart_gitlab_runner
 
 - name: Set ssh password option
   lineinfile:
     dest: "{{ temp_runner_config.path }}"
-    regexp: '^(\s*)password ='
-    line: '\1password = {{ gitlab_runner.ssh_password|default("") | to_json }}'
+    regexp: '^\s*password ='
+    line: '  password = {{ gitlab_runner.ssh_password|default("") | to_json }}'
     state: "{{ 'present' if gitlab_runner.ssh_password is defined else 'absent' }}"
-    backrefs: yes
+    insertafter: '^\s*executor ='
+    backrefs: no
   check_mode: no
   notify: restart_gitlab_runner
 
 - name: Set ssh identity file option
   lineinfile:
     dest: "{{ temp_runner_config.path }}"
-    regexp: '^(\s*)identity_file ='
-    line: '\1identity_file = {{ gitlab_runner.ssh_identity_file|default("") | to_json }}'
+    regexp: '^\s*identity_file ='
+    line: '  identity_file = {{ gitlab_runner.ssh_identity_file|default("") | to_json }}'
     state: "{{ 'present' if gitlab_runner.ssh_identity_file is defined else 'absent' }}"
-    backrefs: yes
+    insertafter: '^\s*executor ='
+    backrefs: no
   check_mode: no
   notify: restart_gitlab_runner
+
+- name: Set builds dir file option
+  lineinfile:
+    dest: "{{ temp_runner_config.path }}"
+    regexp: '^\s*builds_dir ='
+    line: '  builds_dir = {{ gitlab_runner.builds_dir|default("") | to_json }}'
+    state: "{{ 'present' if gitlab_runner.builds_dir is defined else 'absent' }}"
+    insertafter: '^\s*executor ='
+    backrefs: no
+  check_mode: no
+  notify: restart_gitlab_runner
+
+- name: Set cache dir file option
+  lineinfile:
+    dest: "{{ temp_runner_config.path }}"
+    regexp: '^\s*cache_dir ='
+    line: '  cache_dir = {{ gitlab_runner.cache_dir|default("") | to_json }}'
+    state: "{{ 'present' if gitlab_runner.cache_dir is defined else 'absent' }}"
+    insertafter: '^\s*executor ='
+    backrefs: no
+  check_mode: no
+  notify: restart_gitlab_runner
+
+- name: Ensure directory permissions
+  file:
+    dest: "{{ item }}"
+    state: directory
+    owner: gitlab-runner
+    group: gitlab-runner
+    mode: 0770
+    modification_time: preserve
+    access_time: preserve
+    recurse: yes
+  loop:
+    - "{{ gitlab_runner.builds_dir | default(\"\") }}"
+    - "{{ gitlab_runner.cache_dir | default(\"\") }}"
+  when: item|length
+
+- name: Ensure directory access test
+  command: "/usr/bin/test -r {{ item }}"
+  loop:
+    - "{{ gitlab_runner.builds_dir | default(\"\") }}"
+    - "{{ gitlab_runner.cache_dir | default(\"\") }}"
+  when: item|length
+  changed_when: False
+  become: yes
+  become_user: gitlab-runner
+  register: ensure_directory_access
+  ignore_errors: true
+
+- name: Ensure directory access fail on error
+  fail:
+    msg: "Error: user gitlab-runner failed to test access to {{ item.item }}. Check parent folder(s) permissions"
+  loop: "{{ ensure_directory_access.results }}"
+  when:
+    - item.rc is defined and item.rc != 0
 
 - include: section-config-runner.yml
   loop: "{{ gitlab_runner.extra_configs|list }}"

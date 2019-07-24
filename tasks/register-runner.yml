@@ -48,6 +48,12 @@
     {% if gitlab_runner.cache_s3_bucket_location is defined %}
     --cache-s3-bucket-location '{{ gitlab_runner.cache_s3_bucket_location }}'
     {% endif %}
+    {% if gitlab_runner.builds_dir|default(false) %}
+    --builds-dir '{{ gitlab_runner.builds_dir }}'
+    {% endif %}
+    {% if gitlab_runner.cache_dir|default(false) %}
+    --cache-dir '{{ gitlab_runner.cache_dir }}'
+    {% endif %}
     {% if gitlab_runner.cache_s3_insecure|default(false) %}
     --cache-s3-insecure
     {% endif %}
