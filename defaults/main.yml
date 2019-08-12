@@ -20,6 +20,8 @@ gitlab_runner_runners:
     state: present
     # The executor used by the runner.
     executor: 'shell'
+    # Set maximum build log size in kilobytes.
+    output_limit: 4096
     # Maximum number of jobs to run concurrently on this specific runner.
     # Defaults to 0, simply means don't limit.
     concurrent_specific: '0'

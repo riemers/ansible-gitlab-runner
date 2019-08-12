@@ -12,6 +12,7 @@
     {% endif %}
     --executor '{{ gitlab_runner.executor|default("shell") }}'
     --limit '{{ gitlab_runner.concurrent_specific|default(0) }}'
+    --output-limit '{{ gitlab_runner.output_limit|default(4096) }}'
     --locked='{{ gitlab_runner.locked|default(false) }}'
     {% for env_var in gitlab_runner.env_vars|default([]) %}
     --env '{{ env_var }}'
