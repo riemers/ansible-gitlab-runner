@@ -43,6 +43,17 @@
   check_mode: no
   notify: restart_gitlab_runner
 
+- name: Set output_limit option
+  lineinfile:
+    dest: "{{ temp_runner_config.path }}"
+    regexp: '^\s*output_limit ='
+    line: '  output_limit = {{ gitlab_runner.output_limit|default(4096) }}'
+    state: present
+    insertafter: '^\s*executor ='
+    backrefs: no
+  check_mode: no
+  notify: restart_gitlab_runner
+
 - name: Set runner docker image option
   lineinfile:
     dest: "{{ temp_runner_config.path }}"
