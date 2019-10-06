@@ -192,7 +192,7 @@
     dest: "{{ temp_runner_config.path }}"
     regexp: '^\s*user ='
     line: '  user = {{ gitlab_runner.ssh_user|default("") | to_json }}'
-    state: "{{ 'present' if gitlab_runner.cache_s3_insecure is defined else 'absent' }}"
+    state: "{{ 'present' if gitlab_runner.ssh_user is defined else 'absent' }}"
     insertafter: '^\s*executor ='
     backrefs: no
   check_mode: no
