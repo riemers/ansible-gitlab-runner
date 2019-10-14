@@ -28,3 +28,4 @@
   package:
     name: "{{ gitlab_runner_package }}"
     state: "{{ gitlab_runner_package_state }}"
+  become: true
