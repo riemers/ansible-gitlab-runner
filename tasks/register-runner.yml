@@ -65,3 +65,4 @@
     - configured_runners.stderr.find('\n' + gitlab_runner.name|default(ansible_hostname+'-'+gitlab_runner_index|string)) == -1
     - gitlab_runner.state|default('present') == 'present'
   no_log: true
+  become: true
