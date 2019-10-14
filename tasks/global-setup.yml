@@ -5,6 +5,7 @@
     state: touch
     modification_time: preserve
     access_time: preserve
+  become: true
 
 - name: Set concurrent option
   lineinfile:
@@ -14,6 +15,7 @@
     state: present
     backrefs: yes
   notify: restart_gitlab_runner
+  become: true
 
 - name: Add sentry dsn to config
   lineinfile:
@@ -24,3 +26,4 @@
     state: present
   when: gitlab_runner_sentry_dsn | length > 0  # Ensure value is set
   notify: restart_gitlab_runner
+  become: true

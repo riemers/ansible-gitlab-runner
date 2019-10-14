@@ -90,7 +90,7 @@ gitlab_runner_runners:
     # extra_registration_option: '--maximum-timeout=3600'
     #
     # Extra configuration options to change in the config.toml file
-    # This parameter is a dictionnary where the first level keys are TOML section names
+    # This parameter is a dictionary where the first level keys are TOML section names
     # Full list of configuration are available on Gitlab Runner documentation:
     # See https://docs.gitlab.com/runner/configuration/advanced-configuration.html
     #

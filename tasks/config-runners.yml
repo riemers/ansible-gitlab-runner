@@ -3,6 +3,7 @@
   slurp:
     src: /etc/gitlab-runner/config.toml
   register: runner_config_file
+  become: true
 
 - name: Get pre-existing runner configs
   set_fact:
