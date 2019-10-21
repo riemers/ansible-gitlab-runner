@@ -18,6 +18,10 @@ gitlab_runner_runners:
   - name: '{{ ansible_hostname }}'
     # set to 'absent' if you want to delete the runner. Defaults to 'present'.
     state: present
+    # GitLab coordinator URL (overwrite gitlab_runner_coordinator_url)
+    #url: 'https://gitlab.com/ci'
+    # GitLab registration token (overwrite gitlab_runner_registration_token)
+    #token: ''
     # The executor used by the runner.
     executor: 'shell'
     # Set maximum build log size in kilobytes.
