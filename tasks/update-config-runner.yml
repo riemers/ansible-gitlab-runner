@@ -14,7 +14,7 @@
   lineinfile:
     dest: "{{ temp_runner_config.path }}"
     regexp: '^\s*url ='
-    line: '  url = {{ gitlab_runner_coordinator_url | to_json }}'
+    line: '  url = {{ gitlab_runner.url|default(gitlab_runner_coordinator_url) | to_json }}'
     state: present
     insertafter: '^\s*limit ='
     backrefs: no
