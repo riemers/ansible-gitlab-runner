@@ -1,7 +1,7 @@
 ---
 galaxy_info:
-  author: Erik-jan Riemers
-  description: GitLab Runner
+  author: Gastrofix
+  description: GitLab Runner with Mac OS support (based on Erik-jan Riemers role)
   license: MIT
   min_ansible_version: 2.0
   platforms:
@@ -14,6 +14,9 @@ galaxy_info:
   - name: Debian
     version:
     - all
+  - name: MacOSX
+    versions:
+      - all
   galaxy_tags:
     - gitlab
     - runner

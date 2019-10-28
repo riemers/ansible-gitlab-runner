@@ -1,4 +1,25 @@
 ---
+- name: Clear Config File
+  block:
+    - name: remove config.toml file
+      file:
+        path: "{{ gitlab_runner_config_file }}"
+        state: absent
+
+    - name: Create .gitlab-runner dir
+      file:
+        path: "{{ gitlab_runner_config_file_location }}"
+        state: directory
+        mode: '0755'
+
+    - name: Ensure config.toml exists
+      file:
+        path: "{{ gitlab_runner_config_file }}"
+        state: touch
+        modification_time: preserve
+        access_time: preserve
+  when: (verified_runners.stderr.find("Verifying runner... is removed") != -1)
+
 - name: Register runner to GitLab
   command: >
     gitlab-runner register
@@ -61,8 +82,8 @@
     {% if gitlab_runner.extra_registration_option is defined %}
     {{ gitlab_runner.extra_registration_option }}
     {% endif %}
-  when:
-    - configured_runners.stderr.find('\n' + gitlab_runner.name|default(ansible_hostname+'-'+gitlab_runner_index|string)) == -1
-    - gitlab_runner.state|default('present') == 'present'
+  when: (verified_runners.stderr.find("Verifying runner... is removed") != -1) or
+        ((configured_runners.stderr.find('\n' + gitlab_runner.name|default(ansible_hostname+'-'+gitlab_runner_index|string)) == -1) and
+        (gitlab_runner.state|default('present') == 'present'))
   no_log: true
   become: true

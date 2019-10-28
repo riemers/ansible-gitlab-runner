@@ -1,6 +1,13 @@
 ---
 # Change this variable value to 'gitlab-runner' for versions >= 10.x
-gitlab_runner_package_name: 'gitlab-ci-multi-runner'
+gitlab_runner_package_name: 'gitlab-runner'
+
+gitlab_runner_config_file_location: "{{ ansible_env.HOME }}/.gitlab-runner"
+
+# Overridden based on platform
+gitlab_runner_config_file: "/etc/gitlab-runner/config.toml"
+
+gitlab_runner_executable: "{{ gitlab_runner_package_name }}"
 
 # Maximum number of global jobs to run concurrently
 gitlab_runner_concurrent: '{{ ansible_processor_vcpus }}'

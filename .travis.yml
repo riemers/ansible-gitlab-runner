@@ -1,15 +1,19 @@
 ---
-language: python
-python: "2.7"
 
-# Use the new container infrastructure
-sudo: false
-
-# Install ansible
-addons:
-  apt:
-    packages:
-    - python-pip
+jobs:
+  include:
+    - os: linux
+      python: "2.7"
+      language: python
+      addons:
+        apt:
+          packages:
+            - python-pip
+    - os: osx
+      osx_image: xcode10.3
+      # See https://github.com/travis-ci/travis-ci/issues/2312#issuecomment-422830059
+      #language: python
+      language: generic
 
 install:
   # Install ansible
@@ -27,5 +31,5 @@ script:
   # Running tests
   - ansible-playbook tests/test.yml -i tests/inventory
 
-notifications:
-  webhooks: https://galaxy.ansible.com/api/v1/notifications/
+#notifications:
+#  webhooks: https://galaxy.ansible.com/api/v1/notifications/
