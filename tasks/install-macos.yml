@@ -9,13 +9,24 @@
     set_fact:
       gitlab_runner_exists: "{{ gitlab_runner_exists.stat.exists }}"
 
+  - name: (MacOS) Get existing version
+    shell: "{{ gitlab_runner_executable }} --version | awk '/Version: ([\\d\\.]*)/{print $2}'"
+    register: existing_version_shell
+    failed_when: no
+    check_mode: no
+    changed_when: no
+
+  - name: (MacOS) Set fact -> gitlab_runner_existing_version
+    set_fact:
+      gitlab_runner_existing_version: "{{ existing_version_shell.stdout if existing_version_shell.rc == 0 else '0' }}"
+
 - name: (MacOS) INSTALL GitLab Runner for macOS
   block:
     - name: (MacOS) Download GitLab Runner
       get_url:
-        url: https://gitlab-runner-downloads.s3.amazonaws.com/latest/binaries/gitlab-runner-darwin-amd64
+        url: "{{ gitlab_runner_download_url }}"
         dest: "{{ gitlab_runner_executable }}"
-        validate_certs: no
+        force: yes
 
     - name: (MacOS) Setting Permissions for gitlab-runner executable
       file:
@@ -39,9 +50,9 @@
 
     - name: (MacOS) Download GitLab Runner
       get_url:
-        url: https://gitlab-runner-downloads.s3.amazonaws.com/latest/binaries/gitlab-runner-darwin-amd64
+        url: "{{ gitlab_runner_download_url }}"
         dest: "{{ gitlab_runner_executable }}"
-        validate_certs: no
+        force: yes
 
     - name: (MacOS) Setting Permissions for gitlab-runner executable
       file:
@@ -53,4 +64,6 @@
 
     - name: (MacOS) Start GitLab Runner
       command: "{{ gitlab_runner_executable }} start"
-  when: gitlab_runner_exists
+  when:
+    - gitlab_runner_exists
+    - gitlab_runner_existing_version != gitlab_runner_wanted_version or gitlab_runner_wanted_version == 'latest'
