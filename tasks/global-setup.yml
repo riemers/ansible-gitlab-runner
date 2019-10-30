@@ -17,6 +17,17 @@
   notify: restart_gitlab_runner
   become: true
 
+- name: Add listen_address to config
+  lineinfile:
+    dest: /etc/gitlab-runner/config.toml
+    regexp: '^listen_address ='
+    line: 'listen_address = "{{ gitlab_runner_listen_address }}"'
+    insertafter: '\s*concurrent.*'
+    state: present
+  when: gitlab_runner_listen_address | length > 0  # Ensure value is set
+  notify: restart_gitlab_runner
+  become: true
+
 - name: Add sentry dsn to config
   lineinfile:
     dest: /etc/gitlab-runner/config.toml
