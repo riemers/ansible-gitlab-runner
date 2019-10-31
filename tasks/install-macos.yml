@@ -1,0 +1,69 @@
+- name: (MacOS) PRE-CHECK GitLab Runner exists
+  block:
+  - name: (MacOS) Check gitlab-runner executable exists
+    stat:
+      path: "{{ gitlab_runner_executable }}"
+    register: gitlab_runner_exists
+
+  - name: (MacOS) Set fact -> gitlab_runner_exists
+    set_fact:
+      gitlab_runner_exists: "{{ gitlab_runner_exists.stat.exists }}"
+
+  - name: (MacOS) Get existing version
+    shell: "{{ gitlab_runner_executable }} --version | awk '/Version: ([\\d\\.]*)/{print $2}'"
+    register: existing_version_shell
+    failed_when: no
+    check_mode: no
+    changed_when: no
+
+  - name: (MacOS) Set fact -> gitlab_runner_existing_version
+    set_fact:
+      gitlab_runner_existing_version: "{{ existing_version_shell.stdout if existing_version_shell.rc == 0 else '0' }}"
+
+- name: (MacOS) INSTALL GitLab Runner for macOS
+  block:
+    - name: (MacOS) Download GitLab Runner
+      get_url:
+        url: "{{ gitlab_runner_download_url }}"
+        dest: "{{ gitlab_runner_executable }}"
+        force: yes
+
+    - name: (MacOS) Setting Permissions for gitlab-runner executable
+      file:
+        path: "{{ gitlab_runner_executable }}"
+        owner: "{{ ansible_user_id | string }}"
+        group: "{{ ansible_user_gid | string }}"
+        mode: '+x'
+
+    - name: (MacOS) Install GitLab Runner
+      command: "{{ gitlab_runner_executable }} install"
+
+    - name: (MacOS) Start GitLab Runner
+      command: "{{ gitlab_runner_executable }} start"
+
+  when: (not gitlab_runner_exists)
+
+- name: (MacOS) UPGRADE GitLab Runner for macOS
+  block:
+    - name: (MacOS) Stop GitLab Runner
+      command: "{{ gitlab_runner_executable }} stop"
+
+    - name: (MacOS) Download GitLab Runner
+      get_url:
+        url: "{{ gitlab_runner_download_url }}"
+        dest: "{{ gitlab_runner_executable }}"
+        force: yes
+
+    - name: (MacOS) Setting Permissions for gitlab-runner executable
+      file:
+        path: "{{ gitlab_runner_executable }}"
+        owner: "{{ ansible_user_id | string }}"
+        group: "{{ ansible_user_gid | string }}"
+        mode: '+x'
+      become: yes
+
+    - name: (MacOS) Start GitLab Runner
+      command: "{{ gitlab_runner_executable }} start"
+  when:
+    - gitlab_runner_exists
+    - gitlab_runner_existing_version != gitlab_runner_wanted_version or gitlab_runner_wanted_version == 'latest'
