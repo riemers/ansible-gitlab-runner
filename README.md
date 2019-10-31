@@ -67,3 +67,9 @@ gitlab_runner_runners:
       runners.docker.sysctls:
         net.ipv4.ip_forward: "1"
 ```
+
+Contributors
+------------
+Feel free to add your name to the readme if you make a PR. A full list of people from the PR's is [here](https://github.com/riemers/ansible-gitlab-runner/pulls?q=is%3Apr+is%3Aclosed)
+
+- Gastrofix for adding Mac Support
