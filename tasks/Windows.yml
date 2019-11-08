@@ -38,7 +38,7 @@
     chdir: "{{ gitlab_runner_config_file_location }}"
   ignore_errors: True
 
-- name: (Windows) Install GitLab Runner
+- name: (Windows) Start GitLab Runner
   win_command: "{{ gitlab_runner_executable }} start"
   args:
     chdir: "{{ gitlab_runner_config_file_location }}"

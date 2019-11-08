@@ -59,4 +59,4 @@
       chdir: "{{ temp_runner_config_dir.path }}"
 
   - name: (Windows) Assemble new config.toml
-    win_shell: gc "{{ config_toml_temp.path }}","{{ runners_config_toml_temp.path }}" | Set-Content "{{ gitlab_runner_config_file }}.test"
+    win_shell: gc "{{ config_toml_temp.path }}","{{ runners_config_toml_temp.path }}" | Set-Content "{{ gitlab_runner_config_file }}"
