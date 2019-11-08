@@ -10,3 +10,9 @@
   command: "{{ gitlab_runner_executable }} restart"
   become: yes
   when: ansible_os_family == 'Darwin'
+
+- name: restart_gitlab_runner_windows
+  win_command: "{{ gitlab_runner_executable }} restart"
+  args:
+    chdir: "{{ gitlab_runner_config_file_location }}"
+  when: ansible_os_family == 'Windows'

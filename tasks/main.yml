@@ -10,41 +10,10 @@
       paths:
         - 'vars'
 
-- name: Install GitLab Runner (Debian)
-  import_tasks: install-debian.yml
-  when: ansible_os_family == 'Debian'
+- name: Install GitLab Runner (Unix)
+  import_tasks: Unix.yml
+  when: ansible_os_family != 'Windows'
 
-- name: Install GitLab Runner (RedHat)
-  import_tasks: install-redhat.yml
-  when: ansible_os_family == 'RedHat'
-
-- name: Install GitLab Runner (macOS)
-  import_tasks: install-macos.yml
-  when: ansible_os_family == 'Darwin'
-
-- name: Set global options
-  import_tasks: global-setup.yml
-
-- name: List configured runners
-  command: "{{ gitlab_runner_executable }} list"
-  register: configured_runners
-  changed_when: False
-  check_mode: no
-
-- name: Check runner is registered
-  command: "{{ gitlab_runner_executable }} verify"
-  register: verified_runners
-  ignore_errors: True
-  changed_when: False
-  check_mode: no
-
-- name: Register GitLab Runner
-  include_tasks: register-runner.yml
-  when: gitlab_runner_registration_token | string | length > 0  # Ensure value is set
-  loop: "{{ gitlab_runner_runners }}"
-  loop_control:
-    index_var: gitlab_runner_index
-    loop_var: gitlab_runner
-
-- name: Configure GitLab Runner
-  import_tasks: config-runners.yml
+- name: Install GitLab Runner (Windows)
+  import_tasks: Windows.yml
+  when: ansible_os_family == 'Windows'

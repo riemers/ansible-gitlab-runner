@@ -10,11 +10,9 @@ gitlab_runner_wanted_version: latest
 
 # These two variable should not be modified usually as they depend on the gitlab_runner_wanted_version variable
 gitlab_runner_wanted_tag: "{{ 'latest' if gitlab_runner_wanted_version == 'latest' else ('v' + gitlab_runner_wanted_version) }}"
-gitlab_runner_download_url: 'https://gitlab-runner-downloads.s3.amazonaws.com/{{ gitlab_runner_wanted_tag }}/binaries/gitlab-runner-darwin-amd64'
 
 # Overridden based on platform
 gitlab_runner_config_file: "/etc/gitlab-runner/config.toml"
-
 gitlab_runner_executable: "{{ gitlab_runner_package_name }}"
 
 # Maximum number of global jobs to run concurrently

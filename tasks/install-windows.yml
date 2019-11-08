@@ -1,0 +1,50 @@
+- name: (Windows) PRE-CHECK GitLab Runner exists
+  block:
+  - name: (Windows) Check gitlab-runner executable exists
+    win_stat:
+      path: "{{ gitlab_runner_executable }}"
+    register: gitlab_runner_exists
+
+  - name: (Windows) Set fact -> gitlab_runner_exists
+    set_fact:
+      gitlab_runner_exists: "{{ gitlab_runner_exists.stat.exists }}"
+
+  - name: (Windows) Get existing version
+    win_shell: "{{ gitlab_runner_executable }} --version | Select-String 'Version:' -CaseSensitive | %{ $_.Line.Split(' ')[-1].Trim(); }"
+    register: existing_version_shell
+    failed_when: no
+    check_mode: no
+    changed_when: no
+
+  - name: (Windows) Set fact -> gitlab_runner_existing_version
+    set_fact:
+      gitlab_runner_existing_version: "{{ existing_version_shell.stdout | trim if existing_version_shell.rc == 0 else '0' }}"
+
+- name: (Windows) INSTALL GitLab Runner for Windows
+  block:
+    - name: (Windows) Ensure install directory exists
+      win_file:
+        path: "{{ gitlab_runner_install_directory }}"
+        state: directory
+
+    - name: (Windows) Download GitLab Runner
+      win_get_url:
+        url: "{{ gitlab_runner_download_url }}"
+        dest: "{{ gitlab_runner_executable }}"
+        force: yes
+  when: (not gitlab_runner_exists)
+
+- name: (Windows) UPGRADE GitLab Runner for Windows
+  block:
+    - name: (Windows) Stop GitLab Runner
+      win_command: "{{ gitlab_runner_executable }} stop"
+      ignore_errors: yes
+
+    - name: (Windows) Download GitLab Runner
+      win_get_url:
+        url: "{{ gitlab_runner_download_url }}"
+        dest: "{{ gitlab_runner_executable }}"
+        force: yes
+  when:
+    - gitlab_runner_exists
+    - gitlab_runner_existing_version != gitlab_runner_wanted_version or gitlab_runner_wanted_version == 'latest'
