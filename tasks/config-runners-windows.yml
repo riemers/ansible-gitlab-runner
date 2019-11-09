@@ -60,3 +60,8 @@
 
   - name: (Windows) Assemble new config.toml
     win_shell: gc "{{ config_toml_temp.path }}","{{ runners_config_toml_temp.path }}" | Set-Content "{{ gitlab_runner_config_file }}"
+
+  - name: (Windows) Verify config
+    win_command: "{{ gitlab_runner_executable }} verify"
+    args:
+      chdir: "{{ gitlab_runner_config_file_location }}"
