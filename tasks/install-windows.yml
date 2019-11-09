@@ -34,12 +34,14 @@
         force: yes
   when: (not gitlab_runner_exists)
 
+- name: (Windows) Make sure runner is stopped
+  win_command: "{{ gitlab_runner_executable }} stop"
+  ignore_errors: yes
+  when:
+    - gitlab_runner_exists
+
 - name: (Windows) UPGRADE GitLab Runner for Windows
   block:
-    - name: (Windows) Stop GitLab Runner
-      win_command: "{{ gitlab_runner_executable }} stop"
-      ignore_errors: yes
-
     - name: (Windows) Download GitLab Runner
       win_get_url:
         url: "{{ gitlab_runner_download_url }}"

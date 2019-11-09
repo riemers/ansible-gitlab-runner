@@ -86,4 +86,4 @@
         (gitlab_runner.state|default('present') == 'present'))
   args:
     chdir: "{{ gitlab_runner_config_file_location }}"
-  no_log: true
+  #no_log: true
