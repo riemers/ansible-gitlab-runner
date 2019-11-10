@@ -1,0 +1,13 @@
+gitlab_runner_runners:
+  - name: "Shell Runner"
+    tags:
+      - windows
+      - shell
+    executor: shell
+    state: present
+  - name: "Docker Runner"
+    tags:
+      - windows
+      - docker
+    executor: docker-windows
+    state: present

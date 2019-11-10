@@ -32,6 +32,12 @@
         url: "{{ gitlab_runner_download_url }}"
         dest: "{{ gitlab_runner_executable }}"
         force: yes
+
+    - name: (Windows) Install GitLab Runner
+      win_command: "{{ gitlab_runner_executable }} install"
+      args:
+        chdir: "{{ gitlab_runner_config_file_location }}"
+
   when: (not gitlab_runner_exists)
 
 - name: (Windows) Make sure runner is stopped

@@ -3,7 +3,7 @@
 - name: restart_gitlab_runner
   service: name=gitlab-runner state=restarted
   become: yes
-  when: ansible_os_family != 'Darwin'
+  when: ansible_os_family != 'Darwin' and ansible_os_family != 'Windows'
 
 # macOS
 - name: restart_gitlab_runner_macos

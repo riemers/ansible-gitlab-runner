@@ -32,12 +32,6 @@
 - name: (Windows) Configure GitLab Runner
   import_tasks: config-runners-windows.yml
 
-- name: (Windows) Install GitLab Runner
-  win_command: "{{ gitlab_runner_executable }} install"
-  args:
-    chdir: "{{ gitlab_runner_config_file_location }}"
-  ignore_errors: True
-
 - name: (Windows) Start GitLab Runner
   win_command: "{{ gitlab_runner_executable }} start"
   args:
