@@ -1,0 +1,14 @@
+gitlab_runner_runners:
+  - name: 'vagrant-shell'
+    executor: shell
+    tags:
+      - node
+      - ruby
+      - mysql
+  - name: 'vagrant-docker'
+    executor: docker
+    docker_image: 'docker:stable'
+    tags:
+      - node
+      - ruby
+      - mysql
