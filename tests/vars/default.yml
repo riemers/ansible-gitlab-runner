@@ -1,3 +1,4 @@
+---
 gitlab_runner_runners:
   - name: 'vagrant-shell'
     executor: shell
@@ -12,3 +13,19 @@ gitlab_runner_runners:
       - node
       - ruby
       - mysql
+  - name: 'vagrant-docker-cache'
+    executor: docker
+    docker_image: 'docker:stable'
+    tags:
+      - node
+      - ruby
+      - mysql
+      - cache
+    cache_type: s3
+    cache_shared: true
+    cache_s3_server_address: mycache.example.com
+    cache_s3_access_key: myaccess-key
+    cache_s3_secret_key: mysecret-key
+    cache_s3_bucket_name: build-cache-bucket
+    cache_s3_insecure: false
+...
