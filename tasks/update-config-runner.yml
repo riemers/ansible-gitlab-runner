@@ -43,6 +43,17 @@
   check_mode: no
   notify: restart_gitlab_runner
 
+- name: Set runner executor section
+  lineinfile:
+    dest: "{{ temp_runner_config.path }}"
+    regexp: '^\s*[runners.{{ gitlab_runner.executor|default("shell") }}]'
+    line: '  [runners.{{ gitlab_runner.executor|default("shell") }}]'
+    state: present
+    insertafter: '^\s*executor ='
+    backrefs: no
+  check_mode: no
+  notify: restart_gitlab_runner
+
 - name: Set output_limit option
   lineinfile:
     dest: "{{ temp_runner_config.path }}"
@@ -54,13 +65,15 @@
   check_mode: no
   notify: restart_gitlab_runner
 
+
+#### [runners.docker] section ####
 - name: Set runner docker image option
   lineinfile:
     dest: "{{ temp_runner_config.path }}"
     regexp: '^\s*image ='
-    line: '  image = {{ gitlab_runner.docker_image|default("") | to_json }}'
+    line: '    image = {{ gitlab_runner.docker_image|default("") | to_json }}'
     state: "{{ 'present' if gitlab_runner.docker_image is defined else 'absent' }}"
-    insertafter: '^\s*executor ='
+    insertafter: '^\s*\[runners.docker\]'
     backrefs: no
   check_mode: no
   notify: restart_gitlab_runner
@@ -69,9 +82,9 @@
   lineinfile:
     dest: "{{ temp_runner_config.path }}"
     regexp: '^\s*privileged ='
-    line: '  privileged = {{ gitlab_runner.docker_privileged|default(false) | lower }}'
+    line: '    privileged = {{ gitlab_runner.docker_privileged|default(false) | lower }}'
     state: "{{ 'present' if gitlab_runner.docker_privileged is defined else 'absent' }}"
-    insertafter: '^\s*executor ='
+    insertafter: '^\s*\[runners.docker\]'
     backrefs: no
   check_mode: no
   notify: restart_gitlab_runner
@@ -80,7 +93,7 @@
   lineinfile:
     dest: "{{ temp_runner_config.path }}"
     regexp: '^\s*volumes ='
-    line: '  volumes = {{ gitlab_runner.docker_volumes|default([])|to_json }}'
+    line: '    volumes = {{ gitlab_runner.docker_volumes|default([])|to_json }}'
     state: "{{ 'present' if gitlab_runner.docker_volumes is defined else 'absent' }}"
     insertafter: '^\s*executor ='
     backrefs: no
@@ -212,13 +225,15 @@
   check_mode: no
   notify: restart_gitlab_runner
 
+
+#### [runners.ssh] section #####
 - name: Set ssh user option
   lineinfile:
     dest: "{{ temp_runner_config.path }}"
     regexp: '^\s*user ='
     line: '  user = {{ gitlab_runner.ssh_user|default("") | to_json }}'
     state: "{{ 'present' if gitlab_runner.ssh_user is defined else 'absent' }}"
-    insertafter: '^\s*executor ='
+    insertafter: '^\s*\[runners.ssh\]'
     backrefs: no
   check_mode: no
   notify: restart_gitlab_runner
@@ -229,7 +244,7 @@
     regexp: '^\s*host ='
     line: '  host = {{ gitlab_runner.ssh_host|default("") | to_json }}'
     state: "{{ 'present' if gitlab_runner.ssh_host is defined else 'absent' }}"
-    insertafter: '^\s*executor ='
+    insertafter: '^\s*\[runners.ssh\]'
     backrefs: no
   check_mode: no
   notify: restart_gitlab_runner
@@ -240,7 +255,7 @@
     regexp: '^\s*port ='
     line: '  port = {{ gitlab_runner.ssh_port|default("") | to_json }}'
     state: "{{ 'present' if gitlab_runner.ssh_port is defined else 'absent' }}"
-    insertafter: '^\s*executor ='
+    insertafter: '^\s*\[runners.ssh\]'
     backrefs: no
   check_mode: no
   notify: restart_gitlab_runner
@@ -251,7 +266,7 @@
     regexp: '^\s*password ='
     line: '  password = {{ gitlab_runner.ssh_password|default("") | to_json }}'
     state: "{{ 'present' if gitlab_runner.ssh_password is defined else 'absent' }}"
-    insertafter: '^\s*executor ='
+    insertafter: '^\s*\[runners.ssh\]'
     backrefs: no
   check_mode: no
   notify: restart_gitlab_runner
@@ -262,10 +277,11 @@
     regexp: '^\s*identity_file ='
     line: '  identity_file = {{ gitlab_runner.ssh_identity_file|default("") | to_json }}'
     state: "{{ 'present' if gitlab_runner.ssh_identity_file is defined else 'absent' }}"
-    insertafter: '^\s*executor ='
+    insertafter: '^\s*\[runners.ssh\]'
     backrefs: no
   check_mode: no
   notify: restart_gitlab_runner
+
 
 - name: Set builds dir file option
   lineinfile:
