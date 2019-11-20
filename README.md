@@ -13,7 +13,12 @@ Role Variables
 --------------
 
 `gitlab_runner_package_name`
-**Since Gitlab 10.x** The package name of `gitlab-ci-multi-runner` has been renamed to `gitlab-runner`. In order to install a version >= 10.x you will need to define this variable `gitlab_runner_package_name: gitlab-runner`.
+**Since Gitlab 10.x** The package name of `gitlab-ci-multi-runner` has been renamed to `gitlab-runner`. In order to install a version < 10.x you will need to define this variable `gitlab_runner_package_name: gitlab-ci-multi-runner`.
+
+`gitlab_runner_wanted_version` or `gitlab_runner_package_version`
+To install a specific version of the gitlab runner (by default it installs the latest).
+On Mac OSX and Windows, use e.g. `gitlab_runner_wanted_version: 12.4.1`.
+On Linux, use `gitlab_runner_package_version` instead.
 
 `gitlab_runner_concurrent`
 The maximum number of global jobs to run concurrently.
