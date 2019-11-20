@@ -22,7 +22,7 @@
 
 - name: Register runner to GitLab
   command: >
-    gitlab-runner register
+    {{ gitlab_runner_executable }} register
     --non-interactive
     --url '{{ gitlab_runner_coordinator_url }}'
     --registration-token '{{ gitlab_runner.token|default(gitlab_runner_registration_token) }}'
