@@ -43,4 +43,10 @@ gitlab_runner_runners:
     cache_gcs_credentials_file: '/etc/gitlab-runner/credentials.json'
     cache_gcs_access_id: 'cache-access-account@project.iam.gserviceaccount.com'
     cache_gcs_private_key: "-----BEGIN PRIVATE KEY-----\nXXXXXX\n-----END PRIVATE KEY-----\n"
+
+run_mock_server: yes
+gitlab_runner_coordinator_url: "http://localhost:6060/"
+gitlab_runner_registration_token: 'notreal'
+
+gitlab_runner_system_mode: no
 ...
