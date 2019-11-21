@@ -1,2 +1,6 @@
 ---
 # vars file for gitlab-runner
+
+# Useful default paths for config files on Mac/Linux platforms
+__gitlab_runner_config_file_system_mode: "/etc/gitlab-runner/config.toml"
+__gitlab_runner_config_file_user_mode: "~/.gitlab-runner/config.toml"

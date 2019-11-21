@@ -2,17 +2,18 @@
 # for versions >= 10.x
 gitlab_runner_package_name: 'gitlab-runner'
 
-gitlab_runner_config_file_location: "{{ ansible_env.HOME }}/.gitlab-runner"
+gitlab_runner_system_mode: yes
 
 # gitlab_runner_package_version for version pinning on debian/redhat
 # The following are for version pinning on MacOSX
 gitlab_runner_wanted_version: latest
 
-# These two variable should not be modified usually as they depend on the gitlab_runner_wanted_version variable
+# This variable should not be modified usually as it depends on the gitlab_runner_wanted_version variable
 gitlab_runner_wanted_tag: "{{ 'latest' if gitlab_runner_wanted_version == 'latest' else ('v' + gitlab_runner_wanted_version) }}"
 
 # Overridden based on platform
-gitlab_runner_config_file: "/etc/gitlab-runner/config.toml"
+gitlab_runner_config_file: "{{ __gitlab_runner_config_file_system_mode if gitlab_runner_system_mode else __gitlab_runner_config_file_user_mode }}"
+gitlab_runner_config_file_location: "{{ gitlab_runner_config_file | dirname }}"
 gitlab_runner_executable: "{{ gitlab_runner_package_name }}"
 
 # Maximum number of global jobs to run concurrently
@@ -130,5 +131,3 @@ gitlab_runner_runners:
     #     allowed_images: ["ruby:*", "python:*", "php:*"]
     #   runners.docker.sysctls:
     #     net.ipv4.ip_forward: "1"
-
-gitlab_runner_temp_dir: /tmp

@@ -6,6 +6,4 @@ gitlab_runner_install_directory: "c:/gitlab-runner/"
 gitlab_runner_config_file_location: "{{ gitlab_runner_install_directory }}"
 gitlab_runner_config_file: "{{ gitlab_runner_config_file_location }}/config.toml"  # on Windows
 
-gitlab_wrapper_script_name: gitlab-runner-wrapper-macos.ps1
-
 gitlab_runner_executable: "{{gitlab_runner_install_directory}}/{{ gitlab_runner_package_name }}.exe"

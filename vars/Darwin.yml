@@ -1,7 +1,5 @@
 ---
 
 gitlab_runner_download_url: 'https://gitlab-runner-downloads.s3.amazonaws.com/{{ gitlab_runner_wanted_tag }}/binaries/gitlab-runner-darwin-amd64'
-gitlab_runner_config_file: "{{ gitlab_runner_config_file_location }}/config.toml"  # on macOS
 
-gitlab_wrapper_script_name: gitlab-runner-wrapper-macos.sh
 gitlab_runner_executable: "/usr/local/bin/{{ gitlab_runner_package_name }}"
