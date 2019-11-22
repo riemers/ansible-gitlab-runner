@@ -46,7 +46,7 @@
 - name: Set runner executor section
   lineinfile:
     dest: "{{ temp_runner_config.path }}"
-    regexp: '^\s*[runners.{{ gitlab_runner.executor|default("shell") }}]'
+    regexp: '^\s*\[runners\.{{ gitlab_runner.executor|default("shell") }}\]'
     line: '  [runners.{{ gitlab_runner.executor|default("shell") }}]'
     state: present
     insertafter: '^\s*executor ='
@@ -73,7 +73,7 @@
     regexp: '^\s*image ='
     line: '    image = {{ gitlab_runner.docker_image|default("") | to_json }}'
     state: "{{ 'present' if gitlab_runner.docker_image is defined else 'absent' }}"
-    insertafter: '^\s*\[runners.docker\]'
+    insertafter: '^\s*\[runners\.docker\]'
     backrefs: no
   check_mode: no
   notify: restart_gitlab_runner
@@ -84,7 +84,7 @@
     regexp: '^\s*privileged ='
     line: '    privileged = {{ gitlab_runner.docker_privileged|default(false) | lower }}'
     state: "{{ 'present' if gitlab_runner.docker_privileged is defined else 'absent' }}"
-    insertafter: '^\s*\[runners.docker\]'
+    insertafter: '^\s*\[runners\.docker\]'
     backrefs: no
   check_mode: no
   notify: restart_gitlab_runner
@@ -105,7 +105,7 @@
 - name: Set cache section
   lineinfile:
     dest: "{{ temp_runner_config.path }}"
-    regexp: '^\s*\[runners.cache\]\*$'
+    regexp: '^\s*\[runners\.cache\]'
     line: '  [runners.cache]'
     state: present
     insertafter: EOF
@@ -116,10 +116,10 @@
 - name: Set cache s3 section
   lineinfile:
     dest: "{{ temp_runner_config.path }}"
-    regexp: '^\s*\[runners.cache.s3\]'
+    regexp: '^\s*\[runners\.cache\.s3\]'
     line: '    [runners.cache.s3]'
     state: "{{ 'present' if gitlab_runner.cache_s3_server_address is defined else 'absent' }}"
-    insertafter: '^\s*\[runners.cache\]'
+    insertafter: '^\s*\[runners\.cache\]'
     backrefs: no
   check_mode: no
   notify: restart_gitlab_runner
@@ -130,7 +130,7 @@
     regexp: '^\s*Type ='
     line: '    Type = {{ gitlab_runner.cache_type|default("") | to_json }}'
     state: "{{ 'present' if gitlab_runner.cache_type is defined else 'absent' }}"
-    insertafter: '^\s*\[runners.cache\]'
+    insertafter: '^\s*\[runners\.cache\]'
     backrefs: no
   check_mode: no
   notify: restart_gitlab_runner
@@ -141,7 +141,7 @@
     regexp: '^\s*Path ='
     line: '    Path = {{ gitlab_runner.cache_path|default("") | to_json }}'
     state: "{{ 'present' if gitlab_runner.cache_path is defined else 'absent' }}"
-    insertafter: '^\s*\[runners.cache\]'
+    insertafter: '^\s*\[runners\.cache\]'
     backrefs: no
   check_mode: no
   notify: restart_gitlab_runner
@@ -152,7 +152,7 @@
     regexp: '^\s*Shared ='
     line: '    Shared = {{ gitlab_runner.cache_shared|default("") | lower }}'
     state: "{{ 'present' if gitlab_runner.cache_shared is defined else 'absent' }}"
-    insertafter: '^\s*\[runners.cache\]'
+    insertafter: '^\s*\[runners\.cache\]'
     backrefs: no
   check_mode: no
   notify: restart_gitlab_runner
@@ -165,7 +165,7 @@
     regexp: '^\s*ServerAddress ='
     line: '      ServerAddress = {{ gitlab_runner.cache_s3_server_address|default("") | to_json }}'
     state: "{{ 'present' if gitlab_runner.cache_s3_server_address is defined else 'absent' }}"
-    insertafter: '^\s*\[runners.cache.s3\]'
+    insertafter: '^\s*\[runners\.cache\.s3\]'
     backrefs: no
   check_mode: no
   notify: restart_gitlab_runner
@@ -176,7 +176,7 @@
     regexp: '^\s*AccessKey ='
     line: '      AccessKey = {{ gitlab_runner.cache_s3_access_key|default("") | to_json }}'
     state: "{{ 'present' if gitlab_runner.cache_s3_access_key is defined else 'absent' }}"
-    insertafter: '^\s*\[runners.cache.s3\]'
+    insertafter: '^\s*\[runners\.cache\.s3\]'
     backrefs: no
   check_mode: no
   notify: restart_gitlab_runner
@@ -187,7 +187,7 @@
     regexp: '^\s*SecretKey ='
     line: '      SecretKey = {{ gitlab_runner.cache_s3_secret_key|default("") | to_json }}'
     state: "{{ 'present' if gitlab_runner.cache_s3_secret_key is defined else 'absent' }}"
-    insertafter: '^\s*\[runners.cache.s3\]'
+    insertafter: '^\s*\[runners\.cache\.s3\]'
     backrefs: no
   check_mode: no
   notify: restart_gitlab_runner
@@ -198,7 +198,7 @@
     regexp: '^\s*BucketName ='
     line: '      BucketName = {{ gitlab_runner.cache_s3_bucket_name|default("")  | to_json }}'
     state: "{{ 'present' if gitlab_runner.cache_s3_bucket_name is defined else 'absent' }}"
-    insertafter: '^\s*\[runners.cache.s3\]'
+    insertafter: '^\s*\[runners\.cache\.s3\]'
     backrefs: no
   check_mode: no
   notify: restart_gitlab_runner
@@ -209,7 +209,7 @@
     regexp: '^\s*BucketLocation ='
     line: '      BucketLocation = {{ gitlab_runner.cache_s3_bucket_location|default("") | to_json }}'
     state: "{{ 'present' if gitlab_runner.cache_s3_bucket_location is defined else 'absent' }}"
-    insertafter: '^\s*\[runners.cache.s3\]'
+    insertafter: '^\s*\[runners\.cache\.s3\]'
     backrefs: no
   check_mode: no
   notify: restart_gitlab_runner
@@ -220,7 +220,7 @@
     regexp: '^\s*Insecure ='
     line: '      Insecure = {{ gitlab_runner.cache_s3_insecure|default("") | lower }}'
     state: "{{ 'present' if gitlab_runner.cache_s3_insecure is defined else 'absent' }}"
-    insertafter: '^\s*\[runners.cache.s3\]'
+    insertafter: '^\s*\[runners\.cache\.s3\]'
     backrefs: no
   check_mode: no
   notify: restart_gitlab_runner
@@ -233,7 +233,7 @@
     regexp: '^\s*user ='
     line: '  user = {{ gitlab_runner.ssh_user|default("") | to_json }}'
     state: "{{ 'present' if gitlab_runner.ssh_user is defined else 'absent' }}"
-    insertafter: '^\s*\[runners.ssh\]'
+    insertafter: '^\s*\[runners\.ssh\]'
     backrefs: no
   check_mode: no
   notify: restart_gitlab_runner
@@ -244,7 +244,7 @@
     regexp: '^\s*host ='
     line: '  host = {{ gitlab_runner.ssh_host|default("") | to_json }}'
     state: "{{ 'present' if gitlab_runner.ssh_host is defined else 'absent' }}"
-    insertafter: '^\s*\[runners.ssh\]'
+    insertafter: '^\s*\[runners\.ssh\]'
     backrefs: no
   check_mode: no
   notify: restart_gitlab_runner
@@ -255,7 +255,7 @@
     regexp: '^\s*port ='
     line: '  port = {{ gitlab_runner.ssh_port|default("") | to_json }}'
     state: "{{ 'present' if gitlab_runner.ssh_port is defined else 'absent' }}"
-    insertafter: '^\s*\[runners.ssh\]'
+    insertafter: '^\s*\[runners\.ssh\]'
     backrefs: no
   check_mode: no
   notify: restart_gitlab_runner
@@ -266,7 +266,7 @@
     regexp: '^\s*password ='
     line: '  password = {{ gitlab_runner.ssh_password|default("") | to_json }}'
     state: "{{ 'present' if gitlab_runner.ssh_password is defined else 'absent' }}"
-    insertafter: '^\s*\[runners.ssh\]'
+    insertafter: '^\s*\[runners\.ssh\]'
     backrefs: no
   check_mode: no
   notify: restart_gitlab_runner
@@ -277,7 +277,7 @@
     regexp: '^\s*identity_file ='
     line: '  identity_file = {{ gitlab_runner.ssh_identity_file|default("") | to_json }}'
     state: "{{ 'present' if gitlab_runner.ssh_identity_file is defined else 'absent' }}"
-    insertafter: '^\s*\[runners.ssh\]'
+    insertafter: '^\s*\[runners\.ssh\]'
     backrefs: no
   check_mode: no
   notify: restart_gitlab_runner
