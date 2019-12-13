@@ -48,7 +48,7 @@
     dest: "{{ temp_runner_config.path }}"
     regexp: '^\s*\[runners\.{{ gitlab_runner.executor|default("shell") }}\]'
     line: '  [runners.{{ gitlab_runner.executor|default("shell") }}]'
-    state: present
+    state: "{{ 'absent' if (gitlab_runner.executor|default('shell')) == 'shell' else 'present' }}"
     insertafter: '^\s*executor ='
     backrefs: no
   check_mode: no
