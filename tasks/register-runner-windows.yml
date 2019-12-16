@@ -44,11 +44,21 @@
     {% for volume in gitlab_runner.docker_volumes | default([]) %}
     --docker-volumes "{{ volume }}"
     {% endfor %}
-    --ssh-user '{{ gitlab_runner.ssh_user|default("") }}'
-    --ssh-host '{{ gitlab_runner.ssh_host|default("") }}'
-    --ssh-port '{{ gitlab_runner.ssh_port|default("") }}'
-    --ssh-password '{{ gitlab_runner.ssh_password|default("") }}'
-    --ssh-identity-file '{{ gitlab_runner.ssh_identity_file|default("") }}'
+    {% if gitlab_runner.ssh_user is defined %}
+    --ssh-user '{{ gitlab_runner.ssh_user }}'
+    {% endif %}
+    {% if gitlab_runner.ssh_host is defined %}
+    --ssh-host '{{ gitlab_runner.ssh_host }}'
+    {% endif %}
+    {% if gitlab_runner.ssh_port is defined %}
+    --ssh-port '{{ gitlab_runner.ssh_port }}'
+    {% endif %}
+    {% if gitlab_runner.ssh_password is defined %}
+    --ssh-password '{{ gitlab_runner.ssh_password }}'
+    {% endif %}
+    {% if gitlab_runner.ssh_identity_file is defined %}
+    --ssh-identity-file '{{ gitlab_runner.ssh_identity_file }}'
+    {% endif %}
     {% if gitlab_runner.cache_type is defined %}
     --cache-type '{{ gitlab_runner.cache_type }}'
     {% endif %}
