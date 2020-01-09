@@ -38,6 +38,9 @@
     {% for env_var in gitlab_runner.env_vars|default([]) %}
     --env '{{ env_var }}'
     {% endfor %}
+    {% if gitlab_runner.pre_clone_script|default(false) %}
+    --pre-clone-script "{{ gitlab_runner.pre_clone_script }}"
+    {% endif %}
     --docker-image '{{ gitlab_runner.docker_image|default("") }}'
     {% if gitlab_runner.docker_privileged|default(false) %}
     --docker-privileged
