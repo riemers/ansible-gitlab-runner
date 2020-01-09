@@ -27,7 +27,7 @@
     regexp: '^\s*environment =.*'
     line: '  environment = {{ gitlab_runner.env_vars|default([]) | to_json }}'
     state: present
-    insertafter: '^\s*url='
+    insertafter: '^\s*url ='
     backrefs: no
   check_mode: no
   notify: restart_gitlab_runner_windows
