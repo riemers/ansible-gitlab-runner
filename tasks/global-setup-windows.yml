@@ -25,7 +25,7 @@
 
 - name: (Windows) Add listen_address to config
   win_lineinfile:
-    dest: /etc/gitlab-runner/config.toml
+    dest: "{{ gitlab_runner_config_file }}"
     regexp: '^listen_address =.*'
     line: 'listen_address = "{{ gitlab_runner_listen_address }}"'
     insertafter: '\s*concurrent.*'
