@@ -27,10 +27,22 @@
     regexp: '^\s*environment =.*'
     line: '  environment = {{ gitlab_runner.env_vars|default([]) | to_json }}'
     state: present
-    insertafter: '^\s*url='
+    insertafter: '^\s*url ='
     backrefs: no
   check_mode: no
   notify: restart_gitlab_runner_windows
+
+- name: (Windows) Set pre_clone_script
+  win_lineinfile:
+    dest: "{{ temp_runner_config.path }}"
+    regexp: '^\s*pre_clone_script ='
+    line: '  pre_clone_script = {{ gitlab_runner.pre_clone_script | to_json }}'
+    state: present
+    insertafter: '^\s*url ='
+    backrefs: no
+  check_mode: no
+  notify: restart_gitlab_runner
+  when: gitlab_runner.pre_clone_script is defined
 
 - name: (Windows) Set runner executor option
   win_lineinfile:
