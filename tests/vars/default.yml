@@ -28,4 +28,19 @@ gitlab_runner_runners:
     cache_s3_secret_key: mysecret-key
     cache_s3_bucket_name: build-cache-bucket
     cache_s3_insecure: false
+
+  - name: 'vagrant-docker-cache-gcs'
+    executor: docker
+    docker_image: 'docker:stable'
+    tags:
+      - node
+      - ruby
+      - mysql
+      - cache
+    cache_type: gcs
+    cache_shared: true
+    cache_gcs_bucket_name: gcs-cache-bucket
+    cache_gcs_credentials_file: '/etc/gitlab-runner/credentials.json'
+    cache_gcs_access_id: 'cache-access-account@project.iam.gserviceaccount.com'
+    cache_gcs_private_key: "-----BEGIN PRIVATE KEY-----\nXXXXXX\n-----END PRIVATE KEY-----\n"
 ...
