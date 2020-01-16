@@ -72,7 +72,7 @@ gitlab_runner_runners:
     # ssh_identity_file: ''
     #
     # Cache type
-    # cache_type: 's3'
+    # cache_type: 's3|gcs'
     #
     # Cache path
     # cache_path: prefix/key
