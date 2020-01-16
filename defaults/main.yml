@@ -98,6 +98,18 @@ gitlab_runner_runners:
     # Cache S3 insecure
     # cache_s3_insecure: false
     #
+    # Cache GCS Bucket name
+    # cache_gcs_bucket_name: "my-bucket"
+    #
+    # Cache GCS CredentialsFile
+    # cache_gcs_credentials_file: "/path/to/key_file.json"
+    #
+    # Cache GCS Access ID
+    # cache_gcs_access_id: "cache-access-account@project.iam.gserviceaccount.com"
+    #
+    # Cache GCS Private Key
+    # cache_gcs_private_key: "-----BEGIN PRIVATE KEY-----\nXXXXXX\n-----END PRIVATE KEY-----\n"
+    #
     # Builds directory
     # builds_dir: '/builds_dir'
     #
