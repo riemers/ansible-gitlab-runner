@@ -225,6 +225,7 @@
     backrefs: no
   check_mode: no
   notify: restart_gitlab_runner
+  when: gitlab_runner.cache_type == 's3'
 
 - name: Set cache s3 bucket location option
   lineinfile:
@@ -260,6 +261,7 @@
     backrefs: no
   check_mode: no
   notify: restart_gitlab_runner
+  when: gitlab_runner.cache_type == 'gcs'
 
 - name: Set cache gcs credentials file
   lineinfile:
@@ -350,7 +352,6 @@
     backrefs: no
   check_mode: no
   notify: restart_gitlab_runner
-
 
 - name: Set builds dir file option
   lineinfile:
