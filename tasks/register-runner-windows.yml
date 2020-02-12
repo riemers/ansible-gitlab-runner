@@ -37,6 +37,9 @@
     {% for env_var in gitlab_runner.env_vars|default([]) %}
     --env '{{ env_var }}'
     {% endfor %}
+    {% if gitlab_runner.pre_clone_script|default(false) %}
+    --pre-clone-script "{{ gitlab_runner.pre_clone_script }}"
+    {% endif %}
     --docker-image '{{ gitlab_runner.docker_image|default("") }}'
     {% if gitlab_runner.docker_privileged|default(false) %}
     --docker-privileged
@@ -44,11 +47,21 @@
     {% for volume in gitlab_runner.docker_volumes | default([]) %}
     --docker-volumes "{{ volume }}"
     {% endfor %}
-    --ssh-user '{{ gitlab_runner.ssh_user|default("") }}'
-    --ssh-host '{{ gitlab_runner.ssh_host|default("") }}'
-    --ssh-port '{{ gitlab_runner.ssh_port|default("") }}'
-    --ssh-password '{{ gitlab_runner.ssh_password|default("") }}'
-    --ssh-identity-file '{{ gitlab_runner.ssh_identity_file|default("") }}'
+    {% if gitlab_runner.ssh_user is defined %}
+    --ssh-user '{{ gitlab_runner.ssh_user }}'
+    {% endif %}
+    {% if gitlab_runner.ssh_host is defined %}
+    --ssh-host '{{ gitlab_runner.ssh_host }}'
+    {% endif %}
+    {% if gitlab_runner.ssh_port is defined %}
+    --ssh-port '{{ gitlab_runner.ssh_port }}'
+    {% endif %}
+    {% if gitlab_runner.ssh_password is defined %}
+    --ssh-password '{{ gitlab_runner.ssh_password }}'
+    {% endif %}
+    {% if gitlab_runner.ssh_identity_file is defined %}
+    --ssh-identity-file '{{ gitlab_runner.ssh_identity_file }}'
+    {% endif %}
     {% if gitlab_runner.cache_type is defined %}
     --cache-type '{{ gitlab_runner.cache_type }}'
     {% endif %}
@@ -60,7 +73,11 @@
     {% endif %}
     {% if gitlab_runner.cache_s3_server_address is defined %}
     --cache-s3-server-address '{{ gitlab_runner.cache_s3_server_address }}'
+    {% endif %}
+    {% if gitlab_runner.cache_s3_access_key is defined %}
     --cache-s3-access-key '{{ gitlab_runner.cache_s3_access_key }}'
+    {% endif %}
+    {% if gitlab_runner.cache_s3_secret_key is defined %}
     --cache-s3-secret-key '{{ gitlab_runner.cache_s3_secret_key }}'
     {% endif %}
     {% if gitlab_runner.cache_s3_bucket_name is defined %}

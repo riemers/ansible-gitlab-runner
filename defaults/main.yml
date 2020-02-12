@@ -53,6 +53,8 @@ gitlab_runner_runners:
     locked: 'false'
     # Custom environment variables injected to registration command
     env_vars: []
+    # Sets the pre_clone_script. The default is not set.
+    # pre_clone_script:
     #
     # Runner SSH user
     # ssh_user: ''
@@ -70,7 +72,7 @@ gitlab_runner_runners:
     # ssh_identity_file: ''
     #
     # Cache type
-    # cache_type: 's3'
+    # cache_type: 's3|gcs'
     #
     # Cache path
     # cache_path: prefix/key
@@ -95,6 +97,18 @@ gitlab_runner_runners:
     #
     # Cache S3 insecure
     # cache_s3_insecure: false
+    #
+    # Cache GCS Bucket name
+    # cache_gcs_bucket_name: "my-bucket"
+    #
+    # Cache GCS CredentialsFile
+    # cache_gcs_credentials_file: "/path/to/key_file.json"
+    #
+    # Cache GCS Access ID
+    # cache_gcs_access_id: "cache-access-account@project.iam.gserviceaccount.com"
+    #
+    # Cache GCS Private Key
+    # cache_gcs_private_key: "-----BEGIN PRIVATE KEY-----\nXXXXXX\n-----END PRIVATE KEY-----\n"
     #
     # Builds directory
     # builds_dir: '/builds_dir'

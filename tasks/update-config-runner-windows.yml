@@ -27,10 +27,22 @@
     regexp: '^\s*environment =.*'
     line: '  environment = {{ gitlab_runner.env_vars|default([]) | to_json }}'
     state: present
-    insertafter: '^\s*url='
+    insertafter: '^\s*url ='
     backrefs: no
   check_mode: no
   notify: restart_gitlab_runner_windows
+
+- name: (Windows) Set pre_clone_script
+  win_lineinfile:
+    dest: "{{ temp_runner_config.path }}"
+    regexp: '^\s*pre_clone_script ='
+    line: '  pre_clone_script = {{ gitlab_runner.pre_clone_script | to_json }}'
+    state: present
+    insertafter: '^\s*url ='
+    backrefs: no
+  check_mode: no
+  notify: restart_gitlab_runner
+  when: gitlab_runner.pre_clone_script is defined
 
 - name: (Windows) Set runner executor option
   win_lineinfile:
@@ -115,7 +127,7 @@
     regexp: '^\s*ServerAddress =.*'
     line: '  ServerAddress = {{ gitlab_runner.cache_s3_server_address|default("") | to_json }}'
     state: "{{ 'present' if gitlab_runner.cache_s3_server_address is defined else 'absent' }}"
-    insertafter: '^\s*executor ='
+    insertafter: '^\s*\[runners\.cache\.s3\]'
     backrefs: no
   check_mode: no
   notify: restart_gitlab_runner_windows
@@ -126,7 +138,7 @@
     regexp: '^\s*AccessKey =.*'
     line: '  AccessKey = {{ gitlab_runner.cache_s3_access_key|default("") | to_json }}'
     state: "{{ 'present' if gitlab_runner.cache_s3_access_key is defined else 'absent' }}"
-    insertafter: '^\s*executor ='
+    insertafter: '^\s*\[runners\.cache\.s3\]'
     backrefs: no
   check_mode: no
   notify: restart_gitlab_runner_windows
@@ -137,7 +149,7 @@
     regexp: '^\s*SecretKey =.*'
     line: '  SecretKey = {{ gitlab_runner.cache_s3_secret_key|default("") | to_json }}'
     state: "{{ 'present' if gitlab_runner.cache_s3_secret_key is defined else 'absent' }}"
-    insertafter: '^\s*executor ='
+    insertafter: '^\s*\[runners\.cache\.s3\]'
     backrefs: no
   check_mode: no
   notify: restart_gitlab_runner_windows
@@ -160,7 +172,7 @@
     regexp: '^\s*BucketName =.*'
     line: '  BucketName = {{ gitlab_runner.cache_s3_bucket_name|default("")  | to_json }}'
     state: "{{ 'present' if gitlab_runner.cache_s3_bucket_name is defined else 'absent' }}"
-    insertafter: '^\s*executor ='
+    insertafter: '^\s*\[runners\.cache\.s3\]'
     backrefs: no
   check_mode: no
   notify: restart_gitlab_runner_windows
@@ -171,7 +183,7 @@
     regexp: '^\s*BucketLocation =.*'
     line: '  BucketLocation = {{ gitlab_runner.cache_s3_bucket_location|default("") | to_json }}'
     state: "{{ 'present' if gitlab_runner.cache_s3_bucket_location is defined else 'absent' }}"
-    insertafter: '^\s*executor ='
+    insertafter: '^\s*\[runners\.cache\.s3\]'
     backrefs: no
   check_mode: no
   notify: restart_gitlab_runner_windows
@@ -182,7 +194,7 @@
     regexp: '^\s*Insecure =.*'
     line: '  Insecure = {{ gitlab_runner.cache_s3_insecure|default("") | lower }}'
     state: "{{ 'present' if gitlab_runner.cache_s3_insecure is defined else 'absent' }}"
-    insertafter: '^\s*executor ='
+    insertafter: '^\s*\[runners\.cache\.s3\]'
     backrefs: no
   check_mode: no
   notify: restart_gitlab_runner_windows
