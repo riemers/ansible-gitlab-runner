@@ -56,6 +56,8 @@ Inside `vars/main.yml`
 gitlab_runner_registration_token: 'HUzTMgnxk17YV8Rj8ucQ'
 gitlab_runner_runners:
   - name: 'Example Docker GitLab Runner'
+    # token is an optional override to the global gitlab_runner_registration_token
+    token: 'HUzTMgnxk17YV8Rj8ucQ' 
     executor: docker
     docker_image: 'alpine'
     tags:
