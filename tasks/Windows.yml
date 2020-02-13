@@ -20,7 +20,7 @@
 
 - name: (Windows) Register GitLab Runner
   include_tasks: register-runner-windows.yml
-  when: gitlab_runner_registration_token | string | length > 0  # Ensure value is set
+  when: gitlab_runner.token is defined or gitlab_runner_registration_token | string | length > 0  # Ensure value is set
   loop: "{{ gitlab_runner_runners }}"
   loop_control:
     index_var: gitlab_runner_index
