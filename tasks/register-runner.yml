@@ -45,6 +45,12 @@
     {% if gitlab_runner.docker_privileged|default(false) %}
     --docker-privileged
     {% endif %}
+    {% if gitlab_runner.docker_tlsverify|default(false) %}
+    --docker-tlsverify '{{ gitlab_runner.docker_tlsverify|default("true") }}'
+    {% endif %}
+    {% if gitlab_runner.docker_dns|default(false) %}
+    --docker-dns '{{ gitlab_runner.docker_dns|default("1.1.1.1") }}'
+    {% endif %}
     {% for volume in gitlab_runner.docker_volumes | default([]) %}
     --docker-volumes "{{ volume }}"
     {% endfor %}
