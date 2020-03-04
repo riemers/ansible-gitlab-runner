@@ -45,6 +45,12 @@
     {% if gitlab_runner.docker_privileged|default(false) %}
     --docker-privileged
     {% endif %}
+    {% if gitlab_runner.docker_tlsverify|default(false) %}
+    --docker-tlsverify '{{ gitlab_runner.docker_tlsverify|default("true") }}'
+    {% endif %}
+    {% if gitlab_runner.docker_dns|default(false) %}
+    --docker-dns '{{ gitlab_runner.docker_dns|default("1.1.1.1") }}'
+    {% endif %}
     {% for volume in gitlab_runner.docker_volumes | default([]) %}
     --docker-volumes "{{ volume }}"
     {% endfor %}
@@ -81,6 +87,20 @@
     {% endif %}
     {% if gitlab_runner.cache_s3_insecure|default(false) %}
     --cache-s3-insecure
+    {% endif %}
+    {% endif %}
+    {% if gitlab_runner_machine_machine_name is defined %}
+    --machine-idle-nodes '{{ gitlab_runner_machine_idle_count }}'
+    --machine-idle-time '{{ gitlab_runner_machine_idle_time }}'
+    --machine-max-builds '{{ gitlab_runner_machine_max_builds }}'
+    --machine-off-peak-periods '{{ gitlab_runner_machine_off_peak_periods }}'
+    --machine-off-peak-idle_time '{{ gitlab_runner_machine_off_peak_idle_time }}'
+    --machine-off-peak-idle_count '{{ gitlab_runner_machine_off_peak_idle_count }}'
+    --machine-machine-driver '{{ gitlab_runner_machine_machine_driver }}'
+    --machine-machine-name '{{ gitlab_runner_machine_machine_name }}'
+      {% for option,value in gitlab_runner_machine_options.items() | list  %}
+    --machine-machine-options "{{option}}={{value}}"
+      {% endfor %}
     {% endif %}
     {% if gitlab_runner.extra_registration_option is defined %}
     {{ gitlab_runner.extra_registration_option }}

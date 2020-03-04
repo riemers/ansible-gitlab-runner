@@ -1,5 +1,5 @@
 ---
-# Change this variable value to 'gitlab-runner' for versions >= 10.x
+# for versions >= 10.x
 gitlab_runner_package_name: 'gitlab-runner'
 
 gitlab_runner_config_file_location: "{{ ansible_env.HOME }}/.gitlab-runner"
@@ -22,6 +22,32 @@ gitlab_runner_concurrent: '{{ ansible_processor_vcpus }}'
 gitlab_runner_coordinator_url: 'https://gitlab.com/ci'
 # GitLab registration token
 gitlab_runner_registration_token: ''
+# Runner description
+gitlab_runner_description: '{{ ansible_hostname }}'
+# Runner executor
+gitlab_runner_executor: 'shell'
+# Maximum number of jobs to run concurrently on this specific runner
+gitlab_runner_concurrent_specific: '0'
+# Default Docker image
+gitlab_runner_docker_image: ''
+# Runner tags
+gitlab_runner_tags: []
+# Docker privileged mode
+gitlab_runner_docker_privileged: false
+# Runner SSH user
+gitlab_runner_ssh_user: ''
+# Runner SSH host
+gitlab_runner_ssh_host: ''
+# Runner SSH port
+gitlab_runner_ssh_port: ''
+# Runner SSH password
+gitlab_runner_ssh_password: ''
+# Runner SSH identity file
+gitlab_runner_ssh_identity_file: ''
+# Runner Locked
+gitlab_runner_locked: 'false'
+# Custom environment variables injected to build environment
+gitlab_runner_env_vars: []
 
 gitlab_runner_sentry_dsn: ''
 
