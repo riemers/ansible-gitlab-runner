@@ -101,6 +101,28 @@
   check_mode: no
   notify: restart_gitlab_runner
 
+- name: Set docker tlsverify option
+  lineinfile:
+    dest: "{{ temp_runner_config.path }}"
+    regexp: '^\s*tls_verify ='
+    line: '    tls_verify = {{ gitlab_runner.docker_tlsverify|default(false) | lower }}'
+    state: "{{ 'present' if gitlab_runner.docker_tlsverify is defined else 'absent' }}"
+    insertafter: '^\s*\[runners\.docker\]'
+    backrefs: no
+  check_mode: no
+  notify: restart_gitlab_runner
+
+- name: Set docker DNS option
+  lineinfile:
+    dest: "{{ temp_runner_config.path }}"
+    regexp: '^\s*dns ='
+    line: '    dns = {{ gitlab_runner.docker_dns|default(false) | to_json }}'
+    state: "{{ 'present' if gitlab_runner.docker_dns is defined else 'absent' }}"
+    insertafter: '^\s*\[runners\.docker\]'
+    backrefs: no
+  check_mode: no
+  notify: restart_gitlab_runner
+
 - name: Set docker volumes option
   lineinfile:
     dest: "{{ temp_runner_config.path }}"
