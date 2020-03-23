@@ -1,0 +1,28 @@
+gitlab_runner_runners:
+  - name: "Shell Runner"
+    tags:
+      - windows
+      - shell
+    executor: shell
+    state: present
+  - name: "Shell Runner S3 Cache"
+    tags:
+      - windows
+      - shell
+    executor: shell
+    cache_type: s3
+    cache_shared: true
+    cache_s3_server_address: mycache.example.com
+    cache_s3_access_key: myaccess-key
+    cache_s3_secret_key: mysecret-key
+    cache_s3_bucket_name: build-cache-bucket
+    cache_s3_insecure: false
+    state: present
+  - name: "Docker Runner"
+    tags:
+      - windows
+      - docker
+    executor: docker-windows
+    state: present
+
+gitlab_runner_listen_address: '0.0.0.0:9001'

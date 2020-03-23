@@ -1,29 +1,57 @@
 ---
-language: python
-python: "2.7"
 
-# Use the new container infrastructure
-sudo: false
-
-# Install ansible
-addons:
-  apt:
-    packages:
-    - python-pip
-
-install:
-  # Install ansible
-  - pip install ansible
-
-  # Check ansible version
-  - ansible --version
-
-  # Create ansible.cfg with correct roles_path
-  - printf '[defaults]\nroles_path=../' >ansible.cfg
-
-script:
-  # Basic role syntax check
-  - ansible-playbook tests/test.yml -i tests/inventory --syntax-check
+jobs:
+  include:
+    - os: linux
+      python: "2.7"
+      language: python
+      addons:
+        apt:
+          packages:
+            - python-pip
+      install:
+        # Install ansible
+        - pip install ansible
+        # Check ansible version
+        - ansible --version
+        # Create ansible.cfg with correct roles_path
+        - printf '[defaults]\nroles_path=../' > ansible.cfg
+      script:
+        # Basic role syntax check
+        - ansible-playbook tests/test.yml -i tests/inventory --syntax-check
+        # Running tests
+        - ansible-playbook tests/test.yml -i tests/inventory
+    - os: osx
+      osx_image: xcode10.3
+      # See https://github.com/travis-ci/travis-ci/issues/2312#issuecomment-422830059
+      #language: python
+      language: generic
+      install:
+        # Install ansible
+        - pip install ansible
+        # Check ansible version
+        - ansible --version
+        # Create ansible.cfg with correct roles_path
+        - printf '[defaults]\nroles_path=../' > ansible.cfg
+      script:
+        # Basic role syntax check
+        - ansible-playbook tests/test.yml -i tests/inventory --syntax-check
+        # Running tests
+        - ansible-playbook tests/test.yml -i tests/inventory
+    - os: windows
+      language: shell
+      install:
+        - powershell -ExecutionPolicy ByPass -File tests/travis-bootstrap-ansible.ps1
+        - wsl ansible --version
+      script:
+        - wsl mkdir -p tests/roles/ansible-gitlab-runner/
+        - cd tests/roles/ansible-gitlab-runner/
+        - wsl ln -s ../../../* .
+        - cd ../../
+        - wsl ansible-playbook test.yml -i inventory --syntax-check
+        # Running tests
+        - wsl ansible-playbook test.yml -i inventory --extra-vars 'ansible_user=ansible ansible_password=Ans1ble_User! ansible_connection=winrm ansible_winrm_server_cert_validation=ignore ansible_ssh_port=5986'
 
 notifications:
   webhooks: https://galaxy.ansible.com/api/v1/notifications/
+

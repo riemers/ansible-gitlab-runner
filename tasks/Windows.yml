@@ -1,0 +1,38 @@
+- name: Install GitLab Runner (Windows)
+  import_tasks: install-windows.yml
+
+- name: (Windows) List configured runners
+  win_command: "{{ gitlab_runner_executable }} list"
+  args:
+    chdir: "{{ gitlab_runner_config_file_location }}"
+  register: configured_runners
+  changed_when: False
+  check_mode: no
+
+- name: (Windows) Check runner is registered
+  win_command: "{{ gitlab_runner_executable }} verify"
+  args:
+    chdir: "{{ gitlab_runner_config_file_location }}"
+  register: verified_runners
+  ignore_errors: True
+  changed_when: False
+  check_mode: no
+
+- name: (Windows) Register GitLab Runner
+  include_tasks: register-runner-windows.yml
+  when: gitlab_runner.token is defined or gitlab_runner_registration_token | string | length > 0  # Ensure value is set
+  loop: "{{ gitlab_runner_runners }}"
+  loop_control:
+    index_var: gitlab_runner_index
+    loop_var: gitlab_runner
+
+- name: (Windows) Set global options
+  import_tasks: global-setup-windows.yml
+
+- name: (Windows) Configure GitLab Runner
+  import_tasks: config-runners-windows.yml
+
+- name: (Windows) Start GitLab Runner
+  win_command: "{{ gitlab_runner_executable }} start"
+  args:
+    chdir: "{{ gitlab_runner_config_file_location }}"

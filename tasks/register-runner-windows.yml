@@ -1,27 +1,26 @@
 ---
-- name: Clear Config File
+- name: (Windows) Clear Config File
   block:
-    - name: remove config.toml file
-      file:
+    - name: (Windows) remove config.toml file
+      win_file:
         path: "{{ gitlab_runner_config_file }}"
         state: absent
 
-    - name: Create .gitlab-runner dir
-      file:
+    - name: (Windows) Create .gitlab-runner dir
+      win_file:
         path: "{{ gitlab_runner_config_file_location }}"
         state: directory
-        mode: '0755'
 
-    - name: Ensure config.toml exists
-      file:
+    - name: (Windows) Ensure config.toml exists
+      win_file:
         path: "{{ gitlab_runner_config_file }}"
         state: touch
         modification_time: preserve
         access_time: preserve
   when: (verified_runners.stderr.find("Verifying runner... is removed") != -1)
 
-- name: Register runner to GitLab
-  command: >
+- name: (Windows) Register runner to GitLab
+  win_shell: >
     {{ gitlab_runner_executable }} register
     --non-interactive
     --url '{{ gitlab_runner_coordinator_url }}'
@@ -45,20 +44,24 @@
     {% if gitlab_runner.docker_privileged|default(false) %}
     --docker-privileged
     {% endif %}
-    {% if gitlab_runner.docker_tlsverify|default(false) %}
-    --docker-tlsverify '{{ gitlab_runner.docker_tlsverify|default("true") }}'
-    {% endif %}
-    {% if gitlab_runner.docker_dns|default(false) %}
-    --docker-dns '{{ gitlab_runner.docker_dns|default("1.1.1.1") }}'
-    {% endif %}
     {% for volume in gitlab_runner.docker_volumes | default([]) %}
     --docker-volumes "{{ volume }}"
     {% endfor %}
-    --ssh-user '{{ gitlab_runner.ssh_user|default("") }}'
-    --ssh-host '{{ gitlab_runner.ssh_host|default("") }}'
-    --ssh-port '{{ gitlab_runner.ssh_port|default("") }}'
-    --ssh-password '{{ gitlab_runner.ssh_password|default("") }}'
-    --ssh-identity-file '{{ gitlab_runner.ssh_identity_file|default("") }}'
+    {% if gitlab_runner.ssh_user is defined %}
+    --ssh-user '{{ gitlab_runner.ssh_user }}'
+    {% endif %}
+    {% if gitlab_runner.ssh_host is defined %}
+    --ssh-host '{{ gitlab_runner.ssh_host }}'
+    {% endif %}
+    {% if gitlab_runner.ssh_port is defined %}
+    --ssh-port '{{ gitlab_runner.ssh_port }}'
+    {% endif %}
+    {% if gitlab_runner.ssh_password is defined %}
+    --ssh-password '{{ gitlab_runner.ssh_password }}'
+    {% endif %}
+    {% if gitlab_runner.ssh_identity_file is defined %}
+    --ssh-identity-file '{{ gitlab_runner.ssh_identity_file }}'
+    {% endif %}
     {% if gitlab_runner.cache_type is defined %}
     --cache-type '{{ gitlab_runner.cache_type }}'
     {% endif %}
@@ -70,7 +73,11 @@
     {% endif %}
     {% if gitlab_runner.cache_s3_server_address is defined %}
     --cache-s3-server-address '{{ gitlab_runner.cache_s3_server_address }}'
+    {% endif %}
+    {% if gitlab_runner.cache_s3_access_key is defined %}
     --cache-s3-access-key '{{ gitlab_runner.cache_s3_access_key }}'
+    {% endif %}
+    {% if gitlab_runner.cache_s3_secret_key is defined %}
     --cache-s3-secret-key '{{ gitlab_runner.cache_s3_secret_key }}'
     {% endif %}
     {% if gitlab_runner.cache_s3_bucket_name is defined %}
@@ -94,5 +101,6 @@
   when: (verified_runners.stderr.find("Verifying runner... is removed") != -1) or
         ((configured_runners.stderr.find('\n' + gitlab_runner.name|default(ansible_hostname+'-'+gitlab_runner_index|string)) == -1) and
         (gitlab_runner.state|default('present') == 'present'))
-  no_log: true
-  become: true
+  args:
+    chdir: "{{ gitlab_runner_config_file_location }}"
+  #no_log: true

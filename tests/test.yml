@@ -1,5 +1,12 @@
 ---
 - hosts: localhost
-  remote_user: root
+  vars:
+    possible_files:
+    files:
+      - '{{ ansible_distribution }}.yml'
+      - '{{ ansible_os_family }}.yml'
+      - default.yml
+    paths:
+      - 'vars'
   roles:
     - ansible-gitlab-runner

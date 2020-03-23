@@ -7,13 +7,18 @@ This role will install the [official GitLab Runner](https://gitlab.com/gitlab-or
 Requirements
 ------------
 
-This role requires Ansible 2.0 or higher.
+This role requires Ansible 2.7 or higher.
 
 Role Variables
 --------------
 
 `gitlab_runner_package_name`
-**Since Gitlab 10.x** The package name of `gitlab-ci-multi-runner` has been renamed to `gitlab-runner`. In order to install a version >= 10.x you will need to define this variable `gitlab_runner_package_name: gitlab-runner`.
+**Since Gitlab 10.x** The package name of `gitlab-ci-multi-runner` has been renamed to `gitlab-runner`. In order to install a version < 10.x you will need to define this variable `gitlab_runner_package_name: gitlab-ci-multi-runner`.
+
+`gitlab_runner_wanted_version` or `gitlab_runner_package_version`
+To install a specific version of the gitlab runner (by default it installs the latest).
+On Mac OSX and Windows, use e.g. `gitlab_runner_wanted_version: 12.4.1`.
+On Linux, use `gitlab_runner_package_version` instead.
 
 `gitlab_runner_concurrent`
 The maximum number of global jobs to run concurrently.
@@ -26,24 +31,11 @@ The GitLab registration token. If this is specified, a runner will be registered
 The GitLab coordinator URL.
 Defaults to `https://gitlab.com/ci`.
 
-`gitlab_runner_description`
-The description of the runner.
-Defaults to the hostname.
+`gitlab_runner_sentry_dsn`
+Enable tracking of all system level errors to Sentry
 
-`gitlab_runner_executor`
-The executor used by the runner.
-Defaults to `shell`.
-
-`gitlab_runner_concurrent_specific`
-The maximum number of jobs to run concurrently on this specific runner.
-Defaults to 0, simply means don't limit.
-
-`gitlab_runner_docker_image`
-The default Docker image to use. Required when executor is `docker`.
-
-`gitlab_runner_tags`
-The tags assigned to the runner,
-Defaults to an empty list.
+`gitlab_runner_listen_address`
+Enable `/metrics` endpoint for Prometheus scraping.
 
 `gitlab_runner_cache_type`
 Variables to set s3 as a shared cache server. If set it requires variables listed below:
@@ -96,12 +88,30 @@ Example Playbook
 Inside `vars/main.yml`
 ```yaml
 gitlab_runner_registration_token: 'HUzTMgnxk17YV8Rj8ucQ'
-gitlab_runner_description: 'Example GitLab Runner'
-gitlab_runner_tags:
-  - node
-  - ruby
-  - mysql
-gitlab_runner_docker_volumes:
-  - "/var/run/docker.sock:/var/run/docker.sock"
-  - "/cache"
+gitlab_runner_runners:
+  - name: 'Example Docker GitLab Runner'
+    # token is an optional override to the global gitlab_runner_registration_token
+    token: 'HUzTMgnxk17YV8Rj8ucQ'
+    executor: docker
+    docker_image: 'alpine'
+    tags:
+      - node
+      - ruby
+      - mysql
+    docker_volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
+      - "/cache"
+    extra_configs:
+      runners.docker:
+        memory: 512m
+        allowed_images: ["ruby:*", "python:*", "php:*"]
+      runners.docker.sysctls:
+        net.ipv4.ip_forward: "1"
 ```
+
+Contributors
+------------
+Feel free to add your name to the readme if you make a PR. A full list of people from the PR's is [here](https://github.com/riemers/ansible-gitlab-runner/pulls?q=is%3Apr+is%3Aclosed)
+
+- Gastrofix for adding Mac Support
+- Matthias Schmieder for adding Windows Support

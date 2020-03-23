@@ -2,6 +2,19 @@
 # for versions >= 10.x
 gitlab_runner_package_name: 'gitlab-runner'
 
+gitlab_runner_config_file_location: "{{ ansible_env.HOME }}/.gitlab-runner"
+
+# gitlab_runner_package_version for version pinning on debian/redhat
+# The following are for version pinning on MacOSX
+gitlab_runner_wanted_version: latest
+
+# These two variable should not be modified usually as they depend on the gitlab_runner_wanted_version variable
+gitlab_runner_wanted_tag: "{{ 'latest' if gitlab_runner_wanted_version == 'latest' else ('v' + gitlab_runner_wanted_version) }}"
+
+# Overridden based on platform
+gitlab_runner_config_file: "/etc/gitlab-runner/config.toml"
+gitlab_runner_executable: "{{ gitlab_runner_package_name }}"
+
 # Maximum number of global jobs to run concurrently
 gitlab_runner_concurrent: '{{ ansible_processor_vcpus }}'
 
@@ -9,40 +22,113 @@ gitlab_runner_concurrent: '{{ ansible_processor_vcpus }}'
 gitlab_runner_coordinator_url: 'https://gitlab.com/ci'
 # GitLab registration token
 gitlab_runner_registration_token: ''
-# Runner description
-gitlab_runner_description: '{{ ansible_hostname }}'
-# Runner executor
-gitlab_runner_executor: 'shell'
-# Maximum number of jobs to run concurrently on this specific runner
-gitlab_runner_concurrent_specific: '0'
-# Default Docker image
-gitlab_runner_docker_image: ''
-# Runner tags
-gitlab_runner_tags: []
-# Docker privileged mode
-gitlab_runner_docker_privileged: false
-# Runner SSH user
-gitlab_runner_ssh_user: ''
-# Runner SSH host
-gitlab_runner_ssh_host: ''
-# Runner SSH port
-gitlab_runner_ssh_port: ''
-# Runner SSH password
-gitlab_runner_ssh_password: ''
-# Runner SSH identity file
-gitlab_runner_ssh_identity_file: ''
-# Runner Locked
-gitlab_runner_locked: 'false'
-# Custom environment variables injected to build environment
-gitlab_runner_env_vars: []
 
-# aws autoscale runner machine
-gitlab_runner_machine_options: []
-gitlab_runner_machine_idle_count: ''
-gitlab_runner_machine_idle_time: ''
-gitlab_runner_machine_max_builds: ''
-gitlab_runner_machine_off_peak_periods: ''
-gitlab_runner_machine_off_peak_idle_time: ''
-gitlab_runner_machine_off_peak_idle_count: ''
-gitlab_runner_machine_machine_driver: ''
-gitlab_runner_machine_machine_name: ''
+gitlab_runner_sentry_dsn: ''
+
+# Prometheus Metrics & Monitoring
+gitlab_runner_listen_address: ''
+
+# A list of runners to register and configure
+gitlab_runner_runners:
+    # The identifier of the runner.
+  - name: '{{ ansible_hostname }}'
+    # set to 'absent' if you want to delete the runner. Defaults to 'present'.
+    state: present
+    # The executor used by the runner.
+    executor: 'shell'
+    # Set maximum build log size in kilobytes.
+    output_limit: 4096
+    # Maximum number of jobs to run concurrently on this specific runner.
+    # Defaults to 0, simply means don't limit.
+    concurrent_specific: '0'
+    # The default Docker image to use. Required when executor is `docker`.
+    docker_image: ''
+    # The tags assigned to the runner.
+    tags: []
+    # Indicates whether this runner can pick jobs without tags.
+    run_untagged: true
+    # Docker privileged mode
+    docker_privileged: false
+    # Runner Locked. When a runner is locked, it cannot be assigned to other projects
+    locked: 'false'
+    # Custom environment variables injected to registration command
+    env_vars: []
+    # Sets the pre_clone_script. The default is not set.
+    # pre_clone_script:
+    #
+    # Runner SSH user
+    # ssh_user: ''
+    #
+    # Runner SSH host
+    # ssh_host: ''
+    #
+    # Runner SSH port
+    # ssh_port: ''
+    #
+    # Runner SSH password
+    # ssh_password: ''
+    #
+    # Runner SSH identity file
+    # ssh_identity_file: ''
+    #
+    # Cache type
+    # cache_type: 's3|gcs'
+    #
+    # Cache path
+    # cache_path: prefix/key
+    #
+    # Cache shared
+    # cache_shared: false
+    #
+    # Cache S3 server address
+    # cache_s3_server_address: "s3.amazonaws.com"
+    #
+    # Cache S3 access key
+    # cache_s3_access_key: "AMAZON_S3_ACCESS_KEY"
+    #
+    # Cache S3 secret key
+    # cache_s3_secret_key: "AMAZON_S3_SECRET_KEY"
+    #
+    # Cache S3 bucket name
+    # cache_s3_bucket_name: "my-bucket"
+    #
+    # Cache S3 bucket location
+    # cache_s3_bucket_location: "eu-west-1"
+    #
+    # Cache S3 insecure
+    # cache_s3_insecure: false
+    #
+    # Cache GCS Bucket name
+    # cache_gcs_bucket_name: "my-bucket"
+    #
+    # Cache GCS CredentialsFile
+    # cache_gcs_credentials_file: "/path/to/key_file.json"
+    #
+    # Cache GCS Access ID
+    # cache_gcs_access_id: "cache-access-account@project.iam.gserviceaccount.com"
+    #
+    # Cache GCS Private Key
+    # cache_gcs_private_key: "-----BEGIN PRIVATE KEY-----\nXXXXXX\n-----END PRIVATE KEY-----\n"
+    #
+    # Builds directory
+    # builds_dir: '/builds_dir'
+    #
+    # Cache directory
+    # cache_dir: '/cache'
+    #
+    # Extra registration option
+    # extra_registration_option: '--maximum-timeout=3600'
+    #
+    # Extra configuration options to change in the config.toml file
+    # This parameter is a dictionary where the first level keys are TOML section names
+    # Full list of configuration are available on Gitlab Runner documentation:
+    # See https://docs.gitlab.com/runner/configuration/advanced-configuration.html
+    #
+    # extra_configs:
+    #   runners.docker:
+    #     memory: 512m
+    #     allowed_images: ["ruby:*", "python:*", "php:*"]
+    #   runners.docker.sysctls:
+    #     net.ipv4.ip_forward: "1"
+
+gitlab_runner_temp_dir: /tmp

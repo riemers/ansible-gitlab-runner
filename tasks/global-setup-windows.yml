@@ -1,50 +1,49 @@
 ---
-- name: Create .gitlab-runner dir
-  file:
+- name: (Windows) Create .gitlab-runner dir
+  win_file:
     path: "{{ gitlab_runner_config_file_location }}"
     state: directory
-    mode: '0755'
 
-- name: Ensure config.toml exists
-  file:
+- name: (Windows) Ensure config.toml exists
+  win_file:
     path: "{{ gitlab_runner_config_file }}"
     state: touch
     modification_time: preserve
     access_time: preserve
-  become: true
 
-- name: Set concurrent option
-  lineinfile:
+- name: (Windows) Set concurrent option
+  win_lineinfile:
     dest: "{{ gitlab_runner_config_file }}"
-    regexp: '^(\s*)concurrent ='
-    line: '\1concurrent = {{ gitlab_runner_concurrent }}'
+    regexp: '^(\s*)concurrent =.*'
+    line: '$1concurrent = {{ gitlab_runner_concurrent }}'
     state: present
     backrefs: yes
-  become: true
   notify:
     - restart_gitlab_runner
     - restart_gitlab_runner_macos
+    - restart_gitlab_runner_windows
 
-- name: Add listen_address to config
-  lineinfile:
-    dest: /etc/gitlab-runner/config.toml
-    regexp: '^listen_address ='
+- name: (Windows) Add listen_address to config
+  win_lineinfile:
+    dest: "{{ gitlab_runner_config_file }}"
+    regexp: '^listen_address =.*'
     line: 'listen_address = "{{ gitlab_runner_listen_address }}"'
     insertafter: '\s*concurrent.*'
     state: present
   when: gitlab_runner_listen_address | length > 0  # Ensure value is set
-  notify: restart_gitlab_runner
-  become: true
+  notify:
+    - restart_gitlab_runner
+    - restart_gitlab_runner_windows
 
-- name: Add sentry dsn to config
-  lineinfile:
+- name: (Windows) Add sentry dsn to config
+  win_lineinfile:
     dest: "{{ gitlab_runner_config_file }}"
-    regexp: '^sentry_dsn ='
+    regexp: '^sentry_dsn =.*'
     line: 'sentry_dsn = "{{ gitlab_runner_sentry_dsn }}"'
     insertafter: '\s*concurrent.*'
     state: present
   when: gitlab_runner_sentry_dsn | length > 0  # Ensure value is set
-  become: true
   notify:
     - restart_gitlab_runner
     - restart_gitlab_runner_macos
+    - restart_gitlab_runner_windows
