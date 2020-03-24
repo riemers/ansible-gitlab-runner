@@ -40,6 +40,42 @@ Enable `/metrics` endpoint for Prometheus scraping.
 `gitlab_runner_runners`
 A list of gitlab runners to register & configure. Defaults to a single shell executor. See the [`defaults/main.yml`](https://github.com/riemers/ansible-gitlab-runner/blob/master/defaults/main.yml) file listing all possible options which you can be passed to a runner registration command.
 
+`gitlab_runner_cache_type`
+Variables to set s3 as a shared cache server. If set it requires variables listed below:
+`gitlab_runner_cache_s3_server_address`
+`gitlab_runner_cache_s3_access_key`
+`gitlab_runner_cache_s3_access_key`
+`gitlab_runner_cache_s3_bucket_name`
+`gitlab_runner_cache_s3_bucket_location`
+`gitlab_runner_cache_s3_insecure`
+`gitlab_runner_cache_cache_shared`
+
+aws autoscale runner machine
+https://docs.gitlab.com/runner/configuration/runner_autoscale_aws/#the-runnersmachine-section
+
+    gitlab_runner_machine_options: []
+
+https://docs.docker.com/machine/drivers/aws/#options
+
+    gitlab_runner_machine_idle_count: ''
+    gitlab_runner_machine_idle_time: ''
+    gitlab_runner_machine_max_builds: ''
+
+https://docs.gitlab.com/runner/configuration/autoscale.html#how-concurrent-limit-and-idlecount-generate-the-upper-limit-of-running-machines
+
+    gitlab_runner_machine_off_peak_periods: ''
+    gitlab_runner_machine_off_peak_idle_time: ''
+    gitlab_runner_machine_off_peak_idle_count: ''
+
+https://docs.gitlab.com/runner/configuration/autoscale.html#off-peak-time-mode-configuration
+
+    gitlab_runner_machine_machine_driver: 'amazonec2'
+    gitlab_runner_machine_machine_name: 'gitlab-docker-machine-%s'
+
+The Docker Machine driver is set to amazonec2 and the machine name has a standard prefix followed by %s (required) that is replaced by the ID of the child Runner: gitlab-docker-machine-%s.
+
+See the [config for more options](https://github.com/riemers/ansible-gitlab-runner/blob/master/tasks/register-runner.yml)
+
 Example Playbook
 ----------------
 ```yaml
@@ -57,7 +93,7 @@ gitlab_runner_registration_token: 'HUzTMgnxk17YV8Rj8ucQ'
 gitlab_runner_runners:
   - name: 'Example Docker GitLab Runner'
     # token is an optional override to the global gitlab_runner_registration_token
-    token: 'HUzTMgnxk17YV8Rj8ucQ' 
+    token: 'HUzTMgnxk17YV8Rj8ucQ'
     executor: docker
     docker_image: 'alpine'
     tags:
