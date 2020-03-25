@@ -92,7 +92,7 @@
     --machine-idle-nodes '{{ gitlab_runner.gitlab_runner_machine_idle_count }}'
     --machine-idle-time '{{ gitlab_runner.gitlab_runner_machine_idle_time }}'
     --machine-max-builds '{{ gitlab_runner.gitlab_runner_machine_max_builds }}'
-    {% if  is defined gitlab_runner.gitlab_runner_machine_off_peak_periods %}
+    {% if gitlab_runner.gitlab_runner_machine_off_peak_periods is defined %}
     --machine-off-peak-periods '{{ gitlab_runner.gitlab_runner_machine_off_peak_periods }}'
     --machine-off-peak-idle_time '{{ gitlab_runner.gitlab_runner_machine_off_peak_idle_time }}'
     --machine-off-peak-idle_count '{{ gitlab_runner.gitlab_runner_machine_off_peak_idle_count }}'
