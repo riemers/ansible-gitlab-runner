@@ -88,7 +88,6 @@
     {% if gitlab_runner.cache_s3_insecure|default(false) %}
     --cache-s3-insecure
     {% endif %}
-    {% endif %}
     {% if gitlab_runner.extra_registration_option is defined %}
     {{ gitlab_runner.extra_registration_option }}
     {% endif %}
