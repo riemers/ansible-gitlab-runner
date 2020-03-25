@@ -131,6 +131,35 @@ gitlab_runner_runners:
         net.ipv4.ip_forward: "1"
 ```
 
+## autoscale setup on AWS
+how `vars/main.yml` would look like, if you setup an autoscaling GitLab-Runner on AWS:
+
+```yaml
+gitlab_runner_registration_token: 'HUzTMgnxk17YV8Rj8ucQ'
+gitlab_runner_coordinator_url: 'https://gitlab.com/ci'
+gitlab_runner_runners:
+  - name: 'Example autoscaling GitLab Runner'
+    state: present
+    # token is an optional override to the global gitlab_runner_registration_token
+    token: 'HUzTMgnxk17YV8Rj8ucQ'
+    executor: 'docker+machine'
+    # Maximum number of jobs to run concurrently on this specific runner.
+    # Defaults to 0, simply means don't limit.
+    concurrent_specific: '0'
+    docker_image: 'alpine'
+    # Indicates whether this runner can pick jobs without tags.
+    run_untagged: true
+    extra_configs:
+      runners.machine:
+        IdleCount: 1
+        IdleTime: 1800
+        MaxBuilds: 10
+        MachineDriver: 'amazonec2'
+        MachineName: 'git-runner-%s'
+        MachineOptions: ["amazonec2-access-key='{{ lookup('env','AWS_IAM_ACCESS_KEY') }}'", "amazonec2-secret-key='{{ lookup('env','AWS_IAM_SECRET_KEY') }}'", "amazonec2-zone='{{ lookup('env','AWS_EC2_ZONE') }}'", "amazonec2-region='{{ lookup('env','AWS_EC2_REGION') }}'", "amazonec2-vpc-id='{{ lookup('env','AWS_VPC_ID') }}'", "amazonec2-subnet-id='{{ lookup('env','AWS_SUBNET_ID') }}'", "amazonec2-use-private-address=true", "amazonec2-tags=gitlab-runner", "amazonec2-security-group='{{ lookup('env','AWS_EC2_SECURITY_GROUP') }}'", "amazonec2-instance-type='{{ lookup('env','AWS_EC2_INSTANCE_TYPE') }}'"]
+
+```
+
 Contributors
 ------------
 Feel free to add your name to the readme if you make a PR. A full list of people from the PR's is [here](https://github.com/riemers/ansible-gitlab-runner/pulls?q=is%3Apr+is%3Aclosed)
