@@ -50,29 +50,49 @@ Variables to set s3 as a shared cache server. If set it requires variables liste
 `gitlab_runner_cache_s3_insecure`
 `gitlab_runner_cache_cache_shared`
 
-aws autoscale runner machine
-https://docs.gitlab.com/runner/configuration/runner_autoscale_aws/#the-runnersmachine-section
+## Autoscale Runner Machine vars for AWS (optional)
 
-    gitlab_runner_machine_options: []
+`gitlab_runner_machine_options: []`
+Foremost you need to pass an array of dedicated vars in the machine_options to configure your scaling runner:
 
-https://docs.docker.com/machine/drivers/aws/#options
+  `amazonec2-access-key` and `amazonec2-secret-key`
+  the keys of the dedicated IAM user with permission for EC2
+  `amazonec2-zone`
+  `amazonec2-region`
+  `amazonec2-vpc-id`
+  `amazonec2-subnet-id`
+  `amazonec2-use-private-address=true`
+  `amazonec2-security-group`
+  `amazonec2-instance-type`
 
-    gitlab_runner_machine_idle_count: ''
-    gitlab_runner_machine_idle_time: ''
-    gitlab_runner_machine_max_builds: ''
+  you can also set
+  `amazonec2-tags`
+  to identify you instance more easily via aws-cli or the console.
 
-https://docs.gitlab.com/runner/configuration/autoscale.html#how-concurrent-limit-and-idlecount-generate-the-upper-limit-of-running-machines
+`MachineDriver`
+which should be set to `amzonec2` when working on AWS
 
-    gitlab_runner_machine_off_peak_periods: ''
-    gitlab_runner_machine_off_peak_idle_time: ''
-    gitlab_runner_machine_off_peak_idle_count: ''
+`MachineName`
+Name of the machine. It **must** contain `%s`, which will be replaced with a unique machine identifier.
 
-https://docs.gitlab.com/runner/configuration/autoscale.html#off-peak-time-mode-configuration
+`IdleCount`
+Number of machines, that need to be created and waiting in Idle state.
 
-    gitlab_runner_machine_machine_driver: 'amazonec2'
-    gitlab_runner_machine_machine_name: 'gitlab-docker-machine-%s'
+`IdleTime`
+Time (in seconds) for machine to be in Idle state before it is removed.
 
-The Docker Machine driver is set to amazonec2 and the machine name has a standard prefix followed by %s (required) that is replaced by the ID of the child Runner: gitlab-docker-machine-%s.
+In addition you could set *off peak* settings. This lets you select a regular time periods when no work is done. For example most of commercial companies are working from Monday to Friday in a fixed hours, eg. from 10am to 6pm. In the rest of the week - from Monday to Friday at 12am-9am and 6pm-11pm and whole Saturday and Sunday - no one is working. These time periods we’re naming here as Off Peak.
+
+`gitlab_runner_machine_off_peak_periods`
+`gitlab_runner_machine_off_peak_idle_time`
+`gitlab_runner_machine_off_peak_idle_count`
+
+### Read Sources
+For details follow these links:
+
+- [gitlab-docs/runner: advanced configuration: runners.machine section](https://docs.gitlab.com/runner/configuration/advanced-configuration.html#the-runnersmachine-section)
+- [gitlab-docs/runner: autoscale: supported cloud-providers](https://docs.gitlab.com/runner/configuration/autoscale.html#supported-cloud-providers)
+- [gitlab-docs/runner: autoscale_aws: runners.machine section](https://docs.gitlab.com/runner/configuration/runner_autoscale_aws/#the-runnersmachine-section)
 
 See the [config for more options](https://github.com/riemers/ansible-gitlab-runner/blob/master/tasks/register-runner.yml)
 
@@ -111,9 +131,45 @@ gitlab_runner_runners:
         net.ipv4.ip_forward: "1"
 ```
 
+## autoscale setup on AWS
+how `vars/main.yml` would look like, if you setup an autoscaling GitLab-Runner on AWS:
+
+```yaml
+gitlab_runner_registration_token: 'HUzTMgnxk17YV8Rj8ucQ'
+gitlab_runner_coordinator_url: 'https://gitlab.com/ci'
+gitlab_runner_runners:
+  - name: 'Example autoscaling GitLab Runner'
+    state: present
+    # token is an optional override to the global gitlab_runner_registration_token
+    token: 'HUzTMgnxk17YV8Rj8ucQ'
+    executor: 'docker+machine'
+    # Maximum number of jobs to run concurrently on this specific runner.
+    # Defaults to 0, simply means don't limit.
+    concurrent_specific: '0'
+    docker_image: 'alpine'
+    # Indicates whether this runner can pick jobs without tags.
+    run_untagged: true
+    extra_configs:
+      runners.machine:
+        IdleCount: 1
+        IdleTime: 1800
+        MaxBuilds: 10
+        MachineDriver: 'amazonec2'
+        MachineName: 'git-runner-%s'
+        MachineOptions: ["amazonec2-access-key={{ lookup('env','AWS_IAM_ACCESS_KEY') }}", "amazonec2-secret-key={{ lookup('env','AWS_IAM_SECRET_KEY') }}", "amazonec2-zone={{ lookup('env','AWS_EC2_ZONE') }}", "amazonec2-region={{ lookup('env','AWS_EC2_REGION') }}", "amazonec2-vpc-id={{ lookup('env','AWS_VPC_ID') }}", "amazonec2-subnet-id={{ lookup('env','AWS_SUBNET_ID') }}", "amazonec2-use-private-address=true", "amazonec2-tags=gitlab-runner", "amazonec2-security-group={{ lookup('env','AWS_EC2_SECURITY_GROUP') }}", "amazonec2-instance-type={{ lookup('env','AWS_EC2_INSTANCE_TYPE') }}"]
+
+```
+
+### NOTE
+from https://docs.gitlab.com/runner/executors/docker_machine.html:
+
+>The **first time** you’re using Docker Machine, it’s best to execute **manually** `docker-machine create...` with your chosen driver and **all options from the MachineOptions** section. This will set up the Docker Machine environment properly and will also be a good validation of the specified options. After this, you *can destroy the machine* with `docker-machine rm [machine_name]` and start the Runner.
+
+
 Contributors
 ------------
 Feel free to add your name to the readme if you make a PR. A full list of people from the PR's is [here](https://github.com/riemers/ansible-gitlab-runner/pulls?q=is%3Apr+is%3Aclosed)
 
 - Gastrofix for adding Mac Support
 - Matthias Schmieder for adding Windows Support
+- dniwdeus & rosenstrauch for adding AWS autoscale option
