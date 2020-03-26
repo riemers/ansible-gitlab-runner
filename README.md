@@ -156,7 +156,7 @@ gitlab_runner_runners:
         MaxBuilds: 10
         MachineDriver: 'amazonec2'
         MachineName: 'git-runner-%s'
-        MachineOptions: ["amazonec2-access-key='{{ lookup('env','AWS_IAM_ACCESS_KEY') }}'", "amazonec2-secret-key='{{ lookup('env','AWS_IAM_SECRET_KEY') }}'", "amazonec2-zone='{{ lookup('env','AWS_EC2_ZONE') }}'", "amazonec2-region='{{ lookup('env','AWS_EC2_REGION') }}'", "amazonec2-vpc-id='{{ lookup('env','AWS_VPC_ID') }}'", "amazonec2-subnet-id='{{ lookup('env','AWS_SUBNET_ID') }}'", "amazonec2-use-private-address=true", "amazonec2-tags=gitlab-runner", "amazonec2-security-group='{{ lookup('env','AWS_EC2_SECURITY_GROUP') }}'", "amazonec2-instance-type='{{ lookup('env','AWS_EC2_INSTANCE_TYPE') }}'"]
+        MachineOptions: ["amazonec2-access-key={{ lookup('env','AWS_IAM_ACCESS_KEY') }}", "amazonec2-secret-key={{ lookup('env','AWS_IAM_SECRET_KEY') }}", "amazonec2-zone={{ lookup('env','AWS_EC2_ZONE') }}", "amazonec2-region={{ lookup('env','AWS_EC2_REGION') }}", "amazonec2-vpc-id={{ lookup('env','AWS_VPC_ID') }}", "amazonec2-subnet-id={{ lookup('env','AWS_SUBNET_ID') }}", "amazonec2-use-private-address=true", "amazonec2-tags=gitlab-runner", "amazonec2-security-group={{ lookup('env','AWS_EC2_SECURITY_GROUP') }}", "amazonec2-instance-type={{ lookup('env','AWS_EC2_INSTANCE_TYPE') }}"]
 
 ```
 
