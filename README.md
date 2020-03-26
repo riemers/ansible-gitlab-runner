@@ -160,6 +160,12 @@ gitlab_runner_runners:
 
 ```
 
+### NOTE
+from https://docs.gitlab.com/runner/executors/docker_machine.html:
+
+>The **first time** you’re using Docker Machine, it’s best to execute **manually** `docker-machine create...` with your chosen driver and **all options from the MachineOptions** section. This will set up the Docker Machine environment properly and will also be a good validation of the specified options. After this, you *can destroy the machine* with `docker-machine rm [machine_name]` and start the Runner.
+
+
 Contributors
 ------------
 Feel free to add your name to the readme if you make a PR. A full list of people from the PR's is [here](https://github.com/riemers/ansible-gitlab-runner/pulls?q=is%3Apr+is%3Aclosed)
