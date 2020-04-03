@@ -3,7 +3,7 @@
   slurp:
     src: "{{ gitlab_runner_config_file }}"
   register: runner_config_file
-  become: true
+  become: gitlab_runner_system_mode
 
 - name: Get pre-existing runner configs
   set_fact:
@@ -24,19 +24,12 @@
     index_var: runner_config_index
     loop_var: runner_config
 
-- name: Copy gitlab-runner-wrapper.sh
-  copy:
-    src: "{{ gitlab_wrapper_script_name }}"
-    dest: "{{ gitlab_runner_temp_dir|default('/tmp', true) }}/gitlab-runner-wrapper.sh"
-    mode: 0700
-  become: true
-
 - name: Assemble new config.toml
   assemble:
     src: "{{ temp_runner_config_dir.path }}"
     dest: "{{ gitlab_runner_config_file }}"
     delimiter: '[[runners]]\n'
     backup: yes
-    validate: "{{ gitlab_runner_temp_dir|default('/tmp', true) }}/gitlab-runner-wrapper.sh %s"
+    validate: "{{ gitlab_runner_executable }} verify -c %s"
     mode: 0600
-  become: true
+  become: gitlab_runner_system_mode

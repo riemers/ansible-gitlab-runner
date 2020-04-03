@@ -4,6 +4,7 @@
     path: "{{ gitlab_runner_config_file_location }}"
     state: directory
     mode: '0755'
+  become: gitlab_runner_system_mode
 
 - name: Ensure config.toml exists
   file:
@@ -11,7 +12,7 @@
     state: touch
     modification_time: preserve
     access_time: preserve
-  become: true
+  become: gitlab_runner_system_mode
 
 - name: Set concurrent option
   lineinfile:
@@ -20,21 +21,23 @@
     line: '\1concurrent = {{ gitlab_runner_concurrent }}'
     state: present
     backrefs: yes
-  become: true
+  become: gitlab_runner_system_mode
   notify:
     - restart_gitlab_runner
     - restart_gitlab_runner_macos
 
 - name: Add listen_address to config
   lineinfile:
-    dest: /etc/gitlab-runner/config.toml
+    dest: "{{ gitlab_runner_config_file }}"
     regexp: '^listen_address ='
     line: 'listen_address = "{{ gitlab_runner_listen_address }}"'
     insertafter: '\s*concurrent.*'
     state: present
   when: gitlab_runner_listen_address | length > 0  # Ensure value is set
-  notify: restart_gitlab_runner
-  become: true
+  become: gitlab_runner_system_mode
+  notify:
+    - restart_gitlab_runner
+    - restart_gitlab_runner_macos
 
 - name: Add sentry dsn to config
   lineinfile:
@@ -44,7 +47,7 @@
     insertafter: '\s*concurrent.*'
     state: present
   when: gitlab_runner_sentry_dsn | length > 0  # Ensure value is set
-  become: true
+  become: gitlab_runner_system_mode
   notify:
     - restart_gitlab_runner
     - restart_gitlab_runner_macos

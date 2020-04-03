@@ -11,7 +11,7 @@ jobs:
             - python-pip
       install:
         # Install ansible
-        - pip install ansible
+        - pip install ansible flask
         # Check ansible version
         - ansible --version
         # Create ansible.cfg with correct roles_path
@@ -21,6 +21,9 @@ jobs:
         - ansible-playbook tests/test.yml -i tests/inventory --syntax-check
         # Running tests
         - ansible-playbook tests/test.yml -i tests/inventory
+      after_failure:
+        - touch ~/mock_ci.pid && cat ~/mock_ci.pid
+        - touch ~/mock_ci.log && cat ~/mock_ci.log
     - os: osx
       osx_image: xcode10.3
       # See https://github.com/travis-ci/travis-ci/issues/2312#issuecomment-422830059
@@ -28,7 +31,7 @@ jobs:
       language: generic
       install:
         # Install ansible
-        - pip install ansible
+        - pip install ansible flask
         # Check ansible version
         - ansible --version
         # Create ansible.cfg with correct roles_path
@@ -38,6 +41,9 @@ jobs:
         - ansible-playbook tests/test.yml -i tests/inventory --syntax-check
         # Running tests
         - ansible-playbook tests/test.yml -i tests/inventory
+      after_failure:
+        - touch ~/mock_ci.pid && cat ~/mock_ci.pid
+        - touch ~/mock_ci.log && cat ~/mock_ci.log
     - os: windows
       language: shell
       install:
