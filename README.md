@@ -12,80 +12,49 @@ This role requires Ansible 2.7 or higher.
 Role Variables
 --------------
 
-`gitlab_runner_package_name`
-**Since Gitlab 10.x** The package name of `gitlab-ci-multi-runner` has been renamed to `gitlab-runner`. In order to install a version < 10.x you will need to define this variable `gitlab_runner_package_name: gitlab-ci-multi-runner`.
-
-`gitlab_runner_wanted_version` or `gitlab_runner_package_version`
-To install a specific version of the gitlab runner (by default it installs the latest).
+- `gitlab_runner_package_name` - **Since Gitlab 10.x** The package name of `gitlab-ci-multi-runner` has been renamed to `gitlab-runner`. In order to install a version < 10.x you will need to define this variable `gitlab_runner_package_name: gitlab-ci-multi-runner`.
+- `gitlab_runner_wanted_version` or `gitlab_runner_package_version` - To install a specific version of the gitlab runner (by default it installs the latest).
 On Mac OSX and Windows, use e.g. `gitlab_runner_wanted_version: 12.4.1`.
 On Linux, use `gitlab_runner_package_version` instead.
-
-`gitlab_runner_concurrent`
-The maximum number of global jobs to run concurrently.
-Defaults to the number of processor cores.
-
-`gitlab_runner_registration_token`
-The GitLab registration token. If this is specified, a runner will be registered to a GitLab server.
-
-`gitlab_runner_coordinator_url`
-The GitLab coordinator URL.
-Defaults to `https://gitlab.com/ci`.
-
-`gitlab_runner_sentry_dsn`
-Enable tracking of all system level errors to Sentry
-
-`gitlab_runner_listen_address`
-Enable `/metrics` endpoint for Prometheus scraping.
-
-`gitlab_runner_runners`
-A list of gitlab runners to register & configure. Defaults to a single shell executor. See the [`defaults/main.yml`](https://github.com/riemers/ansible-gitlab-runner/blob/master/defaults/main.yml) file listing all possible options which you can be passed to a runner registration command.
-
-`gitlab_runner_cache_type`
-Variables to set s3 as a shared cache server. If set it requires variables listed below:
-`gitlab_runner_cache_s3_server_address`
-`gitlab_runner_cache_s3_access_key`
-`gitlab_runner_cache_s3_access_key`
-`gitlab_runner_cache_s3_bucket_name`
-`gitlab_runner_cache_s3_bucket_location`
-`gitlab_runner_cache_s3_insecure`
-`gitlab_runner_cache_cache_shared`
+- `gitlab_runner_concurrent` - The maximum number of global jobs to run concurrently. Defaults to the number of processor cores.
+- `gitlab_runner_registration_token` - The GitLab registration token. If this is specified, a runner will be registered to a GitLab server.
+- `gitlab_runner_coordinator_url` - The GitLab coordinator URL. Defaults to `https://gitlab.com`.
+- `gitlab_runner_sentry_dsn` - Enable tracking of all system level errors to Sentry
+- `gitlab_runner_listen_address` - Enable `/metrics` endpoint for Prometheus scraping.
+- `gitlab_runner_runners` - A list of gitlab runners to register & configure. Defaults to a single shell executor. See the [`defaults/main.yml`](https://github.com/riemers/ansible-gitlab-runner/blob/master/defaults/main.yml) file listing all possible options which you can be passed to a runner registration command.
+- `gitlab_runner_cache_type` - Variables to set s3 as a shared cache server. If set it requires variables listed below:
+  + `gitlab_runner_cache_s3_server_address`
+  + `gitlab_runner_cache_s3_access_key`
+  + `gitlab_runner_cache_s3_access_key`
+  + `gitlab_runner_cache_s3_bucket_name`
+  + `gitlab_runner_cache_s3_bucket_location`
+  + `gitlab_runner_cache_s3_insecure`
+  + `gitlab_runner_cache_cache_shared`
 
 ## Autoscale Runner Machine vars for AWS (optional)
 
-`gitlab_runner_machine_options: []`
-Foremost you need to pass an array of dedicated vars in the machine_options to configure your scaling runner:
+- `gitlab_runner_machine_options: []` - Foremost you need to pass an array of dedicated vars in the machine_options to configure your scaling runner:
 
-  `amazonec2-access-key` and `amazonec2-secret-key`
-  the keys of the dedicated IAM user with permission for EC2
-  `amazonec2-zone`
-  `amazonec2-region`
-  `amazonec2-vpc-id`
-  `amazonec2-subnet-id`
-  `amazonec2-use-private-address=true`
-  `amazonec2-security-group`
-  `amazonec2-instance-type`
+  + `amazonec2-access-key` and `amazonec2-secret-key` the keys of the dedicated IAM user with permission for EC2
+  + `amazonec2-zone`
+  + `amazonec2-region`
+  + `amazonec2-vpc-id`
+  + `amazonec2-subnet-id`
+  + `amazonec2-use-private-address=true`
+  + `amazonec2-security-group`
+  + `amazonec2-instance-type`
+  + you can also set `amazonec2-tags` to identify you instance more easily via aws-cli or the console.
 
-  you can also set
-  `amazonec2-tags`
-  to identify you instance more easily via aws-cli or the console.
-
-`MachineDriver`
-which should be set to `amzonec2` when working on AWS
-
-`MachineName`
-Name of the machine. It **must** contain `%s`, which will be replaced with a unique machine identifier.
-
-`IdleCount`
-Number of machines, that need to be created and waiting in Idle state.
-
-`IdleTime`
-Time (in seconds) for machine to be in Idle state before it is removed.
+- `MachineDriver` - which should be set to `amzonec2` when working on AWS
+- `MachineName` - Name of the machine. It **must** contain `%s`, which will be replaced with a unique machine identifier.
+- `IdleCount` - Number of machines, that need to be created and waiting in Idle state.
+- `IdleTime` - Time (in seconds) for machine to be in Idle state before it is removed.
 
 In addition you could set *off peak* settings. This lets you select a regular time periods when no work is done. For example most of commercial companies are working from Monday to Friday in a fixed hours, eg. from 10am to 6pm. In the rest of the week - from Monday to Friday at 12am-9am and 6pm-11pm and whole Saturday and Sunday - no one is working. These time periods we’re naming here as Off Peak.
 
-`gitlab_runner_machine_off_peak_periods`
-`gitlab_runner_machine_off_peak_idle_time`
-`gitlab_runner_machine_off_peak_idle_count`
+- `gitlab_runner_machine_off_peak_periods`
+- `gitlab_runner_machine_off_peak_idle_time`
+- `gitlab_runner_machine_off_peak_idle_count`
 
 ### Read Sources
 For details follow these links:
@@ -136,7 +105,7 @@ how `vars/main.yml` would look like, if you setup an autoscaling GitLab-Runner o
 
 ```yaml
 gitlab_runner_registration_token: 'HUzTMgnxk17YV8Rj8ucQ'
-gitlab_runner_coordinator_url: 'https://gitlab.com/ci'
+gitlab_runner_coordinator_url: 'https://gitlab.com'
 gitlab_runner_runners:
   - name: 'Example autoscaling GitLab Runner'
     state: present
