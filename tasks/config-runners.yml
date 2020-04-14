@@ -3,7 +3,7 @@
   slurp:
     src: "{{ gitlab_runner_config_file }}"
   register: runner_config_file
-  become: gitlab_runner_system_mode
+  become: "{{ gitlab_runner_system_mode }}"
 
 - name: Get pre-existing runner configs
   set_fact:
@@ -32,4 +32,4 @@
     backup: yes
     validate: "{{ gitlab_runner_executable }} verify -c %s"
     mode: 0600
-  become: gitlab_runner_system_mode
+  become: "{{ gitlab_runner_system_mode }}"
