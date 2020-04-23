@@ -21,6 +21,18 @@
   check_mode: no
   notify: restart_gitlab_runner_windows
 
+- name: (Windows) Set clone URL
+  win_lineinfile:
+    dest: "{{ temp_runner_config.path }}"
+    regexp: '^\s*clone_url ='
+    line: '  clone_url = {{ gitlab_runner.clone_url | to_json }}'
+    state: present
+    insertafter: '^\s*url ='
+    backrefs: no
+  check_mode: no
+  notify: restart_gitlab_runner
+  when: gitlab_runner.clone_url is defined
+
 - name: (Windows) Set environment option
   win_lineinfile:
     dest: "{{ temp_runner_config.path }}"
