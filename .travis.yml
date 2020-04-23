@@ -1,5 +1,4 @@
 ---
-
 jobs:
   include:
     - os: linux
@@ -60,4 +59,3 @@ jobs:
 
 notifications:
   webhooks: https://galaxy.ansible.com/api/v1/notifications/
-
