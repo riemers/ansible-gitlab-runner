@@ -1,4 +1,3 @@
-
 - name: Install GitLab Runner (Debian)
   import_tasks: install-debian.yml
   when: ansible_os_family == 'Debian'
