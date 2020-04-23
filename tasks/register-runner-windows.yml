@@ -27,6 +27,9 @@
     --registration-token '{{ gitlab_runner.token|default(gitlab_runner_registration_token) }}'
     --description '{{ gitlab_runner.name|default(ansible_hostname+"-"+gitlab_runner_index|string) }}'
     --tag-list '{{ gitlab_runner.tags|default([]) | join(",") }}'
+    {% if gitlab_runner.clone_url|default(false) %}
+    --clone-url "{{ gitlab_runner.clone_url }}"
+    {% endif %}
     {% if gitlab_runner.run_untagged|default(true) %}
     --run-untagged
     {% endif %}

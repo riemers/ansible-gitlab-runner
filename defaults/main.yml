@@ -54,6 +54,9 @@ gitlab_runner_runners:
     locked: 'false'
     # Custom environment variables injected to registration command
     env_vars: []
+    # Sets the clone_url. The default is not set.
+    # clone_url:
+    #
     # Sets the pre_clone_script. The default is not set.
     # pre_clone_script:
     #
