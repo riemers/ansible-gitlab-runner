@@ -504,7 +504,7 @@
   when: item|length
   changed_when: False
   become: yes
-  become_user: gitlab_runner_runtime_owner|default(omit)
+  become_user: "{{ gitlab_runner_runtime_owner|default(omit) }}"
   register: ensure_directory_access
   ignore_errors: true
 
