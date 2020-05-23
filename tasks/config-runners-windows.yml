@@ -28,6 +28,7 @@
     loop_var: runner_config
 
 - name: (Windows) Assemble new config.toml
+  when: not ansible_check_mode
   block:
   - name: (Windows) Create temporary file config.toml
     win_tempfile:
