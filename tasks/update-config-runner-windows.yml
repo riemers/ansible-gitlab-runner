@@ -288,7 +288,7 @@
   check_mode: no
   notify: restart_gitlab_runner_windows
 
-- include: section-config-runner.yml
+- include: section-config-runner-windows.yml
   loop: "{{ gitlab_runner.extra_configs|list }}"
   loop_control:
     loop_var: section
