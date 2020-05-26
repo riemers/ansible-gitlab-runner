@@ -1,4 +1,11 @@
 ---
+- name: (Windows) Print "[[runners]]" section
+  win_lineinfile:
+    dest: "{{ temp_runner_config.path }}"
+    line: '[[runners]]'
+    state: present
+    insertbefore: BOF
+
 - name: (Windows) Set concurrent limit option
   win_lineinfile:
     dest: "{{ temp_runner_config.path }}"
