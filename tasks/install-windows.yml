@@ -37,6 +37,15 @@
       win_command: "{{ gitlab_runner_executable }} install"
       args:
         chdir: "{{ gitlab_runner_config_file_location }}"
+      when: (gitlab_runner_windows_service_user | length == 0) or (gitlab_runner_windows_service_password | length == 0)
+    
+    - name: (Windows) Install GitLab Runner
+      win_command: "{{ gitlab_runner_executable }} install --user \"{{ gitlab_runner_windows_service_user }}\" --password \"{{ gitlab_runner_windows_service_password }}\""
+      args:
+        chdir: "{{ gitlab_runner_config_file_location }}"
+      when:
+        - gitlab_runner_windows_service_user | length > 0
+        - gitlab_runner_windows_service_password | length > 0
 
   when: (not gitlab_runner_exists)
 
