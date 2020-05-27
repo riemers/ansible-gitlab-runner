@@ -29,6 +29,12 @@ gitlab_runner_sentry_dsn: ''
 # Prometheus Metrics & Monitoring
 gitlab_runner_listen_address: ''
 
+# The credentials for the Windows user used to run the gitlab-runner service.
+# Those credentials will be passed to `gitlab-runner.exe install`.
+# https://docs.gitlab.com/runner/install/windows.html 
+gitlab_runner_windows_service_user: ''
+gitlab_runner_windows_service_password: ''
+
 # A list of runners to register and configure
 gitlab_runner_runners:
     # The identifier of the runner.
