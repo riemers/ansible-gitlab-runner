@@ -26,7 +26,7 @@
   - restart_gitlab_runner_macos
 
 - name: Set clone URL
-  win_lineinfile:
+  lineinfile:
     dest: "{{ temp_runner_config.path }}"
     regexp: '^\s*clone_url ='
     line: '  clone_url = {{ gitlab_runner.clone_url | to_json }}'
