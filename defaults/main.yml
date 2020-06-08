@@ -58,6 +58,8 @@ gitlab_runner_runners:
     docker_privileged: false
     # Runner Locked. When a runner is locked, it cannot be assigned to other projects
     locked: 'false'
+    # Add container to a custom network
+    docker_network_mode: bridge
     # Custom environment variables injected to build environment
     env_vars: []
     # Sets the clone_url. The default is not set.
