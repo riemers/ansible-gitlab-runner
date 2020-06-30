@@ -10,9 +10,6 @@
   import_tasks: install-macos.yml
   when: ansible_os_family == 'Darwin'
 
-- name: Set global options (macOS/Debian/RedHat)
-  import_tasks: global-setup.yml
-
 - name: (Unix) List configured runners
   command: "{{ gitlab_runner_executable }} list"
   register: configured_runners
@@ -35,6 +32,9 @@
   loop_control:
     index_var: gitlab_runner_index
     loop_var: gitlab_runner
+
+- name: Set global options (macOS/Debian/RedHat)
+  import_tasks: global-setup.yml
 
 - name: (Unix) Configure GitLab Runner
   import_tasks: config-runners.yml
