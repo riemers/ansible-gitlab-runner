@@ -63,6 +63,30 @@
   notify: restart_gitlab_runner
   when: gitlab_runner.pre_clone_script is defined
 
+- name: (Windows) Set pre_build_script
+  win_lineinfile:
+    dest: "{{ temp_runner_config.path }}"
+    regexp: '^\s*pre_build_script ='
+    line: '  pre_build_script = {{ gitlab_runner.pre_build_script | to_json }}'
+    state: present
+    insertafter: '^\s*url ='
+    backrefs: no
+  check_mode: no
+  notify: restart_gitlab_runner
+  when: gitlab_runner.pre_build_script is defined
+
+- name: (Windows) Set post_build_script
+  win_lineinfile:
+    dest: "{{ temp_runner_config.path }}"
+    regexp: '^\s*post_build_script ='
+    line: '  post_build_script = {{ gitlab_runner.post_build_script | to_json }}'
+    state: present
+    insertafter: '^\s*url ='
+    backrefs: no
+  check_mode: no
+  notify: restart_gitlab_runner
+  when: gitlab_runner.post_build_script is defined
+
 - name: (Windows) Set runner executor option
   win_lineinfile:
     dest: "{{ temp_runner_config.path }}"
