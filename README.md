@@ -134,6 +134,10 @@ from https://docs.gitlab.com/runner/executors/docker_machine.html:
 
 >The **first time** you’re using Docker Machine, it’s best to execute **manually** `docker-machine create...` with your chosen driver and **all options from the MachineOptions** section. This will set up the Docker Machine environment properly and will also be a good validation of the specified options. After this, you *can destroy the machine* with `docker-machine rm [machine_name]` and start the Runner.
 
+`docker-machine create -d amazonec2 --amazonec2-zone=a --amazonec2-region=us-east-1 --amazonec2-vpc-id=vpc-11111111 --amazonec2-subnet-id=subnet-1111111 --amazonec2-use-private-address=true --amazonec2-tags=gitlab-runner --amazonec2-instance-type=t3.medium test
+
+docker-machine rm test
+`
 
 Contributors
 ------------
