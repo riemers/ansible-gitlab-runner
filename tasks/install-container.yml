@@ -1,0 +1,10 @@
+---
+- name: (Container) Pull Image from Registry
+  docker_image:
+    name: "{{ gitlab_runner_container_image }}:{{ gitlab_runner_container_tag }}"
+    source: pull
+
+- name: (Container) Define Container volume Path
+  file:
+    state: directory
+    path: "/srv/{{ gitlab_runner_container_name }}"

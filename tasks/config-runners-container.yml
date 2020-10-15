@@ -1,0 +1,36 @@
+---
+- name: Get existing config.toml
+  slurp:
+    src: "{{ gitlab_runner_config_file }}"
+  register: runner_config_file
+
+- name: Get pre-existing runner configs
+  set_fact:
+    runner_configs: "{{ (runner_config_file['content'] | b64decode).split('[[runners]]\n') }}"
+
+- name: Create temporary directory
+  tempfile:
+    state: directory
+    suffix: gitlab-runner-config
+  register: temp_runner_config_dir
+  check_mode: no
+  changed_when: false
+
+- name: Write config section for each runner
+  include_tasks: config-runner-container.yml
+  loop: "{{ runner_configs }}"
+  loop_control:
+    index_var: runner_config_index
+    loop_var: runner_config
+
+- name: Assemble new config.toml
+  assemble:
+    src: "{{ temp_runner_config_dir.path }}"
+    dest: "{{ gitlab_runner_config_file }}"
+    delimiter: '[[runners]]\n'
+    backup: yes
+    validate: |
+      docker run -i --rm -v %s:/gitlab-runner.conf
+      {{ gitlab_runner_container_image }}:{{ gitlab_runner_container_tag }} 
+      verify -c /gitlab-runner.conf
+    mode: 0600

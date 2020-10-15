@@ -10,10 +10,14 @@
       paths:
         - 'vars'
 
+- name: Install Gitlab Runner (Container)
+  import_tasks: Container.yml
+  when: gitlab_runner_container_install
+
 - name: Install GitLab Runner (Unix)
   import_tasks: Unix.yml
-  when: ansible_os_family != 'Windows'
+  when: ansible_os_family != 'Windows' and not gitlab_runner_container_install
 
 - name: Install GitLab Runner (Windows)
   import_tasks: Windows.yml
-  when: ansible_os_family == 'Windows'
+  when: ansible_os_family == 'Windows' and not gitlab_runner_container_install

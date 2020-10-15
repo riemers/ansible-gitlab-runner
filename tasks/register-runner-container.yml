@@ -1,0 +1,114 @@
+---
+- name: Clear Config File
+  block:
+    - name: remove config.toml file
+      file:
+        path: "{{ gitlab_runner_config_file }}"
+        state: absent
+
+    - name: Ensure config.toml exists
+      file:
+        path: "{{ gitlab_runner_config_file }}"
+        state: touch
+        modification_time: preserve
+        access_time: preserve
+  when: (verified_runners.container.Output.find("Verifying runner... is removed") != -1)
+
+- name: Register runner to GitLab
+  docker_container:
+    name: "{{ gitlab_runner_container_name }}"
+    image: "{{ gitlab_runner_container_image }}:{{ gitlab_runner_container_tag }}"
+    command: |
+      register
+      --non-interactive
+      --url '{{ gitlab_runner_coordinator_url }}'
+      --registration-token '{{ gitlab_runner.token|default(gitlab_runner_registration_token) }}'
+      --description '{{ gitlab_runner.name|default(ansible_hostname+"-"+gitlab_runner_index|string) }}'
+      --tag-list '{{ gitlab_runner.tags|default([]) | join(",") }}'
+      {% if gitlab_runner.clone_url|default(false) %}
+      --clone-url "{{ gitlab_runner.clone_url }}"
+      {% endif %}
+      {% if gitlab_runner.run_untagged|default(true) %}
+      --run-untagged
+      {% endif %}
+      --executor '{{ gitlab_runner.executor|default("shell") }}'
+      --limit '{{ gitlab_runner.concurrent_specific|default(0) }}'
+      --output-limit '{{ gitlab_runner.output_limit|default(4096) }}'
+      --locked='{{ gitlab_runner.locked|default(false) }}'
+      {% for env_var in gitlab_runner.env_vars|default([]) %}
+      --env '{{ env_var }}'
+      {% endfor %}
+      {% if gitlab_runner.pre_clone_script|default(false) %}
+      --pre-clone-script "{{ gitlab_runner.pre_clone_script }}"
+      {% endif %}
+      {% if gitlab_runner.pre_build_script|default(false) %}
+      --pre-build-script "{{ gitlab_runner.pre_build_script }}"
+      {% endif %}
+      {% if gitlab_runner.post_build_script|default(false) %}
+      --post-build-script "{{ gitlab_runner.post_build_script }}"
+      {% endif %}
+      --docker-image '{{ gitlab_runner.docker_image|default("alpine") }}'
+      {% if gitlab_runner.docker_privileged|default(false) %}
+      --docker-privileged
+      {% endif %}
+      {% if gitlab_runner.docker_tlsverify|default(false) %}
+      --docker-tlsverify '{{ gitlab_runner.docker_tlsverify|default("true") }}'
+      {% endif %}
+      {% if gitlab_runner.docker_dns|default(false) %}
+      --docker-dns '{{ gitlab_runner.docker_dns|default("1.1.1.1") }}'
+      {% endif %}
+      {% for volume in gitlab_runner.docker_volumes | default([]) %}
+      --docker-volumes "{{ volume }}"
+      {% endfor %}
+      --ssh-user '{{ gitlab_runner.ssh_user|default("") }}'
+      --ssh-host '{{ gitlab_runner.ssh_host|default("") }}'
+      --ssh-port '{{ gitlab_runner.ssh_port|default("") }}'
+      --ssh-password '{{ gitlab_runner.ssh_password|default("") }}'
+      --ssh-identity-file '{{ gitlab_runner.ssh_identity_file|default("") }}'
+      {% if gitlab_runner.cache_type is defined %}
+      --cache-type '{{ gitlab_runner.cache_type }}'
+      {% endif %}
+      {% if gitlab_runner.cache_shared|default(false) %}
+      --cache-shared
+      {% endif %}
+      {% if gitlab_runner.cache_path is defined %}
+      --cache-path '{{ gitlab_runner.cache_path }}'
+      {% endif %}
+      {% if gitlab_runner.cache_s3_server_address is defined %}
+      --cache-s3-server-address '{{ gitlab_runner.cache_s3_server_address }}'
+      {% if gitlab_runner.cache_s3_access_key is defined %}
+      --cache-s3-access-key '{{ gitlab_runner.cache_s3_access_key }}'
+      {% endif %}
+      {% if gitlab_runner.cache_s3_secret_key is defined %}
+      --cache-s3-secret-key '{{ gitlab_runner.cache_s3_secret_key }}'
+      {% endif %}
+      {% endif %}
+      {% if gitlab_runner.cache_s3_bucket_name is defined %}
+      --cache-s3-bucket-name '{{ gitlab_runner.cache_s3_bucket_name }}'
+      {% endif %}
+      {% if gitlab_runner.cache_s3_bucket_location is defined %}
+      --cache-s3-bucket-location '{{ gitlab_runner.cache_s3_bucket_location }}'
+      {% endif %}
+      {% if gitlab_runner.builds_dir|default(false) %}
+      --builds-dir '{{ gitlab_runner.builds_dir }}'
+      {% endif %}
+      {% if gitlab_runner.cache_dir|default(false) %}
+      --cache-dir '{{ gitlab_runner.cache_dir }}'
+      {% endif %}
+      {% if gitlab_runner.cache_s3_insecure|default(false) %}
+      --cache-s3-insecure
+      {% endif %}
+      {% if gitlab_runner.extra_registration_option is defined %}
+      {{ gitlab_runner.extra_registration_option }}
+      {% endif %}
+    mounts:
+    - type: bind
+      source: "/srv/{{ gitlab_runner_container_name }}"
+      target: /etc/gitlab-runner
+    cleanup: yes
+    auto_remove: yes
+  when: (verified_runners.container.Output.find("Verifying runner... is removed") != -1) or
+        ((configured_runners.container.Output.find('\n' + gitlab_runner.name|default(ansible_hostname+'-'+gitlab_runner_index|string)) == -1) and
+        (gitlab_runner.state|default('present') == 'present'))
+  no_log: false
+
