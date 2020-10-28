@@ -23,7 +23,7 @@
   win_shell: >
     {{ gitlab_runner_executable }} register
     --non-interactive
-    --url '{{ gitlab_runner_coordinator_url }}'
+    --url '{{ gitlab_runner.url|default(gitlab_runner_coordinator_url) }}'
     --registration-token '{{ gitlab_runner.token|default(gitlab_runner_registration_token) }}'
     --description '{{ gitlab_runner.name|default(ansible_hostname+"-"+gitlab_runner_index|string) }}'
     --tag-list '{{ gitlab_runner.tags|default([]) | join(",") }}'
