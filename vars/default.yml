@@ -1,1 +1,5 @@
 ---
+gitlab_runner_container_install: false
+gitlab_runner_container_image: gitlab/gitlab-runner
+gitlab_runner_container_tag: latest
+gitlab_runner_container_name: gitlab-runner

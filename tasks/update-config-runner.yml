@@ -474,7 +474,7 @@
   lineinfile:
     dest: "{{ temp_runner_config.path }}"
     regexp: '^\s*port ='
-    line: '  port = {{ gitlab_runner.ssh_port|default("") | to_json }}'
+    line: '  port = "{{ gitlab_runner.ssh_port|default("") | to_json }}"'
     state: "{{ 'present' if gitlab_runner.ssh_port is defined else 'absent' }}"
     insertafter: '^\s*\[runners\.ssh\]'
     backrefs: no

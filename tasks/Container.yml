@@ -1,0 +1,73 @@
+---
+- name: (Container) Install Gitlab Runner
+  import_tasks: install-container.yml
+  when: gitlab_runner_container_install
+
+- name: (Container) List configured runners
+  docker_container:
+    name: "{{ gitlab_runner_container_name }}"
+    image: "{{ gitlab_runner_container_image }}:{{ gitlab_runner_container_tag }}"
+    command: list
+    mounts:
+      - type: bind
+        source: "/srv/{{ gitlab_runner_container_name }}"
+        target: /etc/gitlab-runner
+    cleanup: yes
+    interactive: yes
+    tty: yes
+    detach: no
+  register: configured_runners
+  changed_when: False
+  check_mode: no
+
+- name: (Container) Check runner is registered
+  docker_container:
+    name: "{{ gitlab_runner_container_name }}"
+    image: "{{ gitlab_runner_container_image }}:{{ gitlab_runner_container_tag }}"
+    command: verify
+    mounts:
+      - type: bind
+        source: "/srv/{{ gitlab_runner_container_name }}"
+        target: /etc/gitlab-runner
+    cleanup: yes
+    interactive: yes
+    tty: yes
+    detach: no
+  register: verified_runners
+  ignore_errors: True
+  changed_when: False
+  check_mode: no
+
+- name: configured_runners?
+  debug:
+    msg: "{{configured_runners.container.Output}}"
+
+- name: verified_runners?
+  debug:
+    msg: "{{verified_runners.container.Output}}"
+
+- name: (Container) Register GitLab Runner
+  include_tasks: register-runner-container.yml
+  when: gitlab_runner.token is defined or gitlab_runner_registration_token | string | length > 0  # Ensure value is set
+  loop: "{{ gitlab_runner_runners }}"
+  loop_control:
+    index_var: gitlab_runner_index
+    loop_var: gitlab_runner
+
+- name: (Container) Set global options
+  import_tasks: global-setup.yml
+
+- name: (Container) Configure GitLab Runner
+  import_tasks: config-runners-container.yml
+
+- name: (Container) Start the container
+  docker_container:
+    name: "{{ gitlab_runner_container_name }}"
+    image: "{{ gitlab_runner_container_image }}:{{ gitlab_runner_container_tag }}"
+    mounts:
+    - type: bind
+      source: "/srv/{{ gitlab_runner_container_name }}"
+      target: /etc/gitlab-runner
+    - type: bind
+      source: /var/run/docker.sock
+      target: /var/run/docker.sock
