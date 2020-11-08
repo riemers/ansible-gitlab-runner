@@ -78,11 +78,14 @@ Example Playbook
 
 Inside `vars/main.yml`
 ```yaml
-gitlab_runner_registration_token: 'HUzTMgnxk17YV8Rj8ucQ'
+gitlab_runner_coordinator_url: https://gitlab.com
+gitlab_runner_registration_token: '12341234'
 gitlab_runner_runners:
   - name: 'Example Docker GitLab Runner'
     # token is an optional override to the global gitlab_runner_registration_token
-    token: 'HUzTMgnxk17YV8Rj8ucQ'
+    token: 'abcd'
+    # url is an optional override to the global gitlab_runner_coordinator_url
+    url: 'https://my-own-gitlab.mydomain.com'
     executor: docker
     docker_image: 'alpine'
     tags:
