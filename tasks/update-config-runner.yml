@@ -107,6 +107,19 @@
   - restart_gitlab_runner
   - restart_gitlab_runner_macos
 
+- name: Set runner shell option
+  lineinfile:
+    dest: "{{ temp_runner_config.path }}"
+    regexp: '^\s*shell ='
+    line: '  shell = {{ gitlab_runner.shell|default("") | to_json }}'
+    state: "{{ 'present' if gitlab_runner.shell is defined else 'absent' }}"
+    insertafter: '^\s*executor ='
+    backrefs: no
+  check_mode: no
+  notify:
+  - restart_gitlab_runner
+  - restart_gitlab_runner_macos
+
 - name: Set runner executor section
   lineinfile:
     dest: "{{ temp_runner_config.path }}"

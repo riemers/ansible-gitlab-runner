@@ -5,6 +5,22 @@ gitlab_runner_runners:
       - shell
     executor: shell
     state: present
+  - name: "Shell Bash Runner"
+    tags:
+      - windows
+      - shell
+      - bash
+    executor: shell
+    shell: bash
+    state: present
+  - name: "Shell Cmd Runner"
+    tags:
+      - windows
+      - shell
+      - cmd
+    executor: shell
+    shell: cmd
+    state: present
   - name: "Shell Runner S3 Cache"
     tags:
       - windows
