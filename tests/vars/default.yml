@@ -6,6 +6,11 @@ gitlab_runner_runners:
       - node
       - ruby
       - mysql
+  - name: 'vagrant-shell-sh'
+    executor: shell
+    shell: sh
+    tags:
+      - sh
   - name: 'vagrant-docker'
     executor: docker
     docker_image: 'docker:stable'

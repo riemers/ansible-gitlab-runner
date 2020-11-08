@@ -98,6 +98,17 @@
   check_mode: no
   notify: restart_gitlab_runner_windows
 
+- name: (Windows) Set runner shell option
+  win_lineinfile:
+    dest: "{{ temp_runner_config.path }}"
+    regexp: '^\s*shell =.*'
+    line: '  shell = {{ gitlab_runner.shell|default("") | to_json }}'
+    state: "{{ 'present' if gitlab_runner.shell is defined else 'absent' }}"
+    insertafter: '^\s*executor ='
+    backrefs: no
+  check_mode: no
+  notify: restart_gitlab_runner_windows
+
 - name: (Windows) Set output_limit option
   win_lineinfile:
     dest: "{{ temp_runner_config.path }}"

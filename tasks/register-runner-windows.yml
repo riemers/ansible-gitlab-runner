@@ -34,6 +34,9 @@
     --run-untagged
     {% endif %}
     --executor '{{ gitlab_runner.executor|default("shell") }}'
+    {% if gitlab_runner.shell is defined %}
+    --shell '{{ gitlab_runner.shell }}'
+    {% endif %}
     --limit '{{ gitlab_runner.concurrent_specific|default(0) }}'
     --output-limit '{{ gitlab_runner.output_limit|default(4096) }}'
     --locked='{{ gitlab_runner.locked|default(false) }}'
