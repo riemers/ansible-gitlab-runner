@@ -5,6 +5,7 @@
     url: "https://packages.gitlab.com/install/repositories/runner/{{ gitlab_runner_package_name }}/script.rpm.sh"
     dest: /tmp/gitlab-runner.script.rpm.sh
     mode: 0744
+  when: gitlab_runner_skip_package_repo_install is not defined or not gitlab_runner_skip_package_repo_install
 
 - name: (RedHat) Install Gitlab repository
   shell: >
@@ -13,6 +14,7 @@
   args:
     creates: "/etc/yum.repos.d/runner_{{ gitlab_runner_package_name }}.repo"
   become: true
+  when: gitlab_runner_skip_package_repo_install is not defined or not gitlab_runner_skip_package_repo_install
 
 - name: (RedHat) Update gitlab_runner_package_name
   set_fact:

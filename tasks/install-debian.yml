@@ -5,12 +5,14 @@
     url: "https://packages.gitlab.com/install/repositories/runner/{{ gitlab_runner_package_name }}/script.deb.sh"
     dest: /tmp/gitlab-runner.script.deb.sh
     mode: 0744
+  when: gitlab_runner_skip_package_repo_install is not defined or not gitlab_runner_skip_package_repo_install
 
 - name: (Debian) Install Gitlab repository
   command: bash /tmp/gitlab-runner.script.deb.sh
   args:
     creates: "/etc/apt/sources.list.d/runner_{{ gitlab_runner_package_name }}.list"
   become: true
+  when: gitlab_runner_skip_package_repo_install is not defined or not gitlab_runner_skip_package_repo_install
 
 - name: (Debian) Update gitlab_runner_package_name
   set_fact:
