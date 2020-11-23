@@ -30,6 +30,7 @@ On Linux, use `gitlab_runner_package_version` instead.
   + `gitlab_runner_cache_s3_bucket_location`
   + `gitlab_runner_cache_s3_insecure`
   + `gitlab_runner_cache_cache_shared`
+- `gitlab_runner_skip_package_repo_install`- Skip the APT or YUM repository installation (by default, false). You should provide a repository containing the needed packages before running this role.
 
 ## Autoscale Runner Machine vars for AWS (optional)
 

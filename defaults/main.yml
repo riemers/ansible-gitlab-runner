@@ -29,6 +29,11 @@ gitlab_runner_sentry_dsn: ''
 # Prometheus Metrics & Monitoring
 gitlab_runner_listen_address: ''
 
+# Skip the APT or YUM repository installation
+# You should provide a repository containing the needed packages before running this role.
+# Use this if you use a mirror repository
+# gitlab_runner_skip_package_repo_install: true
+
 # The credentials for the Windows user used to run the gitlab-runner service.
 # Those credentials will be passed to `gitlab-runner.exe install`.
 # https://docs.gitlab.com/runner/install/windows.html 
