@@ -47,3 +47,6 @@
     path: /home/gitlab-runner/.bash_logout
     state: absent
   when: ansible_distribution_release in ["buster", "focal"]
+
+- name: Set systemd reload options
+  import_tasks: systemd-reload.yml
