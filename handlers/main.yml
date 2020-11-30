@@ -1,7 +1,7 @@
 ---
 # non macOS
 - name: restart_gitlab_runner
-  service: name=gitlab-runner state=restarted
+  service: name=gitlab-runner state={{ gitlab_runner_restart_state }}
   become: yes
   when: ansible_os_family != 'Darwin' and ansible_os_family != 'Windows' and not gitlab_runner_container_install
 
@@ -19,7 +19,7 @@
 
 # Container
 - name: restart_gitlab_runner_container
-  docker_container: 
+  docker_container:
     name: "{{ gitlab_runner_container_name }}"
     restart: yes
   when: gitlab_runner_container_install
