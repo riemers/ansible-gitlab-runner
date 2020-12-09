@@ -10,5 +10,5 @@
     path: "{{ temp_runner_config.path }}"
     insertafter: '\s+\[{{ section | regex_escape }}\]'
     regexp: '^(\s*){{ line|regex_escape }} ='
-    line: '{{ "  " * (section.split(".")|length) }}{{ line }} = {{ gitlab_runner.extra_configs[section][line] | to_json }}'
+    line: '{{ "  " * (section.split(".")|length) }}{{ line | to_json }} = {{ gitlab_runner.extra_configs[section][line] | to_json }}'
   register: modified_config_line
