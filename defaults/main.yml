@@ -44,7 +44,7 @@ gitlab_runner_windows_service_password: ''
 gitlab_runner_container_install: false
 
 # default state to restart
-gitlab_runner_restart_state: "restart"
+gitlab_runner_restart_state: "restarted"
 
 # A list of runners to register and configure
 gitlab_runner_runners:
