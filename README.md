@@ -21,16 +21,26 @@ On Linux, use `gitlab_runner_package_version` instead.
 - `gitlab_runner_coordinator_url` - The GitLab coordinator URL. Defaults to `https://gitlab.com`.
 - `gitlab_runner_sentry_dsn` - Enable tracking of all system level errors to Sentry
 - `gitlab_runner_listen_address` - Enable `/metrics` endpoint for Prometheus scraping.
-- `gitlab_runner_runners` - A list of gitlab runners to register & configure. Defaults to a single shell executor. See the [`defaults/main.yml`](https://github.com/riemers/ansible-gitlab-runner/blob/master/defaults/main.yml) file listing all possible options which you can be passed to a runner registration command.
-- `gitlab_runner_cache_type` - Variables to set s3 as a shared cache server. If set it requires variables listed below:
-  + `gitlab_runner_cache_s3_server_address`
-  + `gitlab_runner_cache_s3_access_key`
-  + `gitlab_runner_cache_s3_access_key`
-  + `gitlab_runner_cache_s3_bucket_name`
-  + `gitlab_runner_cache_s3_bucket_location`
-  + `gitlab_runner_cache_s3_insecure`
-  + `gitlab_runner_cache_cache_shared`
+- `gitlab_runner_runners` - A list of gitlab runners to register & configure. Defaults to a single shell executor.
 - `gitlab_runner_skip_package_repo_install`- Skip the APT or YUM repository installation (by default, false). You should provide a repository containing the needed packages before running this role.
+
+See the [`defaults/main.yml`](https://github.com/riemers/ansible-gitlab-runner/blob/master/defaults/main.yml) file listing all possible options which you can be passed to a runner registration command.
+
+### Gitlab Runners cache
+For each gitlab runner in gitlab_runner_runners you can set cache options. At the moment role support s3 or gcs types.
+Example configurration for s3 can be:
+```yaml
+gitlab_runner_runners:
+  cache_type: "s3"
+  cache_path: "cache"
+  cache_shared: true
+  cache_s3_server_address: "s3.amazonaws.com"
+  cache_s3_access_key: "<access_key>"
+  cache_s3_secret_key: "<secret_key>"
+  cache_s3_bucket_name: "<bucket_name>
+  cache_s3_bucket_location: "eu-west-1"
+  cache_s3_insecure: false
+```
 
 ## Autoscale Runner Machine vars for AWS (optional)
 
