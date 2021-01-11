@@ -3,7 +3,13 @@
 - name: restart_gitlab_runner
   service: name=gitlab-runner state={{ gitlab_runner_restart_state }}
   become: yes
-  when: ansible_os_family != 'Darwin' and ansible_os_family != 'Windows' and not gitlab_runner_container_install
+  when: ansible_os_family != 'Darwin' and ansible_os_family != 'FreeBSD' and ansible_os_family != 'Windows' and not gitlab_runner_container_install
+
+# FreeBSD
+- name: restart_gitlab_runner
+  service: name={{ gitlab_runner_service }} state={{ gitlab_runner_restart_state }}
+  become: yes
+  when: ansible_os_family == 'FreeBSD'
 
 # macOS
 - name: restart_gitlab_runner_macos

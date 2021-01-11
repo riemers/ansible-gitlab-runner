@@ -17,7 +17,7 @@ gitlab_runner_config_file_location: "{{ gitlab_runner_config_file | dirname }}"
 gitlab_runner_executable: "{{ gitlab_runner_package_name }}"
 
 # Maximum number of global jobs to run concurrently
-gitlab_runner_concurrent: '{{ ansible_processor_vcpus }}'
+gitlab_runner_concurrent: '{{ ansible_processor_vcpus | default(ansible_processor_count) }}'
 
 # GitLab coordinator URL
 gitlab_runner_coordinator_url: 'https://gitlab.com'
@@ -36,7 +36,7 @@ gitlab_runner_listen_address: ''
 
 # The credentials for the Windows user used to run the gitlab-runner service.
 # Those credentials will be passed to `gitlab-runner.exe install`.
-# https://docs.gitlab.com/runner/install/windows.html 
+# https://docs.gitlab.com/runner/install/windows.html
 gitlab_runner_windows_service_user: ''
 gitlab_runner_windows_service_password: ''
 

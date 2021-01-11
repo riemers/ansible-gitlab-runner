@@ -1,0 +1,99 @@
+- name: (FreeBSD) PRE-CHECK GitLab Runner exists
+  block:
+  - name: (FreeBSD) Check gitlab-runner executable exists
+    stat:
+      path: "{{ gitlab_runner_executable }}"
+    register: gitlab_runner_exists
+
+  - name: (FreeBSD) Set fact -> gitlab_runner_exists
+    set_fact:
+      gitlab_runner_exists: "{{ gitlab_runner_exists.stat.exists }}"
+
+  - name: (FreeBSD) Get existing version
+    shell: "{{ gitlab_runner_executable }} --version | awk '/Version: ([\\d\\.]*)/{print $2}'"
+    register: existing_version_shell
+    failed_when: no
+    check_mode: no
+    changed_when: no
+
+  - name: (FreeBSD) Set fact -> gitlab_runner_existing_version
+    set_fact:
+      gitlab_runner_existing_version: "{{ existing_version_shell.stdout if existing_version_shell.rc == 0 else '0' }}"
+
+- name: (FreeBSD) INSTALL GitLab Runner for FreeBSD
+  block:
+    - name: (FreeBSD) Download GitLab Runner
+      get_url:
+        url: "{{ gitlab_runner_download_url }}"
+        dest: "{{ gitlab_runner_executable }}"
+        force: yes
+      become: yes
+
+    - name: (FreeBSD) Setting Permissions for gitlab-runner executable
+      file:
+        path: "{{ gitlab_runner_executable }}"
+        owner: "{{ ansible_user_id | string }}"
+        group: "{{ ansible_user_gid | string }}"
+        mode: '+x'
+      become: yes
+
+    - name: (FreeBSD) Ensure /usr/local/etc/rc.d exists
+      file:
+        path: "/usr/local/etc/rc.d"
+        state: directory
+      become: yes
+
+    - name: (FreeBSD) Install GitLab Runner service
+      template:
+        src: "../template/freebsd-rc.d-gitlab-runner.j2"
+        dest: "/usr/local/etc/rc.d/{{ gitlab_runner_service }}"
+      become: yes
+
+    - name: (FreeBSD) Setting Permissions for gitlab-runner service
+      file:
+        path: "/usr/local/etc/rc.d/{{ gitlab_runner_service }}"
+        owner: "{{ ansible_user_id | string }}"
+        group: "{{ ansible_user_gid | string }}"
+        mode: '+x'
+      become: yes
+
+    - name: (FreeBSD) Enable and Start gitlab-runner service
+      service:
+        name: "{{ gitlab_runner_service }}"
+        state: started
+        enabled: yes
+      become: yes
+
+  when: (not gitlab_runner_exists)
+
+- name: (FreeBSD) UPGRADE GitLab Runner for FreeBSD
+  block:
+    - name: (FreeBSD) Stop GitLab Runner
+      service:
+        name: "{{ gitlab_runner_service }}"
+        state: stopped
+      become: yes
+
+    - name: (FreeBSD) Download GitLab Runner
+      get_url:
+        url: "{{ gitlab_runner_download_url }}"
+        dest: "{{ gitlab_runner_executable }}"
+        force: yes
+      become: yes
+
+    - name: (FreeBSD) Setting Permissions for gitlab-runner executable
+      file:
+        path: "{{ gitlab_runner_executable }}"
+        owner: "{{ ansible_user_id | string }}"
+        group: "{{ ansible_user_gid | string }}"
+        mode: '+x'
+      become: yes
+
+    - name: (FreeBSD) Start GitLab Runner
+      service:
+        name: "{{ gitlab_runner_service }}"
+        state: started
+      become: yes
+  when:
+    - gitlab_runner_exists
+    - gitlab_runner_existing_version != gitlab_runner_wanted_version or gitlab_runner_wanted_version == 'latest'

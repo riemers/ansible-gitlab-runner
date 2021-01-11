@@ -10,6 +10,10 @@
   import_tasks: install-macos.yml
   when: ansible_os_family == 'Darwin'
 
+- name: Install GitLab Runner (FreeBSD)
+  import_tasks: install-freebsd.yml
+  when: ansible_os_family == 'FreeBSD'
+
 - name: (Unix) List configured runners
   command: "{{ gitlab_runner_executable }} list"
   register: configured_runners
