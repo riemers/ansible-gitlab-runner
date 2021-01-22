@@ -32,7 +32,7 @@ gitlab_runner_listen_address: ''
 # Session server configuration
 gitlab_runner_session_server_listen_address: ''
 gitlab_runner_session_server_advertise_address: ''
-gitlab_runner_session_server_session_timeout: ''
+gitlab_runner_session_server_session_timeout: 1800
 
 # Skip the APT or YUM repository installation
 # You should provide a repository containing the needed packages before running this role.
