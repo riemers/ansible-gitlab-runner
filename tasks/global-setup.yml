@@ -55,9 +55,9 @@
 - name: Add session server listen_address to config
   lineinfile:
     dest: "{{ gitlab_runner_config_file }}"
-    regexp: "^\s*listen_address ="
+    regexp: '^\s*listen_address ='
     line: '  listen_address = "{{ gitlab_runner_session_server_listen_address }}"'
-    insertafter: "^\s*\[session_server\]"
+    insertafter: '^\s*\[session_server\]'
     state: "{{ 'present' if gitlab_runner_session_server_listen_address | length > 0 else 'absent' }}"
   become: "{{ gitlab_runner_system_mode }}"
   notify:
@@ -67,9 +67,9 @@
 - name: Add session server advertise_address to config
   lineinfile:
     dest: "{{ gitlab_runner_config_file }}"
-    regexp: "^\s*advertise_address ="
+    regexp: '^\s*advertise_address ='
     line: '  advertise_address = "{{ gitlab_runner_session_server_advertise_address }}"'
-    insertafter: "^\s*\[session_server\]"
+    insertafter: '^\s*\[session_server\]'
     state: "{{ 'present' if gitlab_runner_session_server_advertise_address | length > 0 else 'absent' }}"
   become: "{{ gitlab_runner_system_mode }}"
   notify:
@@ -79,9 +79,9 @@
 - name: Add session server session_timeout to config
   lineinfile:
     dest: "{{ gitlab_runner_config_file }}"
-    regexp: "^\s*session_timeout ="
+    regexp: '^\s*session_timeout ='
     line: "  session_timeout = {{ gitlab_runner_session_server_session_timeout }}"
-    insertafter: "^\s*\[session_server\]"
+    insertafter: '^\s*\[session_server\]'
     state: present
   when: gitlab_runner_session_server_session_timeout
   become: "{{ gitlab_runner_system_mode }}"
