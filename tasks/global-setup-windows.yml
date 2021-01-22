@@ -55,7 +55,6 @@
     line: '  listen_address = "{{ gitlab_runner_session_server_listen_address }}"'
     insertafter: '^\s*\[session_server\]'
     state: "{{ 'present' if gitlab_runner_session_server_listen_address | length > 0 else 'absent' }}"
-  become: "{{ gitlab_runner_system_mode }}"
   notify:
     - restart_gitlab_runner
     - restart_gitlab_runner_macos
@@ -68,7 +67,6 @@
     line: '  advertise_address = "{{ gitlab_runner_session_server_advertise_address }}"'
     insertafter: '^\s*\[session_server\]'
     state: "{{ 'present' if gitlab_runner_session_server_advertise_address | length > 0 else 'absent' }}"
-  become: "{{ gitlab_runner_system_mode }}"
   notify:
     - restart_gitlab_runner
     - restart_gitlab_runner_macos
@@ -82,7 +80,6 @@
     insertafter: '^\s*\[session_server\]'
     state: present
   when: gitlab_runner_session_server_session_timeout
-  become: "{{ gitlab_runner_system_mode }}"
   notify:
     - restart_gitlab_runner
     - restart_gitlab_runner_macos
