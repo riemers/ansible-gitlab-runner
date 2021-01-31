@@ -47,18 +47,18 @@ jobs:
       after_failure:
         - touch ~/mock_ci.pid && cat ~/mock_ci.pid
         - touch ~/mock_ci.log && cat ~/mock_ci.log
-#    - os: windows
-#      language: shell
-#      install:
-#        - powershell -ExecutionPolicy ByPass -File tests/travis-bootstrap-ansible.ps1
-#        - wsl ansible --version
-#      script:
-#        - wsl mkdir -p tests/roles/ansible-gitlab-runner/
-#        - cd tests/roles/ansible-gitlab-runner/
-#        - wsl ln -s ../../../* .
-#        - cd ../../
-#        - wsl ansible-playbook test.yml -i inventory --syntax-check
-#        # Running tests
-#        - wsl ansible-playbook test.yml -i inventory --extra-vars 'ansible_user=ansible ansible_password=Ans1ble_User! ansible_connection=winrm ansible_winrm_server_cert_validation=ignore ansible_ssh_port=5986'
+    - os: windows
+      language: shell
+      install:
+        - powershell -ExecutionPolicy ByPass -File tests/travis-bootstrap-ansible.ps1
+        - wsl ansible --version
+      script:
+        - wsl mkdir -p tests/roles/ansible-gitlab-runner/
+        - cd tests/roles/ansible-gitlab-runner/
+        - wsl ln -s ../../../* .
+        - cd ../../
+        - wsl ansible-playbook test.yml -i inventory --syntax-check
+        # Running tests
+        - wsl ansible-playbook test.yml -i inventory --extra-vars 'ansible_user=ansible ansible_password=Ans1ble_User! ansible_connection=winrm ansible_winrm_server_cert_validation=ignore ansible_ssh_port=5986'
 notifications:
   webhooks: https://galaxy.ansible.com/api/v1/notifications/
