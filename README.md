@@ -80,7 +80,7 @@ Example Playbook
 ----------------
 ```yaml
 - hosts: all
-  remote_user: root
+  become: true
   vars_files:
     - vars/main.yml
   roles:
@@ -162,3 +162,4 @@ Feel free to add your name to the readme if you make a PR. A full list of people
 - Gastrofix for adding Mac Support
 - Matthias Schmieder for adding Windows Support
 - dniwdeus & rosenstrauch for adding AWS autoscale option
+
