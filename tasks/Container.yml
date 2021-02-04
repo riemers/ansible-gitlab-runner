@@ -64,6 +64,7 @@
   docker_container:
     name: "{{ gitlab_runner_container_name }}"
     image: "{{ gitlab_runner_container_image }}:{{ gitlab_runner_container_tag }}"
+    restart_policy: "{{ gitlab_runner_container_restart_policy }}"
     mounts:
     - type: bind
       source: "/srv/{{ gitlab_runner_container_name }}"
