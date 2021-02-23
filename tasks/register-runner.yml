@@ -66,7 +66,16 @@
     {% if gitlab_runner.docker_dns|default(false) %}
     --docker-dns '{{ gitlab_runner.docker_dns|default("1.1.1.1") }}'
     {% endif %}
-    {% for volume in gitlab_runner.docker_volumes | default([]) %}
+    {% if gitlab_runner.docker_dns_search|default(false) %}
+    --docker-dns-search '{{ gitlab_runner.docker_dns_search|default([]) }}'
+    {% endif %}
+    {% if gitlab_runner.docker_disable_cache|default(false) %}
+    --docker-disable-cache
+    {% endif %}
+    {% if gitlab_runner.docker_oom_kill_disable|default(false) %}
+    --docker-oom-kill-disable '{{ gitlab_runner.docker_oom_kill_disable|default("false") }}'
+    {% endif %}
+    {% for volume in gitlab_runner.docker_volumes|default([]) %}
     --docker-volumes "{{ volume }}"
     {% endfor %}
     --ssh-user '{{ gitlab_runner.ssh_user|default("") }}'
