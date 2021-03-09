@@ -29,6 +29,11 @@ gitlab_runner_sentry_dsn: ''
 # Prometheus Metrics & Monitoring
 gitlab_runner_listen_address: ''
 
+# Session server configuration
+gitlab_runner_session_server_listen_address: ''
+gitlab_runner_session_server_advertise_address: ''
+gitlab_runner_session_server_session_timeout: 1800
+
 # Skip the APT or YUM repository installation
 # You should provide a repository containing the needed packages before running this role.
 # Use this if you use a mirror repository
@@ -44,7 +49,7 @@ gitlab_runner_windows_service_password: ''
 gitlab_runner_container_install: false
 
 # default state to restart
-gitlab_runner_restart_state: "restarted"
+gitlab_runner_restart_state: restarted
 
 # A list of runners to register and configure
 gitlab_runner_runners:

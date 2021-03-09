@@ -4,4 +4,3 @@ gitlab_runner_container_image: gitlab/gitlab-runner
 gitlab_runner_container_tag: latest
 gitlab_runner_container_name: gitlab-runner
 gitlab_runner_container_restart_policy: unless-stopped
-gitlab_runner_restart_state: restarted
