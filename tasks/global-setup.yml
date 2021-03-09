@@ -39,12 +39,12 @@
     - restart_gitlab_runner
     - restart_gitlab_runner_macos
 
-- name: Add log_format to config
+- name: Add log_format to config 
   lineinfile:
     dest: "{{ gitlab_runner_config_file }}"
     regexp: '^log_format ='
-    line: 'log_format = "{{ gitlab_runner_log_format }}"'
-    insertafter: '\s*listen_address.*'
+    line: 'log_format = "{{ gitlab_runner_log_format|default("runner") }}"'
+    insertbefore: BOF
     state: present
   when: gitlab_runner_log_format | length > 0  # Ensure value is set
   become: "{{ gitlab_runner_system_mode }}"
