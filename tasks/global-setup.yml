@@ -46,7 +46,7 @@
     line: 'log_format = "{{ gitlab_runner_log_format|default("runner") }}"'
     insertbefore: BOF
     state: present
-  when: gitlab_runner_log_format | length > 0  # Ensure value is set
+  when: gitlab_runner_log_format is defined # Ensure value is set
   become: "{{ gitlab_runner_system_mode }}"
   notify:
     - restart_gitlab_runner
