@@ -52,7 +52,7 @@ gitlab_runner_container_install: false
 gitlab_runner_restart_state: restarted
 
 # default value for log_format
-gitlab_runner_log_format: runner
+# gitlab_runner_log_format: runner
 
 # A list of runners to register and configure
 gitlab_runner_runners:
