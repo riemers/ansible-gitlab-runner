@@ -510,10 +510,6 @@
   - restart_gitlab_runner_macos
 
 #### [runners.virtualbox] section #####
-- name: debug
-  debug:
-    var: gitlab_runner
-
 - name: Set virtualbox base name option
   lineinfile:
     dest: "{{ temp_runner_config.path }}"
