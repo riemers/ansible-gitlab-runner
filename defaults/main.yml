@@ -108,6 +108,19 @@ gitlab_runner_runners:
     # Runner SSH identity file
     # ssh_identity_file: ''
     #
+    # Virtualbox executor configuration params
+    # Base VM name (Required for runner registration!)
+    # virtualbox_base_name: "MyPerfectVMForGitlabVirtualboxExecutor"
+    #
+    # Base VM snapshot name
+    # virtualbox_base_snapshot: ""
+    #
+    # Base VM base folder
+    # virtualbox_base_folder: ""
+    #
+    # Not use VM snapshots for agent launch(false==Use snapshots, true==Do not use snapshots)
+    # virtualbox_disable_snapshots: false
+    #
     # Cache type
     # cache_type: 's3|gcs'
     #

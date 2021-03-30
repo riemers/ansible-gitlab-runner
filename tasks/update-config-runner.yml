@@ -509,6 +509,63 @@
   - restart_gitlab_runner
   - restart_gitlab_runner_macos
 
+#### [runners.virtualbox] section #####
+- name: Set virtualbox base name option
+  lineinfile:
+    dest: "{{ temp_runner_config.path }}"
+    regexp: '^\s*base_name ='
+    line: '    base_name = {{ gitlab_runner.virtualbox_base_name | to_json }}'
+    state: "{{ 'present' if gitlab_runner.virtualbox_base_name is defined else 'absent' }}"
+    insertafter: '^\s*\[runners\.virtualbox\]'
+    backrefs: no
+  check_mode: no
+  when: gitlab_runner.executor == 'virtualbox' and gitlab_runner.virtualbox_base_name is defined
+  notify:
+  - restart_gitlab_runner
+  - restart_gitlab_runner_macos
+
+- name: Set virtualbox base snapshot option
+  lineinfile:
+    dest: "{{ temp_runner_config.path }}"
+    regexp: '^\s*base_snapshot ='
+    line: '    base_snapshot = {{ gitlab_runner.virtualbox_base_snapshot | to_json }}'
+    state: "{{ 'present' if gitlab_runner.virtualbox_base_snapshot is defined else 'absent' }}"
+    insertafter: '^\s*\[runners\.virtualbox\]'
+    backrefs: no
+  check_mode: no
+  when: gitlab_runner.executor == 'virtualbox' and gitlab_runner.virtualbox_base_name is defined
+  notify:
+  - restart_gitlab_runner
+  - restart_gitlab_runner_macos
+
+- name: Set virtualbox base folder option
+  lineinfile:
+    dest: "{{ temp_runner_config.path }}"
+    regexp: '^\s*base_folder ='
+    line: '    base_folder = {{ gitlab_runner.virtualbox_base_folder | to_json }}'
+    state: "{{ 'present' if gitlab_runner.virtualbox_base_folder is defined else 'absent' }}"
+    insertafter: '^\s*\[runners\.virtualbox\]'
+    backrefs: no
+  check_mode: no
+  when: gitlab_runner.executor == 'virtualbox' and gitlab_runner.virtualbox_base_name is defined
+  notify:
+  - restart_gitlab_runner
+  - restart_gitlab_runner_macos
+
+- name: Set virtualbox disable snapshots option
+  lineinfile:
+    dest: "{{ temp_runner_config.path }}"
+    regexp: '^\s*disable_snapshots ='
+    line: '    disable_snapshots = {{ gitlab_runner.virtualbox_disable_snapshots|default(false) | to_json }}'
+    state: "{{ 'present' if gitlab_runner.virtualbox_disable_snapshots is defined else 'absent' }}"
+    insertafter: '^\s*\[runners\.virtualbox\]'
+    backrefs: no
+  check_mode: no
+  when: gitlab_runner.executor == 'virtualbox' and gitlab_runner.virtualbox_base_name is defined
+  notify:
+  - restart_gitlab_runner
+  - restart_gitlab_runner_macos
+
 - name: Set builds dir file option
   lineinfile:
     dest: "{{ temp_runner_config.path }}"

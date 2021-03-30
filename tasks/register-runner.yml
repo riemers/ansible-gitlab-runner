@@ -83,6 +83,12 @@
     --ssh-port '{{ gitlab_runner.ssh_port|default("") }}'
     --ssh-password '{{ gitlab_runner.ssh_password|default("") }}'
     --ssh-identity-file '{{ gitlab_runner.ssh_identity_file|default("") }}'
+    {% if gitlab_runner.executor == "virtualbox" and gitlab_runner.virtualbox_base_name %}
+        --virtualbox-base-name '{{ gitlab_runner.virtualbox_base_name }}'
+        --virtualbox-base-snapshot '{{ gitlab_runner.virtualbox_base_snapshot|default("") }}'
+        --virtualbox-base-folder '{{ gitlab_runner.virtualbox_base_folder|default("") }}'
+        --virtualbox-disable-snapshots '{{ gitlab_runner.virtualbox_disable_snapshots|default(false) }}'
+    {% endif %}
     {% if gitlab_runner.cache_type is defined %}
     --cache-type '{{ gitlab_runner.cache_type }}'
     {% endif %}
