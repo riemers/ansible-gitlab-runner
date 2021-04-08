@@ -116,6 +116,7 @@
       target: /etc/gitlab-runner
     cleanup: yes
     auto_remove: yes
+    network_mode: "{{ gitlab_runner_container_network }}"
   when: (verified_runners.container.Output.find("Verifying runner... is removed") != -1) or
         ((configured_runners.container.Output.find('\n' + gitlab_runner.name|default(ansible_hostname+'-'+gitlab_runner_index|string)) == -1) and
         (gitlab_runner.state|default('present') == 'present'))
