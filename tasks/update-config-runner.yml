@@ -213,6 +213,19 @@
   - restart_gitlab_runner
   - restart_gitlab_runner_macos
 
+- name: Set docker devices option
+  lineinfile:
+    dest: "{{ temp_runner_config.path }}"
+    regexp: '^\s*devices ='
+    line: '    devices = {{ gitlab_runner.docker_devices|default([])|to_json }}'
+    state: "{{ 'present' if gitlab_runner.docker_devices is defined else 'absent' }}"
+    insertafter: '^\s*executor ='
+    backrefs: no
+  check_mode: no
+  notify:
+  - restart_gitlab_runner
+  - restart_gitlab_runner_macos
+
 - name: Set runner docker network option
   lineinfile:
     dest: "{{ temp_runner_config.path }}"

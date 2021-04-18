@@ -69,6 +69,9 @@
       {% for volume in gitlab_runner.docker_volumes | default([]) %}
       --docker-volumes "{{ volume }}"
       {% endfor %}
+      {% for device in gitlab_runner.docker_devices | default([]) %}
+      --docker-devices "{{ device }}"
+      {% endfor %}
       --ssh-user '{{ gitlab_runner.ssh_user|default("") }}'
       --ssh-host '{{ gitlab_runner.ssh_host|default("") }}'
       --ssh-port '{{ gitlab_runner.ssh_port|default("") }}'

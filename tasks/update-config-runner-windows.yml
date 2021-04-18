@@ -153,6 +153,17 @@
   check_mode: no
   notify: restart_gitlab_runner_windows
 
+- name: (Windows) Set docker devices option
+  win_lineinfile:
+    dest: "{{ temp_runner_config.path }}"
+    regexp: '^\s*devices =.*'
+    line: '  devices = {{ gitlab_runner.docker_devices|default([])|to_json }}'
+    state: "{{ 'present' if gitlab_runner.docker_devices is defined else 'absent' }}"
+    insertafter: '^\s*executor ='
+    backrefs: no
+  check_mode: no
+  notify: restart_gitlab_runner_windows
+
 - name: (Windows) Set cache type option
   win_lineinfile:
     dest: "{{ temp_runner_config.path }}"
