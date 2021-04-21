@@ -48,6 +48,12 @@ gitlab_runner_windows_service_password: ''
 # gitlab_runner_container_install
 gitlab_runner_container_install: false
 
+# default values for gitlab in container
+gitlab_runner_container_install: false
+gitlab_runner_container_image: gitlab/gitlab-runner
+gitlab_runner_container_tag: latest
+gitlab_runner_container_name: gitlab-runner
+gitlab_runner_container_restart_policy: unless-stopped 
 # you can define a network which the container connects to
 # this option uses network_mode, thus 'default' will use the first network found in docker network list
 gitlab_runner_container_network: default
