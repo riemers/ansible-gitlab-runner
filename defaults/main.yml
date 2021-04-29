@@ -45,9 +45,6 @@ gitlab_runner_session_server_session_timeout: 1800
 gitlab_runner_windows_service_user: ''
 gitlab_runner_windows_service_password: ''
 
-# gitlab_runner_container_install
-gitlab_runner_container_install: false
-
 # default values for gitlab in container
 gitlab_runner_container_install: false
 gitlab_runner_container_image: gitlab/gitlab-runner
