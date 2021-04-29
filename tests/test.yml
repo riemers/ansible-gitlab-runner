@@ -8,6 +8,7 @@
           files:
             - '{{ ansible_distribution }}.yml'
             - '{{ ansible_os_family }}.yml'
+            - 'default.yml'
           paths:
             - 'vars'
     - name: Copy the mock gitlab CI server
