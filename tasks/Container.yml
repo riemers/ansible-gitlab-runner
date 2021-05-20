@@ -5,7 +5,7 @@
 
 - name: (Container) List configured runners
   docker_container:
-    name: "{{ gitlab_runner_container_name }}"
+    name: "{{ gitlab_runner_container_name }}-list"
     image: "{{ gitlab_runner_container_image }}:{{ gitlab_runner_container_tag }}"
     command: list
     mounts:
@@ -22,7 +22,7 @@
 
 - name: (Container) Check runner is registered
   docker_container:
-    name: "{{ gitlab_runner_container_name }}"
+    name: "{{ gitlab_runner_container_name }}-check"
     image: "{{ gitlab_runner_container_image }}:{{ gitlab_runner_container_tag }}"
     command: verify
     mounts:
