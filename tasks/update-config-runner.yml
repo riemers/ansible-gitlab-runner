@@ -187,6 +187,19 @@
   - restart_gitlab_runner
   - restart_gitlab_runner_macos
 
+- name: Set docker disable_cache option
+  lineinfile:
+    dest: "{{ temp_runner_config.path }}"
+    regexp: '^\s*disable_cache ='
+    line: '    disable_cache = {{ gitlab_runner.docker_disable_cache|default(false) | lower }}'
+    state: "{{ 'present' if gitlab_runner.docker_disable_cache is defined else 'absent' }}"
+    insertafter: '^\s*\[runners\.docker\]'
+    backrefs: no
+  check_mode: no
+  notify:
+  - restart_gitlab_runner
+  - restart_gitlab_runner_macos
+
 - name: Set docker DNS option
   lineinfile:
     dest: "{{ temp_runner_config.path }}"

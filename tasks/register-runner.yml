@@ -63,6 +63,9 @@
     {% if gitlab_runner.docker_tlsverify|default(false) %}
     --docker-tlsverify '{{ gitlab_runner.docker_tlsverify|default("true") }}'
     {% endif %}
+    {% if gitlab_runner.docker_disable_cache|default(false) %}
+    --docker-disable-cache '{{ gitlab_runner.docker_disable_cache|default("false") }}'
+    {% endif %}
     {% if gitlab_runner.docker_dns|default(false) %}
     --docker-dns '{{ gitlab_runner.docker_dns|default("1.1.1.1") }}'
     {% endif %}
