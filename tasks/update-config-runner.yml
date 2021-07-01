@@ -232,7 +232,7 @@
     regexp: '^\s*volumes ='
     line: '    volumes = {{ gitlab_runner.docker_volumes|default([])|to_json }}'
     state: "{{ 'present' if gitlab_runner.docker_volumes is defined else 'absent' }}"
-    insertafter: '^\s*executor ='
+    insertafter: '^\s*\[runners\.docker\]'
     backrefs: no
   check_mode: no
   notify:
@@ -245,7 +245,7 @@
     regexp: '^\s*devices ='
     line: '    devices = {{ gitlab_runner.docker_devices|default([])|to_json }}'
     state: "{{ 'present' if gitlab_runner.docker_devices is defined else 'absent' }}"
-    insertafter: '^\s*executor ='
+    insertafter: '^\s*\[runners\.docker\]'
     backrefs: no
   check_mode: no
   notify:
