@@ -78,6 +78,9 @@
     {% if gitlab_runner.docker_oom_kill_disable|default(false) %}
     --docker-oom-kill-disable '{{ gitlab_runner.docker_oom_kill_disable|default("false") }}'
     {% endif %}
+    {% for policy in gitlab_runner.docker_pull_policy|default([]) %}
+    --docker-pull-policy "{{ policy }}"
+    {% endfor %}
     {% for volume in gitlab_runner.docker_volumes|default([]) %}
     --docker-volumes "{{ volume }}"
     {% endfor %}

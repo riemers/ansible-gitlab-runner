@@ -213,6 +213,19 @@
   - restart_gitlab_runner
   - restart_gitlab_runner_macos
 
+- name: Set docker pull_policy option
+  lineinfile:
+    dest: "{{ temp_runner_config.path }}"
+    regexp: '^\s*pull_policy ='
+    line: '    pull_policy = {{ gitlab_runner.docker_pull_policy|default([])|to_json }}'
+    state: "{{ 'present' if gitlab_runner.docker_pull_policy is defined else 'absent' }}"
+    insertafter: '^\s*\[runners\.docker\]'
+    backrefs: no
+  check_mode: no
+  notify:
+  - restart_gitlab_runner
+  - restart_gitlab_runner_macos
+
 - name: Set docker volumes option
   lineinfile:
     dest: "{{ temp_runner_config.path }}"
