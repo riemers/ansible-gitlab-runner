@@ -481,6 +481,32 @@
   - restart_gitlab_runner
   - restart_gitlab_runner_macos
 
+#### [runners.custom_build_dir] section #####
+- name: Set custom_build_dir section
+  lineinfile:
+    dest: "{{ temp_runner_config.path }}"
+    regexp: '^\s*\[runners\.custom_build_dir\]'
+    line: '  [runners.custom_build_dir]'
+    state: present
+    insertafter: EOF
+    backrefs: no
+  check_mode: no
+  notify:
+  - restart_gitlab_runner
+  - restart_gitlab_runner_macos
+
+- name: Set docker custom_build_dir-enabled option
+  lineinfile:
+    dest: "{{ temp_runner_config.path }}"
+    regexp: '^\s*enabled ='
+    line: '    enabled = {{ gitlab_runner.custom_build_dir_enabled|default(false) | lower }}'
+    state: "{{ 'present' if gitlab_runner.custom_build_dir_enabled is defined else 'absent' }}"
+    insertafter: '^\s*\[runners\.custom_build_dir\]'
+    backrefs: no
+  check_mode: no
+  notify:
+  - restart_gitlab_runner
+  - restart_gitlab_runner_macos
 
 #### [runners.ssh] section #####
 - name: Set ssh user option

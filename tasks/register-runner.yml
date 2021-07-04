@@ -125,6 +125,9 @@
     {% if gitlab_runner.builds_dir|default(false) %}
     --builds-dir '{{ gitlab_runner.builds_dir }}'
     {% endif %}
+    {% if gitlab_runner.custom_build_dir_enabled|default(false) %}
+    --custom_build_dir-enabled '{{ gitlab_runner.custom_build_dir_enabled }}'
+    {% endif %}
     {% if gitlab_runner.cache_dir|default(false) %}
     --cache-dir '{{ gitlab_runner.cache_dir }}'
     {% endif %}
