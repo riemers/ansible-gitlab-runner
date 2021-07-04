@@ -265,6 +265,32 @@
   - restart_gitlab_runner
   - restart_gitlab_runner_macos
 
+#### [runners.custom_build_dir] section #####
+- name: Set custom_build_dir section
+  lineinfile:
+    dest: "{{ temp_runner_config.path }}"
+    regexp: '^\s*\[runners\.custom_build_dir\]'
+    line: '  [runners.custom_build_dir]'
+    state: "{{ 'present' if gitlab_runner.custom_build_dir_enabled is defined else 'absent' }}"
+    insertafter: EOF
+    backrefs: no
+  check_mode: no
+  notify:
+  - restart_gitlab_runner
+  - restart_gitlab_runner_macos
+
+- name: Set docker custom_build_dir-enabled option
+  lineinfile:
+    dest: "{{ temp_runner_config.path }}"
+    regexp: '^\s*enabled ='
+    line: '    enabled = {{ gitlab_runner.custom_build_dir_enabled|default(false) | lower }}'
+    state: "{{ 'present' if gitlab_runner.custom_build_dir_enabled is defined else 'absent' }}"
+    insertafter: '^\s*\[runners\.custom_build_dir\]'
+    backrefs: no
+  check_mode: no
+  notify:
+  - restart_gitlab_runner
+  - restart_gitlab_runner_macos
 
 #### [runners.cache] section ####
 - name: Set cache section
@@ -475,33 +501,6 @@
     line: '      PrivateKey = {{ gitlab_runner.cache_gcs_private_key|default("") | to_json }}'
     state: "{{ 'present' if gitlab_runner.cache_gcs_private_key is defined else 'absent' }}"
     insertafter: '^\s*\[runners\.cache\.gcs\]'
-    backrefs: no
-  check_mode: no
-  notify:
-  - restart_gitlab_runner
-  - restart_gitlab_runner_macos
-
-#### [runners.custom_build_dir] section #####
-- name: Set custom_build_dir section
-  lineinfile:
-    dest: "{{ temp_runner_config.path }}"
-    regexp: '^\s*\[runners\.custom_build_dir\]'
-    line: '  [runners.custom_build_dir]'
-    state: "{{ 'present' if gitlab_runner.custom_build_dir_enabled is defined else 'absent' }}"
-    insertafter: EOF
-    backrefs: no
-  check_mode: no
-  notify:
-  - restart_gitlab_runner
-  - restart_gitlab_runner_macos
-
-- name: Set docker custom_build_dir-enabled option
-  lineinfile:
-    dest: "{{ temp_runner_config.path }}"
-    regexp: '^\s*enabled ='
-    line: '    enabled = {{ gitlab_runner.custom_build_dir_enabled|default(false) | lower }}'
-    state: "{{ 'present' if gitlab_runner.custom_build_dir_enabled is defined else 'absent' }}"
-    insertafter: '^\s*\[runners\.custom_build_dir\]'
     backrefs: no
   check_mode: no
   notify:
