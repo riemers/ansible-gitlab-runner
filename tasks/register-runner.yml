@@ -60,6 +60,9 @@
     {% if gitlab_runner.docker_privileged|default(false) %}
     --docker-privileged
     {% endif %}
+    {% if gitlab_runner.docker_wait_for_services_timeout|default(false) %}
+    --docker-wait-for-services-timeout '{{ gitlab_runner.docker_wait_for_services_timeout|default(30) }}'
+    {% endif %}
     {% if gitlab_runner.docker_tlsverify|default(false) %}
     --docker-tlsverify '{{ gitlab_runner.docker_tlsverify|default("true") }}'
     {% endif %}
