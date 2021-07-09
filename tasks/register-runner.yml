@@ -60,8 +60,14 @@
     {% if gitlab_runner.docker_privileged|default(false) %}
     --docker-privileged
     {% endif %}
+    {% if gitlab_runner.docker_wait_for_services_timeout|default(false) %}
+    --docker-wait-for-services-timeout '{{ gitlab_runner.docker_wait_for_services_timeout|default(30) }}'
+    {% endif %}
     {% if gitlab_runner.docker_tlsverify|default(false) %}
     --docker-tlsverify '{{ gitlab_runner.docker_tlsverify|default("true") }}'
+    {% endif %}
+    {% if gitlab_runner.docker_disable_cache|default(false) %}
+    --docker-disable-cache '{{ gitlab_runner.docker_disable_cache|default("false") }}'
     {% endif %}
     {% if gitlab_runner.docker_dns|default(false) %}
     --docker-dns '{{ gitlab_runner.docker_dns|default("1.1.1.1") }}'
@@ -75,6 +81,9 @@
     {% if gitlab_runner.docker_oom_kill_disable|default(false) %}
     --docker-oom-kill-disable '{{ gitlab_runner.docker_oom_kill_disable|default("false") }}'
     {% endif %}
+    {% for policy in gitlab_runner.docker_pull_policy|default([]) %}
+    --docker-pull-policy "{{ policy }}"
+    {% endfor %}
     {% for volume in gitlab_runner.docker_volumes|default([]) %}
     --docker-volumes "{{ volume }}"
     {% endfor %}
@@ -118,6 +127,9 @@
     {% endif %}
     {% if gitlab_runner.builds_dir|default(false) %}
     --builds-dir '{{ gitlab_runner.builds_dir }}'
+    {% endif %}
+    {% if gitlab_runner.custom_build_dir_enabled|default(false) %}
+    --custom_build_dir-enabled '{{ gitlab_runner.custom_build_dir_enabled }}'
     {% endif %}
     {% if gitlab_runner.cache_dir|default(false) %}
     --cache-dir '{{ gitlab_runner.cache_dir }}'

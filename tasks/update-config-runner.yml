@@ -174,12 +174,38 @@
   - restart_gitlab_runner
   - restart_gitlab_runner_macos
 
+- name: Set docker wait_for_services_timeout option
+  lineinfile:
+    dest: "{{ temp_runner_config.path }}"
+    regexp: '^\s*wait_for_services_timeout ='
+    line: '    wait_for_services_timeout = {{ gitlab_runner.docker_wait_for_services_timeout|default(30) }}'
+    state: "{{ 'present' if gitlab_runner.docker_wait_for_services_timeout is defined else 'absent' }}"
+    insertafter: '^\s*\[runners\.docker\]'
+    backrefs: no
+  check_mode: no
+  notify:
+    - restart_gitlab_runner
+    - restart_gitlab_runner_macos
+
 - name: Set docker tlsverify option
   lineinfile:
     dest: "{{ temp_runner_config.path }}"
     regexp: '^\s*tls_verify ='
     line: '    tls_verify = {{ gitlab_runner.docker_tlsverify|default(false) | lower }}'
     state: "{{ 'present' if gitlab_runner.docker_tlsverify is defined else 'absent' }}"
+    insertafter: '^\s*\[runners\.docker\]'
+    backrefs: no
+  check_mode: no
+  notify:
+  - restart_gitlab_runner
+  - restart_gitlab_runner_macos
+
+- name: Set docker disable_cache option
+  lineinfile:
+    dest: "{{ temp_runner_config.path }}"
+    regexp: '^\s*disable_cache ='
+    line: '    disable_cache = {{ gitlab_runner.docker_disable_cache|default(false) | lower }}'
+    state: "{{ 'present' if gitlab_runner.docker_disable_cache is defined else 'absent' }}"
     insertafter: '^\s*\[runners\.docker\]'
     backrefs: no
   check_mode: no
@@ -200,13 +226,26 @@
   - restart_gitlab_runner
   - restart_gitlab_runner_macos
 
+- name: Set docker pull_policy option
+  lineinfile:
+    dest: "{{ temp_runner_config.path }}"
+    regexp: '^\s*pull_policy ='
+    line: '    pull_policy = {{ gitlab_runner.docker_pull_policy|default([])|to_json }}'
+    state: "{{ 'present' if gitlab_runner.docker_pull_policy is defined else 'absent' }}"
+    insertafter: '^\s*\[runners\.docker\]'
+    backrefs: no
+  check_mode: no
+  notify:
+  - restart_gitlab_runner
+  - restart_gitlab_runner_macos
+
 - name: Set docker volumes option
   lineinfile:
     dest: "{{ temp_runner_config.path }}"
     regexp: '^\s*volumes ='
     line: '    volumes = {{ gitlab_runner.docker_volumes|default([])|to_json }}'
     state: "{{ 'present' if gitlab_runner.docker_volumes is defined else 'absent' }}"
-    insertafter: '^\s*executor ='
+    insertafter: '^\s*\[runners\.docker\]'
     backrefs: no
   check_mode: no
   notify:
@@ -219,7 +258,7 @@
     regexp: '^\s*devices ='
     line: '    devices = {{ gitlab_runner.docker_devices|default([])|to_json }}'
     state: "{{ 'present' if gitlab_runner.docker_devices is defined else 'absent' }}"
-    insertafter: '^\s*executor ='
+    insertafter: '^\s*\[runners\.docker\]'
     backrefs: no
   check_mode: no
   notify:
@@ -239,6 +278,32 @@
   - restart_gitlab_runner
   - restart_gitlab_runner_macos
 
+#### [runners.custom_build_dir] section #####
+- name: Set custom_build_dir section
+  lineinfile:
+    dest: "{{ temp_runner_config.path }}"
+    regexp: '^\s*\[runners\.custom_build_dir\]'
+    line: '  [runners.custom_build_dir]'
+    state: "{{ 'present' if gitlab_runner.custom_build_dir_enabled is defined else 'absent' }}"
+    insertafter: EOF
+    backrefs: no
+  check_mode: no
+  notify:
+  - restart_gitlab_runner
+  - restart_gitlab_runner_macos
+
+- name: Set docker custom_build_dir-enabled option
+  lineinfile:
+    dest: "{{ temp_runner_config.path }}"
+    regexp: '^\s*enabled ='
+    line: '    enabled = {{ gitlab_runner.custom_build_dir_enabled|default(false) | lower }}'
+    state: "{{ 'present' if gitlab_runner.custom_build_dir_enabled is defined else 'absent' }}"
+    insertafter: '^\s*\[runners\.custom_build_dir\]'
+    backrefs: no
+  check_mode: no
+  notify:
+  - restart_gitlab_runner
+  - restart_gitlab_runner_macos
 
 #### [runners.cache] section ####
 - name: Set cache section
@@ -454,7 +519,6 @@
   notify:
   - restart_gitlab_runner
   - restart_gitlab_runner_macos
-
 
 #### [runners.ssh] section #####
 - name: Set ssh user option
