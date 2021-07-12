@@ -51,7 +51,7 @@
 - name: (Windows) Add session server listen_address to config
   win_lineinfile:
     dest: "{{ gitlab_runner_config_file }}"
-    regexp: '^\s*listen_address ='
+    regexp: '^(\s+)listen_address ='
     line: '  listen_address = "{{ gitlab_runner_session_server_listen_address }}"'
     insertafter: '^\s*\[session_server\]'
     state: "{{ 'present' if gitlab_runner_session_server_listen_address | length > 0 else 'absent' }}"
