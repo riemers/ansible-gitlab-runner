@@ -30,7 +30,7 @@ See the [`defaults/main.yml`](https://github.com/riemers/ansible-gitlab-runner/b
 For each gitlab runner in gitlab_runner_runners you can set cache options. At the moment role support s3 or gcs types.
 Example configurration for s3 can be:
 ```yaml
-gitlab_runner_runners:
+gitlab_runner:
   cache_type: "s3"
   cache_path: "cache"
   cache_shared: true
@@ -91,7 +91,7 @@ Inside `vars/main.yml`
 ```yaml
 gitlab_runner_coordinator_url: https://gitlab.com
 gitlab_runner_registration_token: '12341234'
-gitlab_runner_runners:
+gitlab_runner:
   - name: 'Example Docker GitLab Runner'
     # token is an optional override to the global gitlab_runner_registration_token
     token: 'abcd'
@@ -120,7 +120,7 @@ how `vars/main.yml` would look like, if you setup an autoscaling GitLab-Runner o
 ```yaml
 gitlab_runner_registration_token: 'HUzTMgnxk17YV8Rj8ucQ'
 gitlab_runner_coordinator_url: 'https://gitlab.com'
-gitlab_runner_runners:
+gitlab_runner:
   - name: 'Example autoscaling GitLab Runner'
     state: present
     # token is an optional override to the global gitlab_runner_registration_token
