@@ -25,13 +25,6 @@
   check_mode: no
   become: yes
 
-- name: (Unix) Add gitlab-runner user to docker group
-  user:
-    name: gitlab-runner
-    append: true
-    groups: docker
-  become: yes
-
 - name: (Unix) Register GitLab Runner
   include_tasks: register-runner.yml
   when: gitlab_runner.token is defined or gitlab_runner_registration_token | string | length > 0  # Ensure value is set
