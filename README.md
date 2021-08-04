@@ -27,7 +27,7 @@ On Linux, use `gitlab_runner_package_version` instead.
 See the [`defaults/main.yml`](https://github.com/riemers/ansible-gitlab-runner/blob/master/defaults/main.yml) file listing all possible options which you can be passed to a runner registration command.
 
 ### Gitlab Runners cache
-For each gitlab runner in gitlab_runner_runners you can set cache options. At the moment role support s3 or gcs types.
+For each gitlab runner in gitlab_runner_runners you can set cache options. At the moment role support s3, azure and gcs types.
 Example configurration for s3 can be:
 ```yaml
 gitlab_runner:
