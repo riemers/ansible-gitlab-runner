@@ -167,6 +167,18 @@ gitlab_runner_runners:
     # Cache GCS Private Key
     # cache_gcs_private_key: "-----BEGIN PRIVATE KEY-----\nXXXXXX\n-----END PRIVATE KEY-----\n"
     #
+    # Cache azure account name
+    # cache_azure_account_name: "<AZURE STORAGE ACCOUNT NAME>"
+    #
+    # Cache azure account key
+    # cache_azure_account_key: "<AZURE STORAGE ACCOUNT KEY>"
+    #
+    # Cache azure container name
+    # cache_azure_container_name: "runners-cache"
+    #
+    # Cache azure storage domain
+    # cache_azure_storage_domain: "blob.core.windows.net"
+    #
     # Builds directory
     # builds_dir: '/builds_dir'
     #

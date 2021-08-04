@@ -345,6 +345,19 @@
   - restart_gitlab_runner
   - restart_gitlab_runner_macos
 
+- name: Set cache azure section
+  lineinfile:
+    dest: "{{ temp_runner_config.path }}"
+    regexp: '^\s*\[runners\.cache\.azure\]'
+    line: '    [runners.cache.azure]'
+    state: "{{ 'present' if gitlab_runner.cache_type is defined else 'absent' }}"
+    insertafter: '^\s*\[runners\.cache\]'
+    backrefs: no
+  check_mode: no
+  notify:
+    - restart_gitlab_runner
+    - restart_gitlab_runner_macos
+
 - name: Set cache type option
   lineinfile:
     dest: "{{ temp_runner_config.path }}"
@@ -519,6 +532,59 @@
   notify:
   - restart_gitlab_runner
   - restart_gitlab_runner_macos
+
+#### [runners.cache.azure] section ####
+- name: Set cache azure account name
+  lineinfile:
+    dest: "{{ temp_runner_config.path }}"
+    regexp: '^\s*AccountName ='
+    line: '      AccountName = {{ gitlab_runner.cache_azure_account_name|default("") | to_json }}'
+    state: "{{ 'present' if gitlab_runner.cache_azure_account_name is defined else 'absent' }}"
+    insertafter: '^\s*\[runners\.cache\.azure\]'
+    backrefs: no
+  check_mode: no
+  notify:
+    - restart_gitlab_runner
+    - restart_gitlab_runner_macos
+
+- name: Set cache azure account key
+  lineinfile:
+    dest: "{{ temp_runner_config.path }}"
+    regexp: '^\s*AccountKey ='
+    line: '      AccountKey = {{ gitlab_runner.cache_azure_account_key|default("") | to_json }}'
+    state: "{{ 'present' if gitlab_runner.cache_azure_account_key is defined else 'absent' }}"
+    insertafter: '^\s*\[runners\.cache\.azure\]'
+    backrefs: no
+  check_mode: no
+  notify:
+    - restart_gitlab_runner
+    - restart_gitlab_runner_macos
+
+- name: Set cache azure container name
+  lineinfile:
+    dest: "{{ temp_runner_config.path }}"
+    regexp: '^\s*ContainerName ='
+    line: '      ContainerName = {{ gitlab_runner.cache_azure_container_name|default("") | to_json }}'
+    state: "{{ 'present' if gitlab_runner.cache_azure_container_name is defined else 'absent' }}"
+    insertafter: '^\s*\[runners\.cache\.azure\]'
+    backrefs: no
+  check_mode: no
+  notify:
+    - restart_gitlab_runner
+    - restart_gitlab_runner_macos
+
+- name: Set cache azure storage domain
+  lineinfile:
+    dest: "{{ temp_runner_config.path }}"
+    regexp: '^\s*StorageDomain ='
+    line: '      StorageDomain = {{ gitlab_runner.cache_azure_storage_domain|default("") | to_json }}'
+    state: "{{ 'present' if gitlab_runner.cache_azure_storage_domain is defined else 'absent' }}"
+    insertafter: '^\s*\[runners\.cache\.azure\]'
+    backrefs: no
+  check_mode: no
+  notify:
+    - restart_gitlab_runner
+    - restart_gitlab_runner_macos
 
 #### [runners.ssh] section #####
 - name: Set ssh user option
