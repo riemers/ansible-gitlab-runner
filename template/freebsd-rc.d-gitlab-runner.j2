@@ -9,8 +9,8 @@
 name="gitlab_runner"
 rcvar="gitlab_runner_enable"
 
-user="gitlab-runner"
-user_home="/home/gitlab-runner"
+user="{{ gitlab_runner_runtime_owner }}"
+user_home="/home/{{ gitlab_runner_runtime_owner }}"
 command="/usr/local/bin/gitlab-runner"
 command_args="run"
 pidfile="/var/run/${name}.pid"
