@@ -53,5 +53,5 @@ run_mock_server: yes
 gitlab_runner_coordinator_url: "http://localhost:6060/"
 gitlab_runner_registration_token: 'notreal'
 
-gitlab_runner_system_mode: no
+gitlab_runner_system_mode: yes
 ...

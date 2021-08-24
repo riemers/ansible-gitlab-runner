@@ -1,6 +1,7 @@
 ---
 
 - name: Ensure /etc/systemd/system/gitlab-runner.service.d/ exists
+  become: yes
   file:
     path: /etc/systemd/system/gitlab-runner.service.d
     state: directory
@@ -9,6 +10,7 @@
     mode: 0755
 
 - name: Add reload command to GitLab Runner system service
+  become: yes
   copy:
     dest: /etc/systemd/system/gitlab-runner.service.d/exec-reload.conf
     content: |
@@ -18,6 +20,7 @@
 
 # https://docs.gitlab.com/runner/configuration/init.html#overriding-systemd
 - name: Configure graceful stop for GitLab Runner system service
+  become: yes
   copy:
     dest: /etc/systemd/system/gitlab-runner.service.d/kill.conf
     content: |
@@ -28,6 +31,7 @@
   register: gitlab_runner_kill_timeout
 
 - name: Force systemd to reread configs
+  become: yes
   systemd:
     daemon_reload: yes
   when: gitlab_runner_exec_reload.changed or gitlab_runner_kill_timeout

@@ -47,3 +47,40 @@
     - restart_gitlab_runner
     - restart_gitlab_runner_macos
     - restart_gitlab_runner_windows
+
+- name: (Windows) Add session server listen_address to config
+  win_lineinfile:
+    dest: "{{ gitlab_runner_config_file }}"
+    regexp: '^(\s+)listen_address ='
+    line: '  listen_address = "{{ gitlab_runner_session_server_listen_address }}"'
+    insertafter: '^\s*\[session_server\]'
+    state: "{{ 'present' if gitlab_runner_session_server_listen_address | length > 0 else 'absent' }}"
+  notify:
+    - restart_gitlab_runner
+    - restart_gitlab_runner_macos
+    - restart_gitlab_runner_windows
+
+- name: (Windows) Add session server advertise_address to config
+  win_lineinfile:
+    dest: "{{ gitlab_runner_config_file }}"
+    regexp: '^\s*advertise_address ='
+    line: '  advertise_address = "{{ gitlab_runner_session_server_advertise_address }}"'
+    insertafter: '^\s*\[session_server\]'
+    state: "{{ 'present' if gitlab_runner_session_server_advertise_address | length > 0 else 'absent' }}"
+  notify:
+    - restart_gitlab_runner
+    - restart_gitlab_runner_macos
+    - restart_gitlab_runner_windows
+
+- name: (Windows) Add session server session_timeout to config
+  win_lineinfile:
+    dest: "{{ gitlab_runner_config_file }}"
+    regexp: '^\s*session_timeout ='
+    line: "  session_timeout = {{ gitlab_runner_session_server_session_timeout }}"
+    insertafter: '^\s*\[session_server\]'
+    state: present
+  when: gitlab_runner_session_server_session_timeout
+  notify:
+    - restart_gitlab_runner
+    - restart_gitlab_runner_macos
+    - restart_gitlab_runner_windows

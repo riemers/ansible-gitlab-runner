@@ -27,10 +27,10 @@ On Linux, use `gitlab_runner_package_version` instead.
 See the [`defaults/main.yml`](https://github.com/riemers/ansible-gitlab-runner/blob/master/defaults/main.yml) file listing all possible options which you can be passed to a runner registration command.
 
 ### Gitlab Runners cache
-For each gitlab runner in gitlab_runner_runners you can set cache options. At the moment role support s3 or gcs types.
+For each gitlab runner in gitlab_runner_runners you can set cache options. At the moment role support s3, azure and gcs types.
 Example configurration for s3 can be:
 ```yaml
-gitlab_runner_runners:
+gitlab_runner:
   cache_type: "s3"
   cache_path: "cache"
   cache_shared: true
@@ -80,7 +80,7 @@ Example Playbook
 ----------------
 ```yaml
 - hosts: all
-  remote_user: root
+  become: true
   vars_files:
     - vars/main.yml
   roles:
@@ -91,7 +91,7 @@ Inside `vars/main.yml`
 ```yaml
 gitlab_runner_coordinator_url: https://gitlab.com
 gitlab_runner_registration_token: '12341234'
-gitlab_runner_runners:
+gitlab_runner:
   - name: 'Example Docker GitLab Runner'
     # token is an optional override to the global gitlab_runner_registration_token
     token: 'abcd'
@@ -120,7 +120,7 @@ how `vars/main.yml` would look like, if you setup an autoscaling GitLab-Runner o
 ```yaml
 gitlab_runner_registration_token: 'HUzTMgnxk17YV8Rj8ucQ'
 gitlab_runner_coordinator_url: 'https://gitlab.com'
-gitlab_runner_runners:
+gitlab_runner:
   - name: 'Example autoscaling GitLab Runner'
     state: present
     # token is an optional override to the global gitlab_runner_registration_token
@@ -150,10 +150,10 @@ from https://docs.gitlab.com/runner/executors/docker_machine.html:
 
 Example:
 
-`docker-machine create -d amazonec2 --amazonec2-zone=a --amazonec2-region=us-east-1 --amazonec2-vpc-id=vpc-11111111 --amazonec2-subnet-id=subnet-1111111 --amazonec2-use-private-address=true --amazonec2-tags=gitlab-runner --amazonec2-instance-type=t3.medium test
+```docker-machine create -d amazonec2 --amazonec2-zone=a --amazonec2-region=us-east-1 --amazonec2-vpc-id=vpc-11111111 --amazonec2-subnet-id=subnet-1111111 --amazonec2-use-private-address=true --amazonec2-tags=gitlab-runner --amazonec2-instance-type=t3.medium test
 
 docker-machine rm test
-`
+```
 
 Contributors
 ------------
@@ -162,3 +162,4 @@ Feel free to add your name to the readme if you make a PR. A full list of people
 - Gastrofix for adding Mac Support
 - Matthias Schmieder for adding Windows Support
 - dniwdeus & rosenstrauch for adding AWS autoscale option
+

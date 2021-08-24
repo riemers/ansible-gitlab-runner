@@ -21,7 +21,7 @@
   win_lineinfile:
     dest: "{{ temp_runner_config.path }}"
     regexp: '^\s*url =.*'
-    line: '  url = {{ gitlab_runner_coordinator_url | to_json }}'
+    line: '  url = {{ gitlab_runner.url|default(gitlab_runner_coordinator_url) | to_json }}'
     state: present
     insertafter: '^\s*limit ='
     backrefs: no
@@ -148,6 +148,17 @@
     regexp: '^\s*volumes =.*'
     line: '  volumes = {{ gitlab_runner.docker_volumes|default([])|to_json }}'
     state: "{{ 'present' if gitlab_runner.docker_volumes is defined else 'absent' }}"
+    insertafter: '^\s*executor ='
+    backrefs: no
+  check_mode: no
+  notify: restart_gitlab_runner_windows
+
+- name: (Windows) Set docker devices option
+  win_lineinfile:
+    dest: "{{ temp_runner_config.path }}"
+    regexp: '^\s*devices =.*'
+    line: '  devices = {{ gitlab_runner.docker_devices|default([])|to_json }}'
+    state: "{{ 'present' if gitlab_runner.docker_devices is defined else 'absent' }}"
     insertafter: '^\s*executor ='
     backrefs: no
   check_mode: no
