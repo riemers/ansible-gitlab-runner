@@ -7,7 +7,7 @@
 
 # macOS
 - name: restart_gitlab_runner_macos
- command: "{{ gitlab_runner_executable }} start"
+  command: "{{ gitlab_runner_executable }} start"
 #  become: "{{ gitlab_runner_system_mode }}"
   when: ansible_os_family == 'Darwin'
 
