@@ -36,7 +36,7 @@
         mode: '+x'
 
     - name: (MacOS) Install GitLab Runner
-      command: "{{ gitlab_runner_executable }} install --user {{ ansible_user_id }}"
+      command: "{{ gitlab_runner_executable }} install"
 
     - name: (MacOS) Start GitLab Runner
       command: "{{ gitlab_runner_executable }} start"
