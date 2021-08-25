@@ -2,7 +2,7 @@
 # for versions >= 10.x
 gitlab_runner_package_name: 'gitlab-runner'
 
-gitlab_runner_system_mode: yes
+gitlab_runner_system_mode: no
 
 # gitlab_runner_package_version for version pinning on debian/redhat
 # The following are for version pinning on MacOSX
