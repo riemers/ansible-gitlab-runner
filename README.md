@@ -30,7 +30,7 @@ See the [`defaults/main.yml`](https://github.com/riemers/ansible-gitlab-runner/b
 For each gitlab runner in gitlab_runner_runners you can set cache options. At the moment role support s3, azure and gcs types.
 Example configurration for s3 can be:
 ```yaml
-gitlab_runner_runners:
+gitlab_runner:
   cache_type: "s3"
   cache_path: "cache"
   cache_shared: true
