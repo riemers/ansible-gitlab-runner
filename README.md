@@ -91,7 +91,7 @@ Inside `vars/main.yml`
 ```yaml
 gitlab_runner_coordinator_url: https://gitlab.com
 gitlab_runner_registration_token: '12341234'
-gitlab_runner:
+gitlab_runner_runners:
   - name: 'Example Docker GitLab Runner'
     # token is an optional override to the global gitlab_runner_registration_token
     token: 'abcd'
@@ -120,7 +120,7 @@ how `vars/main.yml` would look like, if you setup an autoscaling GitLab-Runner o
 ```yaml
 gitlab_runner_registration_token: 'HUzTMgnxk17YV8Rj8ucQ'
 gitlab_runner_coordinator_url: 'https://gitlab.com'
-gitlab_runner:
+gitlab_runner_runners:
   - name: 'Example autoscaling GitLab Runner'
     state: present
     # token is an optional override to the global gitlab_runner_registration_token
