@@ -53,6 +53,9 @@
     {% if gitlab_runner.pre_build_script|default(false) %}
     --pre-build-script "{{ gitlab_runner.pre_build_script }}"
     {% endif %}
+    {% if gitlab_runner.tls_ca_file|default(false) %}
+    --tls-ca-file "{{ gitlab_runner.tls_ca_file }}"
+    {% endif %}
     {% if gitlab_runner.post_build_script|default(false) %}
     --post-build-script "{{ gitlab_runner.post_build_script }}"
     {% endif %}

@@ -41,7 +41,7 @@ gitlab_runner_session_server_session_timeout: 1800
 
 # The credentials for the Windows user used to run the gitlab-runner service.
 # Those credentials will be passed to `gitlab-runner.exe install`.
-# https://docs.gitlab.com/runner/install/windows.html 
+# https://docs.gitlab.com/runner/install/windows.html
 gitlab_runner_windows_service_user: ''
 gitlab_runner_windows_service_password: ''
 
@@ -50,7 +50,7 @@ gitlab_runner_container_install: false
 gitlab_runner_container_image: gitlab/gitlab-runner
 gitlab_runner_container_tag: latest
 gitlab_runner_container_name: gitlab-runner
-gitlab_runner_container_restart_policy: unless-stopped 
+gitlab_runner_container_restart_policy: unless-stopped
 # you can define a network which the container connects to
 # this option uses network_mode, thus 'default' will use the first network found in docker network list
 gitlab_runner_container_network: default
@@ -86,6 +86,9 @@ gitlab_runner_runners:
     locked: 'false'
     # Add container to a custom network
     docker_network_mode: bridge
+    # Custom CA certificate file
+    # tls_ca_file: "/etc/ssl/private/Custom_Bundle-CA.pem"
+    #
     # Custom environment variables injected to build environment
     env_vars: []
     # Sets the clone_url. The default is not set.

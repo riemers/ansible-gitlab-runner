@@ -80,6 +80,20 @@
   - restart_gitlab_runner_macos
   when: gitlab_runner.pre_build_script is defined
 
+- name: Set tls_ca_file
+  lineinfile:
+    dest: "{{ temp_runner_config.path }}"
+    regexp: '^\s*tls-ca-file ='
+    line: '  tls-ca-file = {{ gitlab_runner.tls_ca_file | to_json }}'
+    state: present
+    insertafter: '^\s*url ='
+    backrefs: no
+  check_mode: no
+  notify:
+  - restart_gitlab_runner
+  - restart_gitlab_runner_macos
+  when: gitlab_runner.tls_ca_file is defined
+
 - name: Set post_build_script
   lineinfile:
     dest: "{{ temp_runner_config.path }}"
