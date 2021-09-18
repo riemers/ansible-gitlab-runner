@@ -325,7 +325,7 @@
     dest: "{{ temp_runner_config.path }}"
     regexp: '^\s*\[runners\.cache\]'
     line: '  [runners.cache]'
-    state: present
+    state: "{{ 'present' if gitlab_runner.cache_type is defined else 'absent' }}"
     insertafter: EOF
     backrefs: no
   check_mode: no
