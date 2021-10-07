@@ -214,6 +214,19 @@
   - restart_gitlab_runner
   - restart_gitlab_runner_macos
 
+- name: Set docker shm_size option
+  lineinfile:
+    dest: "{{ temp_runner_config.path }}"
+    regexp: '^\s*shm_size ='
+    line: '    shm_size = {{ gitlab_runner.docker_shm_size|default(false) | lower }}'
+    state: "{{ 'present' if gitlab_runner.docker_shm_size is defined else 'absent' }}"
+    insertafter: '^\s*\[runners\.docker\]'
+    backrefs: no
+  check_mode: no
+  notify:
+  - restart_gitlab_runner
+  - restart_gitlab_runner_macos
+
 - name: Set docker disable_cache option
   lineinfile:
     dest: "{{ temp_runner_config.path }}"
