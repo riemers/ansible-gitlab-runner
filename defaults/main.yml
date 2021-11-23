@@ -76,6 +76,8 @@ gitlab_runner_runners:
     concurrent_specific: '0'
     # The default Docker image to use. Required when executor is `docker`.
     docker_image: ''
+    # The Docker host to use. Required when executor is `docker`.
+    # docker_host: ''
     # The tags assigned to the runner.
     tags: []
     # Indicates whether this runner can pick jobs without tags.

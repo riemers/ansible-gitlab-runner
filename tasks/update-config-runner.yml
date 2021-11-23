@@ -175,6 +175,19 @@
   - restart_gitlab_runner
   - restart_gitlab_runner_macos
 
+- name: Set runner docker host option
+  lineinfile:
+    dest: "{{ temp_runner_config.path }}"
+    regexp: '^\s*host ='
+    line: '    host = {{ gitlab_runner.docker_host| default("") | to_json }}'
+    state: "{{ 'present' if gitlab_runner.docker_host is defined else 'absent' }}"
+    insertafter: '^\s*\[runners\.docker\]'
+    backrefs: no
+  check_mode: no
+  notify:
+  - restart_gitlab_runner
+  - restart_gitlab_runner_macos
+
 - name: Set docker privileged option
   lineinfile:
     dest: "{{ temp_runner_config.path }}"
