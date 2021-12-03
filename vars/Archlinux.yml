@@ -1,0 +1,8 @@
+---
+
+gitlab_runner_executable: "/usr/bin/{{ gitlab_runner_package_name }}"
+
+gitlab_runner_runtime_owner: gitlab-runner
+gitlab_runner_runtime_group: gitlab-runner
+gitlab_runner_restart_state: reloaded
+gitlab_runner_timeout_stop_seconds: 720
