@@ -226,7 +226,7 @@
   notify:
   - restart_gitlab_runner
   - restart_gitlab_runner_macos
-  
+
 - name:  "{{ runn_name_prefix }} Set docker disable_cache option"
   lineinfile:
     dest: "{{ temp_runner_config.path }}"

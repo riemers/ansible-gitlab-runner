@@ -33,6 +33,6 @@
     backup: yes
     validate: |
       docker run -i --rm -v %s:/gitlab-runner.conf
-      {{ gitlab_runner_container_image }}:{{ gitlab_runner_container_tag }} 
+      {{ gitlab_runner_container_image }}:{{ gitlab_runner_container_tag }}
       verify -c /gitlab-runner.conf
     mode: 0600
