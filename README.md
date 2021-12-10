@@ -162,4 +162,4 @@ Feel free to add your name to the readme if you make a PR. A full list of people
 - Gastrofix for adding Mac Support
 - Matthias Schmieder for adding Windows Support
 - dniwdeus & rosenstrauch for adding AWS autoscale option
-
+- oscillate123 for fixing Windows config.toml idempotency
