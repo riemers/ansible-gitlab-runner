@@ -40,12 +40,6 @@
     win_lineinfile:
       insertbefore: BOF
       path: "{{ config_toml_temp.path }}"
-      line: "[[runners]]"
-
-  - name: (Windows) Write global config to file
-    win_lineinfile:
-      insertbefore: BOF
-      path: "{{ config_toml_temp.path }}"
       line: "{{ runner_global_config }}"
 
   - name: (Windows) Create temporary file runners-config.toml
