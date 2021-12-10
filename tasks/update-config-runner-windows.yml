@@ -1,10 +1,14 @@
 ---
-- name: (Windows) Print "[[runners]]" section
+- name: (Windows) Set "[[runners]]" section
   win_lineinfile:
     dest: "{{ temp_runner_config.path }}"
+    regexp: '\n'
     line: '[[runners]]'
     state: present
-    insertbefore: BOF
+    insertbefore: '^\s*name ='
+    backrefs: no
+  check_mode: no
+  notify: restart_gitlab_runner_windows
 
 - name: (Windows) Set concurrent limit option
   win_lineinfile:
@@ -340,6 +344,9 @@
     backrefs: no
   check_mode: no
   notify: restart_gitlab_runner_windows
+
+- name: (Windows) Remove empty lines
+  win_shell: (Get-Content {{ temp_runner_config.path }}) | ? {$_.trim() -ne "" } | Set-Content {{ temp_runner_config.path }}
 
 - include: section-config-runner-windows.yml
   loop: "{{ gitlab_runner.extra_configs|list }}"
