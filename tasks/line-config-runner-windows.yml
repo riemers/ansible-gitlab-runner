@@ -1,11 +1,11 @@
 ---
-- name: (Windows) Ensure section exists
+- name: "(Windows) {{ line_name_prefix }} Ensure section exists"
   win_lineinfile:
     path: "{{ temp_runner_config.path }}"
     regexp: '^(\s*)\[{{ section|regex_escape }}\]$'
     line: '{{ "  " * (section.split(".")|length -1) }}[{{ section }}]'
 
-- name: (Windows) Modify existing line
+- name: "(Windows) {{ line_name_prefix }} Modify existing line"
   win_lineinfile:
     path: "{{ temp_runner_config.path }}"
     insertafter: '\s+\[{{ section | regex_escape }}\]'

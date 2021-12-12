@@ -61,6 +61,9 @@ gitlab_runner_restart_state: restarted
 # default value for log_format
 # gitlab_runner_log_format: runner
 
+# controls diffs for assemle config file
+gitlab_runner_show_config_diff: no
+
 # A list of runners to register and configure
 gitlab_runner_runners:
     # The identifier of the runner.
