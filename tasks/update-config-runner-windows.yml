@@ -348,7 +348,7 @@
 - name: (Windows) Remove empty lines
   win_shell: (Get-Content {{ temp_runner_config.path }}) | ? {$_.trim() -ne "" } | Set-Content {{ temp_runner_config.path }}
 
-- include: section-config-runner-windows.yml
+- include_tasks: section-config-runner-windows.yml
   vars:
     sect_name_prefix: "{{ runn_name_prefix }} section[{{ (section_index|int) + 1 }}/{{ gitlab_runner.extra_configs|list|length }}]:"
   loop: "{{ gitlab_runner.extra_configs|list }}"
