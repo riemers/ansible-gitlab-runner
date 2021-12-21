@@ -796,7 +796,7 @@
   when:
     - item.rc is defined and item.rc != 0
 
-- include: section-config-runner.yml
+- include_tasks: section-config-runner.yml
   vars:
     sect_name_prefix: "{{ runn_name_prefix }} section[{{ (section_index|int) + 1 }}/{{ gitlab_runner.extra_configs|list|length }}]:"
   loop: "{{ gitlab_runner.extra_configs|list }}"
