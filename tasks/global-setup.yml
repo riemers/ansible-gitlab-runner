@@ -39,7 +39,7 @@
     - restart_gitlab_runner
     - restart_gitlab_runner_macos
 
-- name: Add log_format to config 
+- name: Add log_format to config
   lineinfile:
     dest: "{{ gitlab_runner_config_file }}"
     regexp: '^log_format ='

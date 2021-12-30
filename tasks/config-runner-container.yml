@@ -1,5 +1,5 @@
 ---
-- name: Create temporary file
+- name: "{{ conf_name_prefix }} Create temporary file"
   tempfile:
     state: file
     path: "{{ temp_runner_config_dir.path }}"
@@ -8,7 +8,7 @@
   check_mode: no
   changed_when: false
 
-- name: Isolate runner configuration
+- name: "{{ conf_name_prefix }} Isolate runner configuration"
   copy:
     dest: "{{ temp_runner_config.path }}"
     content: "{{ runner_config }}"
@@ -16,6 +16,8 @@
   changed_when: false
 
 - include_tasks: update-config-runner.yml
+  vars:
+    runn_name_prefix: "{{ conf_name_prefix }} runner[{{ (gitlab_runner_index|int) + 1 }}/{{ gitlab_runner_runners|length }}]:"
   when:
     - ('name = "'+gitlab_runner.name|default(ansible_hostname+'-'+gitlab_runner_index|string)+'"') in runner_config
     - gitlab_runner.state|default('present') == 'present'
@@ -24,7 +26,7 @@
     index_var: gitlab_runner_index
     loop_var: gitlab_runner
 
-- name: Remove runner config
+- name: "{{ conf_name_prefix }} Remove runner config"
   file:
     path: "{{ temp_runner_config.path }}"
     state: absent

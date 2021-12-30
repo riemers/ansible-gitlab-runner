@@ -21,6 +21,8 @@
   changed_when: false
 
 - name: (Windows) Write config section for each runner
+  vars:
+    conf_name_prefix: "conf[{{ (runner_config_index|int) + 1 }}/{{ runner_configs|length }}]:"
   include_tasks: config-runner-windows.yml
   loop: "{{ runner_configs }}"
   loop_control:
@@ -35,12 +37,6 @@
       state: file
       suffix: temp
     register: config_toml_temp
-
-  - name: (Windows) Write global config to file
-    win_lineinfile:
-      insertbefore: BOF
-      path: "{{ config_toml_temp.path }}"
-      line: "[[runners]]"
 
   - name: (Windows) Write global config to file
     win_lineinfile:

@@ -40,11 +40,11 @@
 
 - name: configured_runners?
   debug:
-    msg: "{{configured_runners.container.Output}}"
+    msg: "{{ configured_runners.container.Output }}"
 
 - name: verified_runners?
   debug:
-    msg: "{{verified_runners.container.Output}}"
+    msg: "{{ verified_runners.container.Output }}"
 
 - name: (Container) Register GitLab Runner
   include_tasks: register-runner-container.yml

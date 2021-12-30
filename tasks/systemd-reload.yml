@@ -30,7 +30,7 @@
   when: gitlab_runner_timeout_stop_seconds > 0
   register: gitlab_runner_kill_timeout
 
-- name: Force systemd to reread configs
+- name: Force systemd to reread configs # noqa 503
   become: yes
   systemd:
     daemon_reload: yes
