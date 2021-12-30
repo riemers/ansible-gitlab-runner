@@ -32,7 +32,7 @@
     dest: "{{ gitlab_runner_config_file }}"
     delimiter: '[[runners]]\n'
     backup: yes
-    validate: "{{ gitlab_runner_executable }} verify -c %s"
+#    validate: "{{ gitlab_runner_executable }} verify -c %s"
     mode: 0600
   become: "{{ gitlab_runner_system_mode }}"
   diff: "{{ gitlab_runner_show_config_diff|bool }}"
