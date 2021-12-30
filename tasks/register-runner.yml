@@ -152,5 +152,5 @@
   when: (verified_runners.stderr.find("Verifying runner... is removed") != -1) or
         ((configured_runners.stderr.find('\n' + gitlab_runner.name|default(ansible_hostname+'-'+gitlab_runner_index|string)) == -1) and
         (gitlab_runner.state|default('present') == 'present'))
-  no_log: true
+  no_log: false
   become: "{{ gitlab_runner_system_mode }}"
