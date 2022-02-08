@@ -253,6 +253,19 @@
   - restart_gitlab_runner
   - restart_gitlab_runner_macos
 
+- name:  "{{ runn_name_prefix }} Set docker DNS search option"
+  lineinfile:
+    dest: "{{ temp_runner_config.path }}"
+    regexp: '^\s*dns_search ='
+    line: '    dns_search = {{ gitlab_runner.docker_dns_search|default(false) | to_json }}'
+    state: "{{ 'present' if gitlab_runner.docker_dns_search is defined else 'absent' }}"
+    insertafter: '^\s*\[runners\.docker\]'
+    backrefs: no
+  check_mode: no
+  notify:
+  - restart_gitlab_runner
+  - restart_gitlab_runner_macos
+
 - name:  "{{ runn_name_prefix }} Set docker pull_policy option"
   lineinfile:
     dest: "{{ temp_runner_config.path }}"
