@@ -83,6 +83,8 @@ gitlab_runner_runners:
     tags: []
     # Indicates whether this runner can pick jobs without tags.
     run_untagged: true
+    # Indicates whether this runner should only pick jobs from protected branches.
+    protected: false
     # Docker privileged mode
     docker_privileged: false
     # Runner Locked. When a runner is locked, it cannot be assigned to other projects

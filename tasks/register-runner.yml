@@ -38,6 +38,9 @@
       {% if gitlab_runner.run_untagged|default(true) %}
       --run-untagged
       {% endif %}
+      {% if gitlab_runner.protected|default(false) %}
+      --access-level="ref_protected"
+      {% endif %}
       --executor '{{ gitlab_runner.executor|default("shell") }}'
       {% if gitlab_runner.shell is defined %}
       --shell '{{ gitlab_runner.shell }}'
