@@ -10,7 +10,7 @@
     command: list
     mounts:
       - type: bind
-        source: "/srv/{{ gitlab_runner_container_name }}"
+        source: "{{ gitlab_runner_container_mount_path }}"
         target: /etc/gitlab-runner
     cleanup: yes
     interactive: yes
@@ -27,7 +27,7 @@
     command: verify
     mounts:
       - type: bind
-        source: "/srv/{{ gitlab_runner_container_name }}"
+        source: "{{ gitlab_runner_container_mount_path }}"
         target: /etc/gitlab-runner
     cleanup: yes
     interactive: yes
@@ -67,7 +67,7 @@
     restart_policy: "{{ gitlab_runner_container_restart_policy }}"
     mounts:
     - type: bind
-      source: "/srv/{{ gitlab_runner_container_name }}"
+      source: "{{ gitlab_runner_container_mount_path }}"
       target: /etc/gitlab-runner
     - type: bind
       source: /var/run/docker.sock
