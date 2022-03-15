@@ -175,6 +175,19 @@
   - restart_gitlab_runner
   - restart_gitlab_runner_macos
 
+- name:  "{{ runn_name_prefix }} Set docker helper image option"
+  lineinfile:
+    dest: "{{ temp_runner_config.path }}"
+    regexp: '^\s*helper_image ='
+    line: '    helper_image = {{ gitlab_runner.docker_helper_image|default('') | to_json }}'
+    state: "{{ 'present' if gitlab_runner.docker_helper_image is defined else 'absent' }}"
+    insertafter: '^\s*\[runners\.docker\]'
+    backrefs: no
+  check_mode: no
+  notify:
+  - restart_gitlab_runner
+  - restart_gitlab_runner_macos
+
 - name:  "{{ runn_name_prefix }} Set docker privileged option"
   lineinfile:
     dest: "{{ temp_runner_config.path }}"
