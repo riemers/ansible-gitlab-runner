@@ -3,7 +3,7 @@
   file:
     path: "{{ gitlab_runner_config_file_location }}"
     state: directory
-    mode: '0755'
+    mode: '0700'
   become: "{{ gitlab_runner_system_mode }}"
 
 - name: Ensure config.toml exists
