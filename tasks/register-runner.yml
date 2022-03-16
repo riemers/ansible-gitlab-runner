@@ -64,6 +64,9 @@
       --post-build-script "{{ gitlab_runner.post_build_script }}"
       {% endif %}
       --docker-image '{{ gitlab_runner.docker_image|default("alpine") }}'
+      {% if gitlab_runner.docker_helper_image is defined %}
+      --docker-helper-image "{{ gitlab_runner.docker_helper_image }}"
+      {% endif %}
       {% if gitlab_runner.docker_privileged|default(false) %}
       --docker-privileged
       {% endif %}

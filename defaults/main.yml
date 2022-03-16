@@ -79,6 +79,9 @@ gitlab_runner_runners:
     concurrent_specific: '0'
     # The default Docker image to use. Required when executor is `docker`.
     docker_image: ''
+    # Set to override the default helper image that is used.
+    # docker_helper_image: 'gitlab/gitlab-runner-helper-linux:latest'
+    #
     # The tags assigned to the runner.
     tags: []
     # Indicates whether this runner can pick jobs without tags.
