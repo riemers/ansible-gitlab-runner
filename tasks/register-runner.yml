@@ -108,7 +108,7 @@
           --virtualbox-base-name '{{ gitlab_runner.virtualbox_base_name }}'
           --virtualbox-base-snapshot '{{ gitlab_runner.virtualbox_base_snapshot|default("") }}'
           --virtualbox-base-folder '{{ gitlab_runner.virtualbox_base_folder|default("") }}'
-          --virtualbox-disable-snapshots '{{ gitlab_runner.virtualbox_disable_snapshots|default(false) }}'
+          --virtualbox-disable-snapshots='{{ gitlab_runner.virtualbox_disable_snapshots|default(false) }}'
       {% endif %}
       {% if gitlab_runner.cache_type is defined %}
       --cache-type '{{ gitlab_runner.cache_type }}'
