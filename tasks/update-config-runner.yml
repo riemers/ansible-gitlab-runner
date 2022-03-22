@@ -179,7 +179,7 @@
   lineinfile:
     dest: "{{ temp_runner_config.path }}"
     regexp: '^\s*helper_image ='
-    line: "    helper_image = {{ gitlab_runner.docker_helper_image|default('') | to_json }}"
+    line: '    helper_image = {{ gitlab_runner.docker_helper_image|default("") | to_json }}'
     state: "{{ 'present' if gitlab_runner.docker_helper_image is defined else 'absent' }}"
     insertafter: '^\s*\[runners\.docker\]'
     backrefs: no
