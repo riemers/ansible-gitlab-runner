@@ -37,7 +37,7 @@ gitlab_runner:
   cache_s3_server_address: "s3.amazonaws.com"
   cache_s3_access_key: "<access_key>"
   cache_s3_secret_key: "<secret_key>"
-  cache_s3_bucket_name: "<bucket_name>
+  cache_s3_bucket_name: "<bucket_name>"
   cache_s3_bucket_location: "eu-west-1"
   cache_s3_insecure: false
 ```
