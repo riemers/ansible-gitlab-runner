@@ -38,34 +38,28 @@
       state: file
       suffix: temp
     register: config_toml_temp
-  no_log: True  
 
   - name: (Windows) Write global config to file
     win_lineinfile:
       insertbefore: BOF
       path: "{{ config_toml_temp.path }}"
       line: "{{ runner_global_config }}"
-    no_log: True
 
   - name: (Windows) Create temporary file runners-config.toml
     win_tempfile:
       state: file
       suffix: temp
     register: runners_config_toml_temp
-    no_log: True
 
   - name: (Windows) Assemble runners files in config dir
     win_shell: dir -rec | gc | out-file "{{ runners_config_toml_temp.path }}"
     args:
       chdir: "{{ temp_runner_config_dir.path }}"
-    no_log: True
 
   - name: (Windows) Assemble new config.toml
     win_shell: gc "{{ config_toml_temp.path }}","{{ runners_config_toml_temp.path }}" | Set-Content "{{ gitlab_runner_config_file }}"
-    no_log: True
 
   - name: (Windows) Verify config
     win_command: "{{ gitlab_runner_executable }} verify"
     args:
       chdir: "{{ gitlab_runner_config_file_location }}"
-    no_log: True
