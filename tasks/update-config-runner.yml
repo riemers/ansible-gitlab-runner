@@ -159,6 +159,8 @@
   notify:
   - restart_gitlab_runner
   - restart_gitlab_runner_macos
+  tags:
+  - macOSExtra
 
 
 #### [runners.docker] section ####
@@ -174,6 +176,8 @@
   notify:
   - restart_gitlab_runner
   - restart_gitlab_runner_macos
+  tags:
+  - macOSExtra
 
 - name:  "{{ runn_name_prefix }} Set docker privileged option"
   lineinfile:
@@ -806,3 +810,4 @@
   when:
     - gitlab_runner.extra_configs is defined
     - gitlab_runner.extra_configs|list|length > 0
+
