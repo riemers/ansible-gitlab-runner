@@ -20,6 +20,14 @@
     set_fact:
       gitlab_runner_existing_version: "{{ existing_version_shell.stdout if existing_version_shell.rc == 0 else '0' }}"
 
+- name: (MacOS) Precreate gitlab-runner log directory
+  become: yes
+  file:
+    path: /usr/local/var/log
+    state: directory
+    owner: "{{ ansible_user_id | string }}"
+  when: gitlab_runner_arch == 'arm64'
+
 - name: (MacOS) INSTALL GitLab Runner for macOS
   block:
     - name: (MacOS) Download GitLab Runner
