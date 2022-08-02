@@ -1,0 +1,16 @@
+---
+
+- name: (Arch) Set gitlab_runner_package_name
+  set_fact:
+    gitlab_runner_package: "{{ gitlab_runner_package_name }}"
+    gitlab_runner_package_state: "latest"
+  when: gitlab_runner_package_version is not defined
+
+- name: (Arch) Install GitLab Runner
+  package:
+    name: "{{ gitlab_runner_package }}"
+    state: "{{ gitlab_runner_package_state }}"
+  become: true
+
+- name: Set systemd reload options
+  import_tasks: systemd-reload.yml

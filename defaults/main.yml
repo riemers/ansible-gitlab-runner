@@ -29,6 +29,11 @@ gitlab_runner_sentry_dsn: ''
 # Prometheus Metrics & Monitoring
 gitlab_runner_listen_address: ''
 
+# Session server configuration
+gitlab_runner_session_server_listen_address: ''
+gitlab_runner_session_server_advertise_address: ''
+gitlab_runner_session_server_session_timeout: 1800
+
 # Skip the APT or YUM repository installation
 # You should provide a repository containing the needed packages before running this role.
 # Use this if you use a mirror repository
@@ -40,11 +45,30 @@ gitlab_runner_listen_address: ''
 gitlab_runner_windows_service_user: ''
 gitlab_runner_windows_service_password: ''
 
-# gitlab_runner_container_install
+# Whether to try to start the runner on MacOS.
+# If set to `false`, it should be started manually.
+# https://docs.gitlab.com/runner/install/osx.html#limitations-on-macos
+gitlab_runner_macos_start_runner: true
+
+# default values for gitlab in container
 gitlab_runner_container_install: false
+gitlab_runner_container_image: gitlab/gitlab-runner
+gitlab_runner_container_tag: latest
+gitlab_runner_container_name: gitlab-runner
+gitlab_runner_container_mount_path: ''
+gitlab_runner_container_restart_policy: unless-stopped
+# you can define a network which the container connects to
+# this option uses network_mode, thus 'default' will use the first network found in docker network list
+gitlab_runner_container_network: default
 
 # default state to restart
-gitlab_runner_restart_state: "restarted"
+gitlab_runner_restart_state: restarted
+
+# default value for log_format
+# gitlab_runner_log_format: runner
+
+# controls diffs for assemle config file
+gitlab_runner_show_config_diff: no
 
 # A list of runners to register and configure
 gitlab_runner_runners:
@@ -61,16 +85,24 @@ gitlab_runner_runners:
     concurrent_specific: '0'
     # The default Docker image to use. Required when executor is `docker`.
     docker_image: ''
+    # Set to override the default helper image that is used.
+    # docker_helper_image: 'gitlab/gitlab-runner-helper-linux:latest'
+    #
     # The tags assigned to the runner.
     tags: []
     # Indicates whether this runner can pick jobs without tags.
     run_untagged: true
+    # Indicates whether this runner should only pick jobs from protected branches.
+    protected: false
     # Docker privileged mode
     docker_privileged: false
     # Runner Locked. When a runner is locked, it cannot be assigned to other projects
     locked: 'false'
     # Add container to a custom network
     docker_network_mode: bridge
+    # Custom CA certificate file
+    # tls_ca_file: "/etc/ssl/private/Custom_Bundle-CA.pem"
+    #
     # Custom environment variables injected to build environment
     env_vars: []
     # Sets the clone_url. The default is not set.
@@ -99,6 +131,19 @@ gitlab_runner_runners:
     #
     # Runner SSH identity file
     # ssh_identity_file: ''
+    #
+    # Virtualbox executor configuration params
+    # Base VM name (Required for runner registration!)
+    # virtualbox_base_name: "MyPerfectVMForGitlabVirtualboxExecutor"
+    #
+    # Base VM snapshot name
+    # virtualbox_base_snapshot: ""
+    #
+    # Base VM base folder
+    # virtualbox_base_folder: ""
+    #
+    # Not use VM snapshots for agent launch(false==Use snapshots, true==Do not use snapshots)
+    # virtualbox_disable_snapshots: false
     #
     # Cache type
     # cache_type: 's3|gcs'
@@ -138,6 +183,18 @@ gitlab_runner_runners:
     #
     # Cache GCS Private Key
     # cache_gcs_private_key: "-----BEGIN PRIVATE KEY-----\nXXXXXX\n-----END PRIVATE KEY-----\n"
+    #
+    # Cache azure account name
+    # cache_azure_account_name: "<AZURE STORAGE ACCOUNT NAME>"
+    #
+    # Cache azure account key
+    # cache_azure_account_key: "<AZURE STORAGE ACCOUNT KEY>"
+    #
+    # Cache azure container name
+    # cache_azure_container_name: "runners-cache"
+    #
+    # Cache azure storage domain
+    # cache_azure_storage_domain: "blob.core.windows.net"
     #
     # Builds directory
     # builds_dir: '/builds_dir'

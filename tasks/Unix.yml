@@ -14,12 +14,16 @@
   import_tasks: install-freebsd.yml
   when: ansible_os_family == 'FreeBSD'
 
+- name: Install GitLab Runner (Arch)
+  import_tasks: install-arch.yml
+  when: ansible_os_family == 'Archlinux'
+
 - name: (Unix) List configured runners
   command: "{{ gitlab_runner_executable }} list"
   register: configured_runners
   changed_when: False
   check_mode: no
-  become: yes
+  become: "{{ gitlab_runner_system_mode }}"
 
 - name: (Unix) Check runner is registered
   command: "{{ gitlab_runner_executable }} verify"
@@ -27,7 +31,7 @@
   ignore_errors: True
   changed_when: False
   check_mode: no
-  become: yes
+  become: "{{ gitlab_runner_system_mode }}"
 
 - name: (Unix) Register GitLab Runner
   include_tasks: register-runner.yml

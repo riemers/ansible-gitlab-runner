@@ -2,19 +2,23 @@
 jobs:
   include:
     - os: linux
-      python: "2.7"
+      dist: focal
+      python: "3.8"
       language: python
       addons:
         apt:
           packages:
-            - python-pip
+            - python3-pip
       install:
         # Install ansible
-        - pip install ansible flask
+        - sudo update-alternatives --install /usr/bin/python python /usr/bin/python3 1
+        - echo $PATH
+        - pip3 install ansible flask
         # Check ansible version
         - ansible --version
         # Create ansible.cfg with correct roles_path
-        - printf '[defaults]\nroles_path=../' > ansible.cfg
+        #- printf '[defaults]\nroles_path=../' > ansible.cfg
+        - "{ echo '[defaults]'; echo 'roles_path = ../'; } > ansible.cfg"
       script:
         # Basic role syntax check
         - ansible-playbook tests/test.yml -i tests/inventory --syntax-check
@@ -56,6 +60,5 @@ jobs:
         - wsl ansible-playbook test.yml -i inventory --syntax-check
         # Running tests
         - wsl ansible-playbook test.yml -i inventory --extra-vars 'ansible_user=ansible ansible_password=Ans1ble_User! ansible_connection=winrm ansible_winrm_server_cert_validation=ignore ansible_ssh_port=5986'
-
 notifications:
   webhooks: https://galaxy.ansible.com/api/v1/notifications/

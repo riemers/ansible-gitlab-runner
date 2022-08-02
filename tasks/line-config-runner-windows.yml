@@ -1,14 +1,24 @@
 ---
-- name: (Windows) Ensure section exists
+- name: "(Windows) {{ line_name_prefix }} Ensure section exists"
   win_lineinfile:
     path: "{{ temp_runner_config.path }}"
     regexp: '^(\s*)\[{{ section|regex_escape }}\]$'
     line: '{{ "  " * (section.split(".")|length -1) }}[{{ section }}]'
 
-- name: (Windows) Modify existing line
+- name: "(Windows) {{ line_name_prefix }} Modify existing line"
   win_lineinfile:
     path: "{{ temp_runner_config.path }}"
     insertafter: '\s+\[{{ section | regex_escape }}\]'
-    regexp: '^(\s*){{ line | to_json | regex_escape }} =.*'
+    regexp: '^(\s*)({{ line | regex_escape }}|{{ line | regex_escape }}) =.*'
+    line: '{{ "  " * (section.split(".")|length) }}{{ line }} = {{ gitlab_runner.extra_configs[section][line] | to_json }}'
+  register: modified_config_line
+  when: "not '.' in line"
+
+- name: "(Windows) {{ line_name_prefix }} Modify existing line to_json"
+  win_lineinfile:
+    path: "{{ temp_runner_config.path }}"
+    insertafter: '\s+\[{{ section | regex_escape }}\]'
+    regexp: '^(\s*)({{ line | to_json | regex_escape }}|{{ line | regex_escape }}) =.*'
     line: '{{ "  " * (section.split(".")|length) }}{{ line | to_json }} = {{ gitlab_runner.extra_configs[section][line] | to_json }}'
   register: modified_config_line
+  when: "'.' in line"

@@ -5,12 +5,12 @@
 
 - name: (Container) List configured runners
   docker_container:
-    name: "{{ gitlab_runner_container_name }}"
+    name: "{{ gitlab_runner_container_name }}-list"
     image: "{{ gitlab_runner_container_image }}:{{ gitlab_runner_container_tag }}"
     command: list
     mounts:
       - type: bind
-        source: "/srv/{{ gitlab_runner_container_name }}"
+        source: "{{ gitlab_runner_container_mount_path }}"
         target: /etc/gitlab-runner
     cleanup: yes
     interactive: yes
@@ -22,12 +22,12 @@
 
 - name: (Container) Check runner is registered
   docker_container:
-    name: "{{ gitlab_runner_container_name }}"
+    name: "{{ gitlab_runner_container_name }}-check"
     image: "{{ gitlab_runner_container_image }}:{{ gitlab_runner_container_tag }}"
     command: verify
     mounts:
       - type: bind
-        source: "/srv/{{ gitlab_runner_container_name }}"
+        source: "{{ gitlab_runner_container_mount_path }}"
         target: /etc/gitlab-runner
     cleanup: yes
     interactive: yes
@@ -40,11 +40,11 @@
 
 - name: configured_runners?
   debug:
-    msg: "{{configured_runners.container.Output}}"
+    msg: "{{ configured_runners.container.Output }}"
 
 - name: verified_runners?
   debug:
-    msg: "{{verified_runners.container.Output}}"
+    msg: "{{ verified_runners.container.Output }}"
 
 - name: (Container) Register GitLab Runner
   include_tasks: register-runner-container.yml
@@ -64,10 +64,12 @@
   docker_container:
     name: "{{ gitlab_runner_container_name }}"
     image: "{{ gitlab_runner_container_image }}:{{ gitlab_runner_container_tag }}"
+    restart_policy: "{{ gitlab_runner_container_restart_policy }}"
     mounts:
     - type: bind
-      source: "/srv/{{ gitlab_runner_container_name }}"
+      source: "{{ gitlab_runner_container_mount_path }}"
       target: /etc/gitlab-runner
     - type: bind
       source: /var/run/docker.sock
       target: /var/run/docker.sock
+    network_mode: "{{ gitlab_runner_container_network }}"

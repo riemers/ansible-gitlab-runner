@@ -38,9 +38,9 @@
       args:
         chdir: "{{ gitlab_runner_config_file_location }}"
       when: (gitlab_runner_windows_service_user | length == 0) or (gitlab_runner_windows_service_password | length == 0)
-    
+
     - name: (Windows) Install GitLab Runner
-      win_command: "{{ gitlab_runner_executable }} install --user \"{{ gitlab_runner_windows_service_user }}\" --password \"{{ gitlab_runner_windows_service_password }}\""
+      win_command: "{{ gitlab_runner_executable }} install --user \"{{ gitlab_runner_windows_service_user }}\" --password \"{{ gitlab_runner_windows_service_password }}\"" # noqa 204
       args:
         chdir: "{{ gitlab_runner_config_file_location }}"
       when:

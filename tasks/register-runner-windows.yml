@@ -33,6 +33,9 @@
     {% if gitlab_runner.run_untagged|default(true) %}
     --run-untagged
     {% endif %}
+    {% if gitlab_runner.protected|default(false) %}
+    --access-level="ref_protected"
+    {% endif %}
     --executor '{{ gitlab_runner.executor|default("shell") }}'
     {% if gitlab_runner.shell is defined %}
     --shell '{{ gitlab_runner.shell }}'
@@ -58,6 +61,9 @@
     {% endif %}
     {% for volume in gitlab_runner.docker_volumes | default([]) %}
     --docker-volumes "{{ volume }}"
+    {% endfor %}
+    {% for device in gitlab_runner.docker_devices | default([]) %}
+    --docker-devices "{{ device }}"
     {% endfor %}
     {% if gitlab_runner.ssh_user is defined %}
     --ssh-user '{{ gitlab_runner.ssh_user }}'

@@ -21,7 +21,7 @@
     command: |
       register
       --non-interactive
-      --url '{{ gitlab_runner_coordinator_url }}'
+      --url '{{ gitlab_runner.url | default(gitlab_runner_coordinator_url) }}'
       --registration-token '{{ gitlab_runner.token|default(gitlab_runner_registration_token) }}'
       --description '{{ gitlab_runner.name|default(ansible_hostname+"-"+gitlab_runner_index|string) }}'
       --tag-list '{{ gitlab_runner.tags|default([]) | join(",") }}'
@@ -30,6 +30,9 @@
       {% endif %}
       {% if gitlab_runner.run_untagged|default(true) %}
       --run-untagged
+      {% endif %}
+      {% if gitlab_runner.protected|default(false) %}
+      --access-level="ref_protected"
       {% endif %}
       --executor '{{ gitlab_runner.executor|default("shell") }}'
       --limit '{{ gitlab_runner.concurrent_specific|default(0) }}'
@@ -57,8 +60,20 @@
       {% if gitlab_runner.docker_dns|default(false) %}
       --docker-dns '{{ gitlab_runner.docker_dns|default("1.1.1.1") }}'
       {% endif %}
+      {% if gitlab_runner.docker_dns_search|default(false) %}
+      --docker-dns-search '{{ gitlab_runner.docker_dns_search|default([]) }}'
+      {% endif %}
+      {% if gitlab_runner.docker_disable_cache|default(false) %}
+      --docker-disable-cache
+      {% endif %}
+      {% if gitlab_runner.docker_oom_kill_disable|default(false) %}
+      --docker-oom-kill-disable '{{ gitlab_runner.docker_oom_kill_disable|default("false") }}'
+      {% endif %}
       {% for volume in gitlab_runner.docker_volumes | default([]) %}
       --docker-volumes "{{ volume }}"
+      {% endfor %}
+      {% for device in gitlab_runner.docker_devices | default([]) %}
+      --docker-devices "{{ device }}"
       {% endfor %}
       --ssh-user '{{ gitlab_runner.ssh_user|default("") }}'
       --ssh-host '{{ gitlab_runner.ssh_host|default("") }}'
@@ -103,12 +118,12 @@
       {% endif %}
     mounts:
     - type: bind
-      source: "/srv/{{ gitlab_runner_container_name }}"
+      source: "{{ gitlab_runner_container_mount_path }}"
       target: /etc/gitlab-runner
     cleanup: yes
     auto_remove: yes
+    network_mode: "{{ gitlab_runner_container_network }}"
   when: (verified_runners.container.Output.find("Verifying runner... is removed") != -1) or
         ((configured_runners.container.Output.find('\n' + gitlab_runner.name|default(ansible_hostname+'-'+gitlab_runner_index|string)) == -1) and
         (gitlab_runner.state|default('present') == 'present'))
   no_log: false
-

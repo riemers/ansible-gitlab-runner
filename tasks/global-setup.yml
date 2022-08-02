@@ -3,7 +3,7 @@
   file:
     path: "{{ gitlab_runner_config_file_location }}"
     state: directory
-    mode: '0755'
+    mode: '0700'
   become: "{{ gitlab_runner_system_mode }}"
 
 - name: Ensure config.toml exists
@@ -39,6 +39,19 @@
     - restart_gitlab_runner
     - restart_gitlab_runner_macos
 
+- name: Add log_format to config
+  lineinfile:
+    dest: "{{ gitlab_runner_config_file }}"
+    regexp: '^log_format ='
+    line: 'log_format = "{{ gitlab_runner_log_format|default("runner") }}"'
+    insertbefore: BOF
+    state: present
+  when: gitlab_runner_log_format is defined # Ensure value is set
+  become: "{{ gitlab_runner_system_mode }}"
+  notify:
+    - restart_gitlab_runner
+    - restart_gitlab_runner_macos
+
 - name: Add sentry dsn to config
   lineinfile:
     dest: "{{ gitlab_runner_config_file }}"
@@ -47,6 +60,43 @@
     insertafter: '\s*concurrent.*'
     state: present
   when: gitlab_runner_sentry_dsn | length > 0  # Ensure value is set
+  become: "{{ gitlab_runner_system_mode }}"
+  notify:
+    - restart_gitlab_runner
+    - restart_gitlab_runner_macos
+
+- name: Add session server listen_address to config
+  lineinfile:
+    dest: "{{ gitlab_runner_config_file }}"
+    regexp: '^(\s+)listen_address ='
+    line: '  listen_address = "{{ gitlab_runner_session_server_listen_address }}"'
+    insertafter: '^\s*\[session_server\]'
+    state: "{{ 'present' if gitlab_runner_session_server_listen_address | length > 0 else 'absent' }}"
+  become: "{{ gitlab_runner_system_mode }}"
+  notify:
+    - restart_gitlab_runner
+    - restart_gitlab_runner_macos
+
+- name: Add session server advertise_address to config
+  lineinfile:
+    dest: "{{ gitlab_runner_config_file }}"
+    regexp: '^\s*advertise_address ='
+    line: '  advertise_address = "{{ gitlab_runner_session_server_advertise_address }}"'
+    insertafter: '^\s*\[session_server\]'
+    state: "{{ 'present' if gitlab_runner_session_server_advertise_address | length > 0 else 'absent' }}"
+  become: "{{ gitlab_runner_system_mode }}"
+  notify:
+    - restart_gitlab_runner
+    - restart_gitlab_runner_macos
+
+- name: Add session server session_timeout to config
+  lineinfile:
+    dest: "{{ gitlab_runner_config_file }}"
+    regexp: '^\s*session_timeout ='
+    line: "  session_timeout = {{ gitlab_runner_session_server_session_timeout }}"
+    insertafter: '^\s*\[session_server\]'
+    state: present
+  when: gitlab_runner_session_server_session_timeout
   become: "{{ gitlab_runner_system_mode }}"
   notify:
     - restart_gitlab_runner

@@ -1,12 +1,16 @@
 ---
-- name: (Windows) Print "[[runners]]" section
+- name: "(Windows) {{ runn_name_prefix }} Set \"[[runners]]\" section"
   win_lineinfile:
     dest: "{{ temp_runner_config.path }}"
+    regexp: '\n'
     line: '[[runners]]'
     state: present
-    insertbefore: BOF
+    insertbefore: '^\s*name ='
+    backrefs: no
+  check_mode: no
+  notify: restart_gitlab_runner_windows
 
-- name: (Windows) Set concurrent limit option
+- name: "(Windows) {{ runn_name_prefix }} Set concurrent limit option"
   win_lineinfile:
     dest: "{{ temp_runner_config.path }}"
     regexp: '^\s*limit =.*'
@@ -17,18 +21,18 @@
   check_mode: no
   notify: restart_gitlab_runner_windows
 
-- name: (Windows) Set coordinator URL
+- name: "(Windows) {{ runn_name_prefix }} Set coordinator URL"
   win_lineinfile:
     dest: "{{ temp_runner_config.path }}"
     regexp: '^\s*url =.*'
-    line: '  url = {{ gitlab_runner_coordinator_url | to_json }}'
+    line: '  url = {{ gitlab_runner.url|default(gitlab_runner_coordinator_url) | to_json }}'
     state: present
     insertafter: '^\s*limit ='
     backrefs: no
   check_mode: no
   notify: restart_gitlab_runner_windows
 
-- name: (Windows) Set clone URL
+- name: "(Windows) {{ runn_name_prefix }} Set clone URL"
   win_lineinfile:
     dest: "{{ temp_runner_config.path }}"
     regexp: '^\s*clone_url ='
@@ -40,7 +44,7 @@
   notify: restart_gitlab_runner
   when: gitlab_runner.clone_url is defined
 
-- name: (Windows) Set environment option
+- name: "(Windows) {{ runn_name_prefix }} Set environment option"
   win_lineinfile:
     dest: "{{ temp_runner_config.path }}"
     regexp: '^\s*environment =.*'
@@ -51,7 +55,7 @@
   check_mode: no
   notify: restart_gitlab_runner_windows
 
-- name: (Windows) Set pre_clone_script
+- name: "(Windows) {{ runn_name_prefix }} Set pre_clone_script"
   win_lineinfile:
     dest: "{{ temp_runner_config.path }}"
     regexp: '^\s*pre_clone_script ='
@@ -63,7 +67,7 @@
   notify: restart_gitlab_runner
   when: gitlab_runner.pre_clone_script is defined
 
-- name: (Windows) Set pre_build_script
+- name: "(Windows) {{ runn_name_prefix }} Set pre_build_script"
   win_lineinfile:
     dest: "{{ temp_runner_config.path }}"
     regexp: '^\s*pre_build_script ='
@@ -75,7 +79,7 @@
   notify: restart_gitlab_runner
   when: gitlab_runner.pre_build_script is defined
 
-- name: (Windows) Set post_build_script
+- name: "(Windows) {{ runn_name_prefix }} Set post_build_script"
   win_lineinfile:
     dest: "{{ temp_runner_config.path }}"
     regexp: '^\s*post_build_script ='
@@ -87,7 +91,7 @@
   notify: restart_gitlab_runner
   when: gitlab_runner.post_build_script is defined
 
-- name: (Windows) Set runner executor option
+- name: "(Windows) {{ runn_name_prefix }} Set runner executor option"
   win_lineinfile:
     dest: "{{ temp_runner_config.path }}"
     regexp: '^\s*executor =.*'
@@ -98,7 +102,7 @@
   check_mode: no
   notify: restart_gitlab_runner_windows
 
-- name: (Windows) Set runner shell option
+- name: "(Windows) {{ runn_name_prefix }} Set runner shell option"
   win_lineinfile:
     dest: "{{ temp_runner_config.path }}"
     regexp: '^\s*shell =.*'
@@ -109,7 +113,7 @@
   check_mode: no
   notify: restart_gitlab_runner_windows
 
-- name: (Windows) Set output_limit option
+- name: "(Windows) {{ runn_name_prefix }} Set output_limit option"
   win_lineinfile:
     dest: "{{ temp_runner_config.path }}"
     regexp: '^\s*output_limit =.*'
@@ -120,7 +124,7 @@
   check_mode: no
   notify: restart_gitlab_runner_windows
 
-- name: (Windows) Set runner docker image option
+- name: "(Windows) {{ runn_name_prefix }} Set runner docker image option"
   win_lineinfile:
     dest: "{{ temp_runner_config.path }}"
     regexp: '^\s*image =.*'
@@ -131,7 +135,7 @@
   check_mode: no
   notify: restart_gitlab_runner_windows
 
-- name: (Windows) Set docker privileged option
+- name: "(Windows) {{ runn_name_prefix }} Set docker privileged option"
   win_lineinfile:
     dest: "{{ temp_runner_config.path }}"
     regexp: '^\s*privileged =.*'
@@ -142,7 +146,7 @@
   check_mode: no
   notify: restart_gitlab_runner_windows
 
-- name: (Windows) Set docker volumes option
+- name: "(Windows) {{ runn_name_prefix }} Set docker volumes option"
   win_lineinfile:
     dest: "{{ temp_runner_config.path }}"
     regexp: '^\s*volumes =.*'
@@ -153,7 +157,18 @@
   check_mode: no
   notify: restart_gitlab_runner_windows
 
-- name: (Windows) Set cache type option
+- name: "(Windows) {{ runn_name_prefix }} Set docker devices option"
+  win_lineinfile:
+    dest: "{{ temp_runner_config.path }}"
+    regexp: '^\s*devices =.*'
+    line: '  devices = {{ gitlab_runner.docker_devices|default([])|to_json }}'
+    state: "{{ 'present' if gitlab_runner.docker_devices is defined else 'absent' }}"
+    insertafter: '^\s*executor ='
+    backrefs: no
+  check_mode: no
+  notify: restart_gitlab_runner_windows
+
+- name: "(Windows) {{ runn_name_prefix }} Set cache type option"
   win_lineinfile:
     dest: "{{ temp_runner_config.path }}"
     regexp: '^\s*Type =.*'
@@ -164,7 +179,7 @@
   check_mode: no
   notify: restart_gitlab_runner_windows
 
-- name: (Windows) Set cache path option
+- name: "(Windows) {{ runn_name_prefix }} Set cache path option"
   win_lineinfile:
     dest: "{{ temp_runner_config.path }}"
     regexp: '^\s*Path =.*'
@@ -175,7 +190,7 @@
   check_mode: no
   notify: restart_gitlab_runner_windows
 
-- name: (Windows) Set cache s3 server addresss
+- name: "(Windows) {{ runn_name_prefix }} Set cache s3 server address"
   win_lineinfile:
     dest: "{{ temp_runner_config.path }}"
     regexp: '^\s*ServerAddress =.*'
@@ -186,7 +201,7 @@
   check_mode: no
   notify: restart_gitlab_runner_windows
 
-- name: (Windows) Set cache s3 access key
+- name: "(Windows) {{ runn_name_prefix }} Set cache s3 access key"
   win_lineinfile:
     dest: "{{ temp_runner_config.path }}"
     regexp: '^\s*AccessKey =.*'
@@ -197,7 +212,7 @@
   check_mode: no
   notify: restart_gitlab_runner_windows
 
-- name: (Windows) Set cache s3 secret key
+- name: "(Windows) {{ runn_name_prefix }} Set cache s3 secret key"
   win_lineinfile:
     dest: "{{ temp_runner_config.path }}"
     regexp: '^\s*SecretKey =.*'
@@ -209,7 +224,7 @@
   notify: restart_gitlab_runner_windows
 
 
-- name: (Windows) Set cache shared option
+- name: "(Windows) {{ runn_name_prefix }} Set cache shared option"
   win_lineinfile:
     dest: "{{ temp_runner_config.path }}"
     regexp: '^\s*Shared =.*'
@@ -220,7 +235,7 @@
   check_mode: no
   notify: restart_gitlab_runner_windows
 
-- name: (Windows) Set cache s3 bucket name option
+- name: "(Windows) {{ runn_name_prefix }} Set cache s3 bucket name option"
   win_lineinfile:
     dest: "{{ temp_runner_config.path }}"
     regexp: '^\s*BucketName =.*'
@@ -231,7 +246,7 @@
   check_mode: no
   notify: restart_gitlab_runner_windows
 
-- name: (Windows) Set cache s3 bucket location option
+- name: "(Windows) {{ runn_name_prefix }} Set cache s3 bucket location option"
   win_lineinfile:
     dest: "{{ temp_runner_config.path }}"
     regexp: '^\s*BucketLocation =.*'
@@ -242,7 +257,7 @@
   check_mode: no
   notify: restart_gitlab_runner_windows
 
-- name: (Windows) Set cache s3 insecure option
+- name: "(Windows) {{ runn_name_prefix }} Set cache s3 insecure option"
   win_lineinfile:
     dest: "{{ temp_runner_config.path }}"
     regexp: '^\s*Insecure =.*'
@@ -253,7 +268,7 @@
   check_mode: no
   notify: restart_gitlab_runner_windows
 
-- name: (Windows) Set ssh user option
+- name: "(Windows) {{ runn_name_prefix }} Set ssh user option"
   win_lineinfile:
     dest: "{{ temp_runner_config.path }}"
     regexp: '^\s*user =.*'
@@ -264,7 +279,7 @@
   check_mode: no
   notify: restart_gitlab_runner_windows
 
-- name: (Windows) Set ssh host option
+- name: "(Windows) {{ runn_name_prefix }} Set ssh host option"
   win_lineinfile:
     dest: "{{ temp_runner_config.path }}"
     regexp: '^\s*host =.*'
@@ -275,7 +290,7 @@
   check_mode: no
   notify: restart_gitlab_runner_windows
 
-- name: (Windows) Set ssh port option
+- name: "(Windows) {{ runn_name_prefix }} Set ssh port option"
   win_lineinfile:
     dest: "{{ temp_runner_config.path }}"
     regexp: '^\s*port =.*'
@@ -286,7 +301,7 @@
   check_mode: no
   notify: restart_gitlab_runner_windows
 
-- name: (Windows) Set ssh password option
+- name: "(Windows) {{ runn_name_prefix }} Set ssh password option"
   win_lineinfile:
     dest: "{{ temp_runner_config.path }}"
     regexp: '^\s*password =.*'
@@ -297,7 +312,7 @@
   check_mode: no
   notify: restart_gitlab_runner_windows
 
-- name: (Windows) Set ssh identity file option
+- name: "(Windows) {{ runn_name_prefix }} Set ssh identity file option"
   win_lineinfile:
     dest: "{{ temp_runner_config.path }}"
     regexp: '^\s*identity_file =.*'
@@ -308,7 +323,7 @@
   check_mode: no
   notify: restart_gitlab_runner_windows
 
-- name: (Windows) Set builds dir file option
+- name: "(Windows) {{ runn_name_prefix }} Set builds dir file option"
   win_lineinfile:
     dest: "{{ temp_runner_config.path }}"
     regexp: '^\s*builds_dir =.*'
@@ -319,7 +334,7 @@
   check_mode: no
   notify: restart_gitlab_runner_windows
 
-- name: (Windows) Set cache dir file option
+- name: "(Windows) {{ runn_name_prefix }} Set cache dir file option"
   win_lineinfile:
     dest: "{{ temp_runner_config.path }}"
     regexp: '^\s*cache_dir =.*'
@@ -330,10 +345,16 @@
   check_mode: no
   notify: restart_gitlab_runner_windows
 
-- include: section-config-runner-windows.yml
+- name: (Windows) Remove empty lines
+  win_shell: (Get-Content {{ temp_runner_config.path }}) | ? {$_.trim() -ne "" } | Set-Content {{ temp_runner_config.path }}
+
+- include_tasks: section-config-runner-windows.yml
+  vars:
+    sect_name_prefix: "{{ runn_name_prefix }} section[{{ (section_index|int) + 1 }}/{{ gitlab_runner.extra_configs|list|length }}]:"
   loop: "{{ gitlab_runner.extra_configs|list }}"
   loop_control:
     loop_var: section
+    index_var: section_index
   when:
     - gitlab_runner.extra_configs is defined
     - gitlab_runner.extra_configs|list|length > 0
