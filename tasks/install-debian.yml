@@ -33,20 +33,20 @@
   become: true
   environment:
     GITLAB_RUNNER_DISABLE_SKEL: "true"
-  when: ansible_distribution_release in ["buster", "focal"]
+  when: ansible_distribution_release in ["buster", "focal", "jammy"]
 
 - name: (Debian) Install GitLab Runner
   apt:
     name: "{{ gitlab_runner_package }}"
     state: "{{ gitlab_runner_package_state }}"
   become: true
-  when: ansible_distribution_release not in ["buster", "focal"]
+  when: ansible_distribution_release not in ["buster", "focal", "jammy"]
 
 - name: (Debian) Remove ~/gitlab-runner/.bash_logout on debian buster and ubuntu focal
   file:
     path: /home/gitlab-runner/.bash_logout
     state: absent
-  when: ansible_distribution_release in ["buster", "focal"]
+  when: ansible_distribution_release in ["buster", "focal", "jammy"]
 
 - name: Set systemd reload options
   import_tasks: systemd-reload.yml
