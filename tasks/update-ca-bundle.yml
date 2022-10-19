@@ -1,0 +1,24 @@
+- name: install ca package on rhel systems
+  yum:
+    name: ca-certificates
+    state: present
+  when: ansible_os_family == "RedHat"
+
+- name: install ca package on debian systems
+  apt:
+    name: ca-certificates
+    state: present
+    update_cache: yes
+  when: ansible_os_family == "Debian"
+
+- name: enable dynamic ca configuration on rhel6
+  shell: /bin/update-ca-trust enable
+  when: ansible_os_family == "RedHat" and ansible_distribution_major_version|int == 6
+
+- name: update trusted ca debian
+  shell: /usr/sbin/update-ca-certificates
+  when: ansible_os_family == "Debian"
+
+- name: update trusted ca redhat
+  shell: /bin/update-ca-trust
+  when: ansible_os_family == "RedHat"

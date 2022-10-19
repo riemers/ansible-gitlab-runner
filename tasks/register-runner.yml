@@ -27,6 +27,10 @@
   shell: "openssl s_client -connect {{gitlab_server_ip}}:443 -showcerts </dev/null 2>/dev/null | sed -e '/-----BEGIN/,/-----END/!d' | tee {{tls_ca_file}} >/dev/null"
   when: force_accept_gitlab_server_self_signed
 
+- name: Update CA bundle with self signe cert of the gitlab server
+  import_tasks: update-ca-bundle.yml
+  when: force_accept_gitlab_server_self_signed
+
 - name: Construct the runner command without secrets
   # makes the command visible in awx without the secrets and therefore helps with debugging
   set_fact:
