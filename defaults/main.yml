@@ -67,6 +67,9 @@ gitlab_runner_restart_state: restarted
 # default value for log_format
 # gitlab_runner_log_format: runner
 
+# default value for force accept self signed certificates
+force_accept_gitlab_server_self_signed: false
+
 # controls diffs for assemle config file
 gitlab_runner_show_config_diff: no
 
