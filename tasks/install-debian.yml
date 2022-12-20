@@ -25,6 +25,11 @@
     gitlab_runner_package_state: "latest"
   when: gitlab_runner_package_version is not defined
 
+- name: (Debian) Unhold GitLab Runner version
+  dpkg_selections:
+    name: "{{ gitlab_runner_package_name }}"
+    selection: install
+
 - name: (Debian) Install GitLab Runner
   apt:
     name: "{{ gitlab_runner_package }}"
