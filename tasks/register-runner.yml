@@ -1,27 +1,4 @@
 ---
-- name: Clear Config File
-  block:
-    - name: remove config.toml file
-      file:
-        path: "{{ gitlab_runner_config_file }}"
-        state: absent
-      become: "{{ gitlab_runner_system_mode }}"
-
-    - name: Create .gitlab-runner dir
-      file:
-        path: "{{ gitlab_runner_config_file_location }}"
-        state: directory
-        mode: '0700'
-      become: "{{ gitlab_runner_system_mode }}"
-
-    - name: Ensure config.toml exists
-      file:
-        path: "{{ gitlab_runner_config_file }}"
-        state: touch
-        modification_time: preserve
-        access_time: preserve
-      become: "{{ gitlab_runner_system_mode }}"
-  when: (verified_runners.stderr.find("Verifying runner... is removed") != -1)
 
 - name: Accept gitlab server self signed cert as valid CA
   shell: "openssl s_client -connect {{gitlab_server_ip}}:443 -showcerts </dev/null 2>/dev/null | sed -e '/-----BEGIN/,/-----END/!d' | tee {{tls_ca_file}} >/dev/null"
@@ -163,8 +140,7 @@
     --cache-s3-secret-key '{{ gitlab_runner.cache_s3_secret_key }}'
     {% endif %}
     --ssh-password '{{ gitlab_runner.ssh_password|default("") }}'
-  when: (verified_runners.stderr.find("Verifying runner... is removed") != -1) or
-        ((configured_runners.stderr.find('\n' + gitlab_runner.name|default(ansible_hostname+'-'+gitlab_runner_index|string)) == -1) and
-        (gitlab_runner.state|default('present') == 'present'))
+  when: ('\n' + gitlab_runner.name|default(ansible_hostname+'-'+gitlab_runner_index|string)) not in configured_runners.stderr and
+        gitlab_runner.state|default('present') == 'present'
   no_log: true
   become: "{{ gitlab_runner_system_mode }}"

@@ -3,6 +3,23 @@
   import_tasks: install-container.yml
   when: gitlab_runner_container_install
 
+- name: (Container) Delete no longer existing runners
+  docker_container:
+    name: "{{ gitlab_runner_container_name }}-check"
+    image: "{{ gitlab_runner_container_image }}:{{ gitlab_runner_container_tag }}"
+    command: verify --delete
+    mounts:
+      - type: bind
+        source: "{{ gitlab_runner_container_mount_path }}"
+        target: /etc/gitlab-runner
+    cleanup: yes
+    interactive: yes
+    tty: yes
+    detach: no
+  register: verified_runners
+  changed_when: '"Updated " in verified_runners.container.Output'
+  check_mode: no
+
 - name: (Container) List configured runners
   docker_container:
     name: "{{ gitlab_runner_container_name }}-list"
@@ -19,32 +36,6 @@
   register: configured_runners
   changed_when: False
   check_mode: no
-
-- name: (Container) Check runner is registered
-  docker_container:
-    name: "{{ gitlab_runner_container_name }}-check"
-    image: "{{ gitlab_runner_container_image }}:{{ gitlab_runner_container_tag }}"
-    command: verify
-    mounts:
-      - type: bind
-        source: "{{ gitlab_runner_container_mount_path }}"
-        target: /etc/gitlab-runner
-    cleanup: yes
-    interactive: yes
-    tty: yes
-    detach: no
-  register: verified_runners
-  ignore_errors: True
-  changed_when: False
-  check_mode: no
-
-- name: configured_runners?
-  debug:
-    msg: "{{ configured_runners.container.Output }}"
-
-- name: verified_runners?
-  debug:
-    msg: "{{ verified_runners.container.Output }}"
 
 - name: (Container) Register GitLab Runner
   include_tasks: register-runner-container.yml
