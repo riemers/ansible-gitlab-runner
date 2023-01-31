@@ -1,5 +1,4 @@
 ---
-
 - name: (Debian) Get Gitlab repository installation script
   get_url:
     url: "https://packages.gitlab.com/install/repositories/runner/{{ gitlab_runner_package_name }}/script.deb.sh"
@@ -26,10 +25,16 @@
     gitlab_runner_package_state: "latest"
   when: gitlab_runner_package_version is not defined
 
+- name: (Debian) Unhold GitLab Runner version
+  dpkg_selections:
+    name: "{{ gitlab_runner_package_name }}"
+    selection: install
+
 - name: (Debian) Install GitLab Runner
   apt:
     name: "{{ gitlab_runner_package }}"
     state: "{{ gitlab_runner_package_state }}"
+    allow_downgrade: true
   become: true
   environment:
     GITLAB_RUNNER_DISABLE_SKEL: "true"
@@ -39,8 +44,15 @@
   apt:
     name: "{{ gitlab_runner_package }}"
     state: "{{ gitlab_runner_package_state }}"
+    allow_downgrade: true
   become: true
   when: ansible_distribution_release not in ["buster", "focal", "jammy"]
+
+- name: (Debian) Hold GitLab Runner version
+  dpkg_selections:
+    name: "{{ gitlab_runner_package_name }}"
+    selection: hold
+  when: gitlab_runner_package_version is defined
 
 - name: (Debian) Remove ~/gitlab-runner/.bash_logout on debian buster and ubuntu focal
   file:
