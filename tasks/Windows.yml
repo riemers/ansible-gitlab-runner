@@ -1,20 +1,19 @@
 - name: Install GitLab Runner (Windows)
   import_tasks: install-windows.yml
 
+- name: (Windows) Delete no longer existing runners
+  win_command: "{{ gitlab_runner_executable }} verify --delete"
+  args:
+    chdir: "{{ gitlab_runner_config_file_location }}"
+  register: verified_runners
+  changed_when: '"Updated " in verified_runners.stderr'
+  check_mode: no
+
 - name: (Windows) List configured runners
   win_command: "{{ gitlab_runner_executable }} list"
   args:
     chdir: "{{ gitlab_runner_config_file_location }}"
   register: configured_runners
-  changed_when: False
-  check_mode: no
-
-- name: (Windows) Check runner is registered
-  win_command: "{{ gitlab_runner_executable }} verify"
-  args:
-    chdir: "{{ gitlab_runner_config_file_location }}"
-  register: verified_runners
-  ignore_errors: True
   changed_when: False
   check_mode: no
 

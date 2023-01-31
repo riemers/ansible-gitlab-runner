@@ -1,23 +1,4 @@
 ---
-- name: (Windows) Clear Config File
-  block:
-    - name: (Windows) remove config.toml file
-      win_file:
-        path: "{{ gitlab_runner_config_file }}"
-        state: absent
-
-    - name: (Windows) Create .gitlab-runner dir
-      win_file:
-        path: "{{ gitlab_runner_config_file_location }}"
-        state: directory
-
-    - name: (Windows) Ensure config.toml exists
-      win_file:
-        path: "{{ gitlab_runner_config_file }}"
-        state: touch
-        modification_time: preserve
-        access_time: preserve
-  when: (verified_runners.stderr.find("Verifying runner... is removed") != -1)
 
 - name: (Windows) Register runner to GitLab
   win_shell: >
@@ -119,9 +100,7 @@
     {% if gitlab_runner.extra_registration_option is defined %}
     {{ gitlab_runner.extra_registration_option }}
     {% endif %}
-  when: (verified_runners.stderr.find("Verifying runner... is removed") != -1) or
-        ((configured_runners.stderr.find('\n' + gitlab_runner.name|default(ansible_hostname+'-'+gitlab_runner_index|string)) == -1) and
-        (gitlab_runner.state|default('present') == 'present'))
+  when: ('\n' + gitlab_runner.name|default(ansible_hostname+'-'+gitlab_runner_index|string)) not in configured_runners.stderr and
+        gitlab_runner.state|default('present') == 'present'
   args:
     chdir: "{{ gitlab_runner_config_file_location }}"
-  #no_log: true

@@ -1,18 +1,4 @@
 ---
-- name: Clear Config File
-  block:
-    - name: remove config.toml file
-      file:
-        path: "{{ gitlab_runner_config_file }}"
-        state: absent
-
-    - name: Ensure config.toml exists
-      file:
-        path: "{{ gitlab_runner_config_file }}"
-        state: touch
-        modification_time: preserve
-        access_time: preserve
-  when: (verified_runners.container.Output.find("Verifying runner... is removed") != -1)
 
 - name: Register runner to GitLab
   docker_container:
@@ -123,7 +109,6 @@
     cleanup: yes
     auto_remove: yes
     network_mode: "{{ gitlab_runner_container_network }}"
-  when: (verified_runners.container.Output.find("Verifying runner... is removed") != -1) or
-        ((configured_runners.container.Output.find('\n' + gitlab_runner.name|default(ansible_hostname+'-'+gitlab_runner_index|string)) == -1) and
-        (gitlab_runner.state|default('present') == 'present'))
+  when: ('\n' + gitlab_runner.name|default(ansible_hostname+'-'+gitlab_runner_index|string)) not in configured_runners.container.Output and
+        gitlab_runner.state|default('present') == 'present'
   no_log: false
