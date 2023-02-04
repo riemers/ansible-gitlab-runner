@@ -103,6 +103,8 @@ gitlab_runner_runners:
     locked: 'false'
     # Add container to a custom network
     docker_network_mode: bridge
+    # Change the services startup timeout
+    # docker_wait_for_services_timeout: 30
     # Custom CA certificate file
     # tls_ca_file: "/etc/ssl/private/Custom_Bundle-CA.pem"
     #
