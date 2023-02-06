@@ -1,24 +1,24 @@
 - name: (Windows) PRE-CHECK GitLab Runner exists
   block:
-  - name: (Windows) Check gitlab-runner executable exists
-    win_stat:
-      path: "{{ gitlab_runner_executable }}"
-    register: gitlab_runner_exists
+    - name: (Windows) Check gitlab-runner executable exists
+      win_stat:
+        path: "{{ gitlab_runner_executable }}"
+      register: gitlab_runner_exists
 
-  - name: (Windows) Set fact -> gitlab_runner_exists
-    set_fact:
-      gitlab_runner_exists: "{{ gitlab_runner_exists.stat.exists }}"
+    - name: (Windows) Set fact -> gitlab_runner_exists
+      set_fact:
+        gitlab_runner_exists: "{{ gitlab_runner_exists.stat.exists }}"
 
-  - name: (Windows) Get existing version
-    win_shell: "{{ gitlab_runner_executable }} --version | Select-String 'Version:' -CaseSensitive | %{ $_.Line.Split(' ')[-1].Trim(); }"
-    register: existing_version_shell
-    failed_when: no
-    check_mode: no
-    changed_when: no
+    - name: (Windows) Get existing version
+      win_shell: "{{ gitlab_runner_executable }} --version | Select-String 'Version:' -CaseSensitive | %{ $_.Line.Split(' ')[-1].Trim(); }"
+      register: existing_version_shell
+      failed_when: no
+      check_mode: no
+      changed_when: no
 
-  - name: (Windows) Set fact -> gitlab_runner_existing_version
-    set_fact:
-      gitlab_runner_existing_version: "{{ existing_version_shell.stdout | trim if existing_version_shell.rc == 0 else '0' }}"
+    - name: (Windows) Set fact -> gitlab_runner_existing_version
+      set_fact:
+        gitlab_runner_existing_version: "{{ existing_version_shell.stdout | trim if existing_version_shell.rc == 0 else '0' }}"
 
 - name: (Windows) INSTALL GitLab Runner for Windows
   block:
