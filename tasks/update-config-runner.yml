@@ -331,6 +331,19 @@
   - restart_gitlab_runner
   - restart_gitlab_runner_macos
 
+#### [[runners.docker.services]] section ####
+- name:  "{{ runn_name_prefix }} Set additional services"
+  blockinfile:
+    dest: "{{ temp_runner_config.path }}"
+    content: "{{ lookup('template', 'config.runners.docker.services.j2') if gitlab_runner.docker_services is defined }}"
+    state: "{{ 'present' if gitlab_runner.docker_services is defined else 'absent' }}"
+    marker: "# {mark} runners.docker.services"
+    insertafter: EOF
+  check_mode: no
+  notify:
+  - restart_gitlab_runner
+  - restart_gitlab_runner_macos
+
 #### [runners.custom_build_dir] section #####
 - name:  "{{ runn_name_prefix }} Set custom_build_dir section"
   lineinfile:

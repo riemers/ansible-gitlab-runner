@@ -1,0 +1,6 @@
+{% for service in gitlab_runner.docker_services %}
+    [[runners.docker.services]]
+{% for attr in service %}
+      {{ attr }} = {{ service[attr] | to_json }}
+{% endfor %}
+{% endfor %}
