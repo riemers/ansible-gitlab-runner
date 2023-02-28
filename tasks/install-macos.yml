@@ -1,46 +1,52 @@
 - name: (MacOS) PRE-CHECK GitLab Runner exists
   block:
-  - name: (MacOS) Check gitlab-runner executable exists
-    stat:
-      path: "{{ gitlab_runner_executable }}"
-    register: gitlab_runner_exists
+    - name: (MacOS) Check gitlab-runner executable exists
+      stat:
+        path: "{{ gitlab_runner_executable }}"
+      register: gitlab_runner_exists
 
-  - name: (MacOS) Set fact -> gitlab_runner_exists
-    set_fact:
-      gitlab_runner_exists: "{{ gitlab_runner_exists.stat.exists }}"
+    - name: (MacOS) Set fact -> gitlab_runner_exists
+      set_fact:
+        gitlab_runner_exists: "{{ gitlab_runner_exists.stat.exists }}"
 
-  - name: (MacOS) Get existing version
-    shell: "{{ gitlab_runner_executable }} --version | awk '/Version: ([\\d\\.]*)/{print $2}'"
-    register: existing_version_shell
-    failed_when: no
-    check_mode: no
-    changed_when: no
+    - name: (MacOS) Get existing version
+      shell: "{{ gitlab_runner_executable }} --version | awk '/Version: ([\\d\\.]*)/{print $2}'"
+      register: existing_version_shell
+      failed_when: no
+      check_mode: no
+      changed_when: no
 
-  - name: (MacOS) Set fact -> gitlab_runner_existing_version
-    set_fact:
-      gitlab_runner_existing_version: "{{ existing_version_shell.stdout if existing_version_shell.rc == 0 else '0' }}"
+    - name: (MacOS) Set fact -> gitlab_runner_existing_version
+      set_fact:
+        gitlab_runner_existing_version: "{{ existing_version_shell.stdout if existing_version_shell.rc == 0 else '0' }}"
 
-- name: (MacOS) Precreate gitlab-runner log directory
-  become: yes
-  file:
-    path: /usr/local/var/log
-    state: directory
-    owner: "{{ ansible_user_id | string }}"
+- name: (MacOS) Precreate necessary directories for arm64 architecture
+  block:
+    - name: (MacOS) Precreate gitlab-runner log directory
+      become: yes
+      file:
+        path: /usr/local/var/log
+        state: directory
+        owner: "{{ ansible_user_id | string }}"
+
+    - name: (MacOS) Precreate {{ gitlab_runner_directory }} directory
+      become: yes
+      file:
+        mode: "755"
+        owner: "root"
+        path: "{{ gitlab_runner_directory }}"
+        state: "directory"
+
   when: gitlab_runner_arch == 'arm64'
 
 - name: (MacOS) INSTALL GitLab Runner for macOS
   block:
     - name: (MacOS) Download GitLab Runner
+      become: true
       get_url:
         url: "{{ gitlab_runner_download_url }}"
         dest: "{{ gitlab_runner_executable }}"
         force: yes
-
-    - name: (MacOS) Setting Permissions for gitlab-runner executable
-      file:
-        path: "{{ gitlab_runner_executable }}"
-        owner: "{{ ansible_user_id | string }}"
-        group: "{{ ansible_user_gid | string }}"
         mode: '+x'
 
     - name: (MacOS) Install GitLab Runner

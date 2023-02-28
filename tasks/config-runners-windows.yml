@@ -32,33 +32,33 @@
 - name: (Windows) Assemble new config.toml
   when: not ansible_check_mode
   block:
-  - name: (Windows) Create temporary file config.toml
-    win_tempfile:
-      state: file
-      suffix: temp
-    register: config_toml_temp
+    - name: (Windows) Create temporary file config.toml
+      win_tempfile:
+        state: file
+        suffix: temp
+      register: config_toml_temp
 
-  - name: (Windows) Write global config to file
-    win_lineinfile:
-      insertbefore: BOF
-      path: "{{ config_toml_temp.path }}"
-      line: "{{ runner_global_config }}"
+    - name: (Windows) Write global config to file
+      win_lineinfile:
+        insertbefore: BOF
+        path: "{{ config_toml_temp.path }}"
+        line: "{{ runner_global_config }}"
 
-  - name: (Windows) Create temporary file runners-config.toml
-    win_tempfile:
-      state: file
-      suffix: temp
-    register: runners_config_toml_temp
+    - name: (Windows) Create temporary file runners-config.toml
+      win_tempfile:
+        state: file
+        suffix: temp
+      register: runners_config_toml_temp
 
-  - name: (Windows) Assemble runners files in config dir
-    win_shell: dir -rec | gc | out-file "{{ runners_config_toml_temp.path }}"
-    args:
-      chdir: "{{ temp_runner_config_dir.path }}"
+    - name: (Windows) Assemble runners files in config dir
+      win_shell: dir -rec | gc | out-file "{{ runners_config_toml_temp.path }}"
+      args:
+        chdir: "{{ temp_runner_config_dir.path }}"
 
-  - name: (Windows) Assemble new config.toml
-    win_shell: gc "{{ config_toml_temp.path }}","{{ runners_config_toml_temp.path }}" | Set-Content "{{ gitlab_runner_config_file }}"
+    - name: (Windows) Assemble new config.toml
+      win_shell: gc "{{ config_toml_temp.path }}","{{ runners_config_toml_temp.path }}" | Set-Content "{{ gitlab_runner_config_file }}"
 
-  - name: (Windows) Verify config
-    win_command: "{{ gitlab_runner_executable }} verify"
-    args:
-      chdir: "{{ gitlab_runner_config_file_location }}"
+    - name: (Windows) Verify config
+      win_command: "{{ gitlab_runner_executable }} verify"
+      args:
+        chdir: "{{ gitlab_runner_config_file_location }}"

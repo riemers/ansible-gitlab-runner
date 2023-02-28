@@ -26,6 +26,7 @@
   when: gitlab_runner_package_version is not defined
 
 - name: (Debian) Unhold GitLab Runner version
+  changed_when: false
   dpkg_selections:
     name: "{{ gitlab_runner_package_name }}"
     selection: install
