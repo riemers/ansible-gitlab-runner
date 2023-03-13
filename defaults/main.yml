@@ -57,6 +57,7 @@ gitlab_runner_container_tag: latest
 gitlab_runner_container_name: gitlab-runner
 gitlab_runner_container_mount_path: ''
 gitlab_runner_container_restart_policy: unless-stopped
+gitlab_runner_container_latest_update: false
 # you can define a network which the container connects to
 # this option uses network_mode, thus 'default' will use the first network found in docker network list
 gitlab_runner_container_network: default
