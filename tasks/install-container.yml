@@ -3,6 +3,7 @@
   docker_image:
     name: "{{ gitlab_runner_container_image }}:{{ gitlab_runner_container_tag }}"
     source: pull
+    force_source: "{{ gitlab_runner_container_update_latest }}"
 
 - name: (Container) Define Container volume Path
   file:
