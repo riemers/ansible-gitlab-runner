@@ -390,7 +390,7 @@
     dest: "{{ temp_runner_config.path }}"
     regexp: '^\s*\[runners\.cache\.s3\]'
     line: '    [runners.cache.s3]'
-    state: "{{ 'present' if gitlab_runner.cache_type is defined else 'absent' }}"
+    state: "{{ 'present' if gitlab_runner.cache_s3_bucket_name is defined else 'absent' }}"
     insertafter: '^\s*\[runners\.cache\]'
     backrefs: no
   check_mode: no
@@ -416,7 +416,7 @@
     dest: "{{ temp_runner_config.path }}"
     regexp: '^\s*\[runners\.cache\.azure\]'
     line: '    [runners.cache.azure]'
-    state: "{{ 'present' if gitlab_runner.cache_type is defined else 'absent' }}"
+    state: "{{ 'present' if gitlab_runner.cache_azure_account_name is defined else 'absent' }}"
     insertafter: '^\s*\[runners\.cache\]'
     backrefs: no
   check_mode: no
