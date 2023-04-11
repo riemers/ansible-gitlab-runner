@@ -11,13 +11,13 @@
         - 'vars'
 
 - name: Install Gitlab Runner (Container)
-  import_tasks: Container.yml
+  include_tasks: Container.yml
   when: gitlab_runner_container_install
 
 - name: Install GitLab Runner (Unix)
-  import_tasks: Unix.yml
+  include_tasks: Unix.yml
   when: ansible_os_family != 'Windows' and not gitlab_runner_container_install
 
 - name: Install GitLab Runner (Windows)
-  import_tasks: Windows.yml
+  include_tasks: Windows.yml
   when: ansible_os_family == 'Windows' and not gitlab_runner_container_install
