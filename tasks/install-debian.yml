@@ -1,4 +1,9 @@
 ---
+- name: (Debian) Refresh package cache
+  ansible.builtin.apt:
+    cache_valid_time: 3600
+  when: gitlab_runner_skip_package_repo_install is not defined or not gitlab_runner_skip_package_repo_install
+
 - name: (Debian) Get Gitlab repository installation script
   get_url:
     url: "https://packages.gitlab.com/install/repositories/runner/{{ gitlab_runner_package_name }}/script.deb.sh"
