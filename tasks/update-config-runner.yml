@@ -331,6 +331,32 @@
   - restart_gitlab_runner
   - restart_gitlab_runner_macos
 
+- name:  "{{ runn_name_prefix }} Set tls-cert-file option"
+  lineinfile:
+    dest: "{{ temp_runner_config.path }}"
+    regexp: '^\s*tls-cert-file ='
+    line: '  tls-cert-file = {{ gitlab_runner.tls_cert_file|default([]) | to_json }}'
+    state: "{{ 'present' if gitlab_runner.tls_cert_file is defined else 'absent' }}"
+    insertafter: '^\s*url ='
+    backrefs: no
+  check_mode: no
+  notify:
+  - restart_gitlab_runner
+  - restart_gitlab_runner_macos
+
+- name:  "{{ runn_name_prefix }} Set tls-key-file option"
+  lineinfile:
+    dest: "{{ temp_runner_config.path }}"
+    regexp: '^\s*tls-key-file ='
+    line: '  tls-key-file = {{ gitlab_runner.tls_key_file|default([]) | to_json }}'
+    state: "{{ 'present' if gitlab_runner.tls_key_file is defined else 'absent' }}"
+    insertafter: '^\s*url ='
+    backrefs: no
+  check_mode: no
+  notify:
+  - restart_gitlab_runner
+  - restart_gitlab_runner_macos
+
 #### [[runners.docker.services]] section ####
 - name:  "{{ runn_name_prefix }} Set additional services"
   blockinfile:

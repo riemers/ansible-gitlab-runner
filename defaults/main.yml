@@ -108,6 +108,10 @@ gitlab_runner_runners:
     # docker_wait_for_services_timeout: 30
     # Custom CA certificate file
     # tls_ca_file: "/etc/ssl/private/Custom_Bundle-CA.pem"
+    # Client certificate file to (mTLS) authenticate with the peer
+    # tls_cert_file: "/etc/gitlab-runner/ssl/gitlab-runner.cert.pem"
+    # Client certificate's key file to (mTLS) authenticate with the peer
+    # tls_key_file: "/etc/gitlab-runner/ssl/gitlab-runner.key.pem"
     #
     # Custom environment variables injected to build environment
     env_vars: []
