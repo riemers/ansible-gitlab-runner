@@ -59,6 +59,7 @@
     name: "{{ gitlab_runner_package_name }}"
     selection: hold
   when: gitlab_runner_package_version is defined
+  changed_when: false
 
 - name: (Debian) Remove ~/gitlab-runner/.bash_logout on debian buster and ubuntu focal
   file:
