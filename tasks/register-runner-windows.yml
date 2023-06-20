@@ -2,7 +2,7 @@
 
 - name: Construct the runner command without secrets
   set_fact:
-    register_runner_cmd: >
+    register_runner_cmd: >-
       {{ gitlab_runner_executable }} register
       --non-interactive
       --url '{{ gitlab_runner.url|default(gitlab_runner_coordinator_url) }}'
