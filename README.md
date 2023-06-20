@@ -23,6 +23,7 @@ On Linux, use `gitlab_runner_package_version` instead.
 - `gitlab_runner_listen_address` - Enable `/metrics` endpoint for Prometheus scraping.
 - `gitlab_runner_runners` - A list of gitlab runners to register & configure. Defaults to a single shell executor.
 - `gitlab_runner_skip_package_repo_install`- Skip the APT or YUM repository installation (by default, false). You should provide a repository containing the needed packages before running this role.
+- `gitlab_runner_config_update_mode`- Set to `by_config_toml` (default) if this role should apply config changes by updating the `config.toml` itself or set it to `by_registering` if config changes should be applied by unregistering and regeistering the runner in case the config has changed.
 
 See the [`defaults/main.yml`](https://github.com/riemers/ansible-gitlab-runner/blob/master/defaults/main.yml) file listing all possible options which you can be passed to a runner registration command.
 

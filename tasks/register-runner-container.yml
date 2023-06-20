@@ -1,14 +1,11 @@
 ---
 
-- name: Register runner to GitLab
-  docker_container:
-    name: "{{ gitlab_runner_container_name }}"
-    image: "{{ gitlab_runner_container_image }}:{{ gitlab_runner_container_tag }}"
-    command: |
+- name: Construct the runner command without secrets
+  set_fact:
+    register_runner_cmd: >
       register
       --non-interactive
       --url '{{ gitlab_runner.url | default(gitlab_runner_coordinator_url) }}'
-      --registration-token '{{ gitlab_runner.token|default(gitlab_runner_registration_token) }}'
       --description '{{ gitlab_runner.name|default(ansible_hostname+"-"+gitlab_runner_index|string) }}'
       --tag-list '{{ gitlab_runner.tags|default([]) | join(",") }}'
       {% if gitlab_runner.clone_url|default(false) %}
@@ -64,7 +61,6 @@
       --ssh-user '{{ gitlab_runner.ssh_user|default("") }}'
       --ssh-host '{{ gitlab_runner.ssh_host|default("") }}'
       --ssh-port '{{ gitlab_runner.ssh_port|default("") }}'
-      --ssh-password '{{ gitlab_runner.ssh_password|default("") }}'
       --ssh-identity-file '{{ gitlab_runner.ssh_identity_file|default("") }}'
       {% if gitlab_runner.cache_type is defined %}
       --cache-type '{{ gitlab_runner.cache_type }}'
@@ -79,9 +75,6 @@
       --cache-s3-server-address '{{ gitlab_runner.cache_s3_server_address }}'
       {% if gitlab_runner.cache_s3_access_key is defined %}
       --cache-s3-access-key '{{ gitlab_runner.cache_s3_access_key }}'
-      {% endif %}
-      {% if gitlab_runner.cache_s3_secret_key is defined %}
-      --cache-s3-secret-key '{{ gitlab_runner.cache_s3_secret_key }}'
       {% endif %}
       {% endif %}
       {% if gitlab_runner.cache_s3_bucket_name is defined %}
@@ -102,6 +95,90 @@
       {% if gitlab_runner.extra_registration_option is defined %}
       {{ gitlab_runner.extra_registration_option }}
       {% endif %}
+
+- name: Apply updates (if any) by unregister the runner and let it then register later on
+  block:
+    - name: Check if the configuration has changed since the last run
+      ansible.builtin.copy:
+        content: >
+          {{ register_runner_cmd }}
+          --registration-token '{{ gitlab_runner.token|default(gitlab_runner_registration_token)|hash("sha1") }}'
+          {% if gitlab_runner.cache_s3_secret_key is defined %}
+          --cache-s3-secret-key '{{ gitlab_runner.cache_s3_secret_key|hash("sha1") }}'
+          {% endif %}
+          {% if gitlab_runner.ssh_password is defined %}
+          --ssh-password '{{ gitlab_runner.ssh_password|hash("sha1") }}'
+          {% endif %}
+        dest: '{{ gitlab_runner_config_file_location }}/last-runner-config-{{ gitlab_runner.name|default(ansible_hostname+"-"+gitlab_runner_index|string) }}'
+      register: runner_config_state
+
+    - name: List configured runners
+      docker_container:
+        name: "{{ gitlab_runner_container_name }}-list"
+        image: "{{ gitlab_runner_container_image }}:{{ gitlab_runner_container_tag }}"
+        command: list
+        mounts:
+          - type: bind
+            source: "{{ gitlab_runner_container_mount_path }}"
+            target: /etc/gitlab-runner
+        cleanup: yes
+        interactive: yes
+        tty: yes
+        detach: no
+      register: configured_runners
+      changed_when: False
+      check_mode: no
+
+    - name: Unregister runner when config has changed
+      docker_container:
+        name: "{{ gitlab_runner_container_name }}-list"
+        image: "{{ gitlab_runner_container_image }}:{{ gitlab_runner_container_tag }}"
+        command: unregister --name {{ gitlab_runner.name|default(ansible_hostname+"-"+gitlab_runner_index|string) }}'
+        mounts:
+          - type: bind
+            source: "{{ gitlab_runner_container_mount_path }}"
+            target: /etc/gitlab-runner
+        cleanup: yes
+        interactive: yes
+        tty: yes
+        detach: no
+      register: configured_runners
+      changed_when: False
+      check_mode: no
+      when: ('\n' + gitlab_runner.name|default(ansible_hostname+'-'+gitlab_runner_index|string) + ' ') in configured_runners.stderr and
+          runner_config_state.changed
+  when: gitlab_runner_config_update_mode == 'by_registering'
+
+- name: List configured runners
+  docker_container:
+    name: "{{ gitlab_runner_container_name }}-list"
+    image: "{{ gitlab_runner_container_image }}:{{ gitlab_runner_container_tag }}"
+    command: list
+    mounts:
+      - type: bind
+        source: "{{ gitlab_runner_container_mount_path }}"
+        target: /etc/gitlab-runner
+    cleanup: yes
+    interactive: yes
+    tty: yes
+    detach: no
+  register: configured_runners
+  changed_when: False
+  check_mode: no
+
+- name: Register runner to GitLab
+  docker_container:
+    name: "{{ gitlab_runner_container_name }}"
+    image: "{{ gitlab_runner_container_image }}:{{ gitlab_runner_container_tag }}"
+    command: >
+      {{ register_runner_cmd }}
+      --registration-token '{{ gitlab_runner.token|default(gitlab_runner_registration_token) }}'
+      {% if gitlab_runner.cache_s3_secret_key is defined %}
+      --cache-s3-secret-key '{{ gitlab_runner.cache_s3_secret_key }}'
+      {% endif %}
+      {% if gitlab_runner.ssh_password is defined %}
+      --ssh-password '{{ gitlab_runner.ssh_password }}'
+      {% endif %}
     mounts:
     - type: bind
       source: "{{ gitlab_runner_container_mount_path }}"
@@ -109,6 +186,6 @@
     cleanup: yes
     auto_remove: yes
     network_mode: "{{ gitlab_runner_container_network }}"
-  when: ('\n' + gitlab_runner.name|default(ansible_hostname+'-'+gitlab_runner_index|string)) not in configured_runners.container.Output and
+  when: ('\n' + gitlab_runner.name|default(ansible_hostname+'-'+gitlab_runner_index|string) + ' ') not in configured_runners.container.Output and
         gitlab_runner.state|default('present') == 'present'
   no_log: false

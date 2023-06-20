@@ -21,16 +21,9 @@
   check_mode: no
   become: "{{ gitlab_runner_system_mode }}"
 
-- name: (Unix) List configured runners
-  command: "{{ gitlab_runner_executable }} list"
-  register: configured_runners
-  changed_when: False
-  check_mode: no
-  become: "{{ gitlab_runner_system_mode }}"
-
 - name: (Unix) Register GitLab Runner
   include_tasks: register-runner.yml
-  when: gitlab_runner.token is defined or gitlab_runner_registration_token | string | length > 0  # Ensure value is set
+  when: gitlab_runner.token is defined or gitlab_runner_registration_token | string | length > 0
   loop: "{{ gitlab_runner_runners }}"
   loop_control:
     index_var: gitlab_runner_index
@@ -40,4 +33,5 @@
   import_tasks: global-setup.yml
 
 - name: (Unix) Configure GitLab Runner
-  import_tasks: config-runners.yml
+  include_tasks: config-runners.yml
+  when: gitlab_runner_config_update_mode == 'by_config_toml'

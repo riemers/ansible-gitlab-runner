@@ -39,6 +39,8 @@ gitlab_runner_session_server_session_timeout: 1800
 # Use this if you use a mirror repository
 # gitlab_runner_skip_package_repo_install: true
 
+gitlab_runner_config_update_mode: by_config_toml
+
 # The credentials for the Windows user used to run the gitlab-runner service.
 # Those credentials will be passed to `gitlab-runner.exe install`.
 # https://docs.gitlab.com/runner/install/windows.html

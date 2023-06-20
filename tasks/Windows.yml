@@ -9,17 +9,9 @@
   changed_when: '"Updated " in verified_runners.stderr'
   check_mode: no
 
-- name: (Windows) List configured runners
-  win_command: "{{ gitlab_runner_executable }} list"
-  args:
-    chdir: "{{ gitlab_runner_config_file_location }}"
-  register: configured_runners
-  changed_when: False
-  check_mode: no
-
 - name: (Windows) Register GitLab Runner
   include_tasks: register-runner-windows.yml
-  when: gitlab_runner.token is defined or gitlab_runner_registration_token | string | length > 0  # Ensure value is set
+  when: gitlab_runner.token is defined or gitlab_runner_registration_token | string | length > 0
   loop: "{{ gitlab_runner_runners }}"
   loop_control:
     index_var: gitlab_runner_index
@@ -29,7 +21,8 @@
   import_tasks: global-setup-windows.yml
 
 - name: (Windows) Configure GitLab Runner
-  import_tasks: config-runners-windows.yml
+  include_tasks: config-runners-windows.yml
+  when: gitlab_runner_config_update_mode == 'by_config_toml'
 
 - name: (Windows) Start GitLab Runner
   win_command: "{{ gitlab_runner_executable }} start"
