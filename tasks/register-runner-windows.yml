@@ -115,7 +115,9 @@
 
     - name: (Windows) Unregister runner when config has changed
       win_command: '{{ gitlab_runner_executable }} unregister --name {{ actual_gitlab_runner_name }}'
-      when: 
+      args:
+        chdir: "{{ gitlab_runner_config_file_location }}"
+      when:
         - actual_gitlab_runner_name in registered_gitlab_runner_names
         - runner_config_state.changed
   when: gitlab_runner_config_update_mode == 'by_registering'
@@ -132,7 +134,7 @@
     {% if gitlab_runner.ssh_password is defined %}
     --ssh-password '{{ gitlab_runner.ssh_password }}'
     {% endif %}
-  when: 
+  when:
     - actual_gitlab_runner_name) not in registered_gitlab_runner_names
     - gitlab_runner.state|default('present') == 'present'
   args:
