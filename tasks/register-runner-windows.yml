@@ -111,27 +111,16 @@
         dest: '{{ gitlab_runner_config_file_location }}/last-runner-config-{{ gitlab_runner.name|default(ansible_hostname+"-"+gitlab_runner_index|string) }}'
       register: runner_config_state
 
-    - name: (Windows) List configured runners
-      win_command: "{{ gitlab_runner_executable }} list"
-      args:
-        chdir: "{{ gitlab_runner_config_file_location }}"
-      register: configured_runners
-      changed_when: False
-      check_mode: no
+    - import_tasks: list-configured-runners-windows.yml
 
     - name: (Windows) Unregister runner when config has changed
       win_command: '{{ gitlab_runner_executable }} unregister --name {{ gitlab_runner.name|default(ansible_hostname+"-"+gitlab_runner_index|string) }}'
-      when: ('\n' + gitlab_runner.name|default(ansible_hostname+'-'+gitlab_runner_index|string) + ' ') in configured_runners.stderr and
-            runner_config_state.changed
+      when: 
+        - gitlab_runner.name|default(ansible_hostname+'-'+gitlab_runner_index|string) in registered_gitlab_runner_names
+        - runner_config_state.changed
   when: gitlab_runner_config_update_mode == 'by_registering'
 
-- name: (Windows) List configured runners again
-  win_command: "{{ gitlab_runner_executable }} list"
-  args:
-    chdir: "{{ gitlab_runner_config_file_location }}"
-  register: configured_runners
-  changed_when: False
-  check_mode: no
+- import_tasks: list-configured-runners-windows.yml
 
 - name: (Windows) Register runner to GitLab
   win_shell: >
@@ -143,7 +132,8 @@
     {% if gitlab_runner.ssh_password is defined %}
     --ssh-password '{{ gitlab_runner.ssh_password }}'
     {% endif %}
-  when: ('\n' + gitlab_runner.name|default(ansible_hostname+'-'+gitlab_runner_index|string) + ' ') not in configured_runners.stderr and
-        gitlab_runner.state|default('present') == 'present'
+  when: 
+    - gitlab_runner.name|default(ansible_hostname+'-'+gitlab_runner_index|string) not in registered_gitlab_runner_names
+    - gitlab_runner.state|default('present') == 'present'
   args:
     chdir: "{{ gitlab_runner_config_file_location }}"

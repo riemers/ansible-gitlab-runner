@@ -112,22 +112,7 @@
         dest: '{{ gitlab_runner_config_file_location }}/last-runner-config-{{ gitlab_runner.name|default(ansible_hostname+"-"+gitlab_runner_index|string) }}'
       register: runner_config_state
 
-    - name: List configured runners
-      docker_container:
-        name: "{{ gitlab_runner_container_name }}-list"
-        image: "{{ gitlab_runner_container_image }}:{{ gitlab_runner_container_tag }}"
-        command: list
-        mounts:
-          - type: bind
-            source: "{{ gitlab_runner_container_mount_path }}"
-            target: /etc/gitlab-runner
-        cleanup: yes
-        interactive: yes
-        tty: yes
-        detach: no
-      register: configured_runners
-      changed_when: False
-      check_mode: no
+    - import_tasks: list-configured-runners-container.yml
 
     - name: Unregister runner when config has changed
       docker_container:
@@ -142,29 +127,14 @@
         interactive: yes
         tty: yes
         detach: no
-      register: configured_runners
       changed_when: False
       check_mode: no
-      when: ('\n' + gitlab_runner.name|default(ansible_hostname+'-'+gitlab_runner_index|string) + ' ') in configured_runners.stderr and
-          runner_config_state.changed
+      when: 
+        - gitlab_runner.name|default(ansible_hostname+'-'+gitlab_runner_index|string) in registered_gitlab_runner_names
+        - runner_config_state.changed
   when: gitlab_runner_config_update_mode == 'by_registering'
 
-- name: List configured runners
-  docker_container:
-    name: "{{ gitlab_runner_container_name }}-list"
-    image: "{{ gitlab_runner_container_image }}:{{ gitlab_runner_container_tag }}"
-    command: list
-    mounts:
-      - type: bind
-        source: "{{ gitlab_runner_container_mount_path }}"
-        target: /etc/gitlab-runner
-    cleanup: yes
-    interactive: yes
-    tty: yes
-    detach: no
-  register: configured_runners
-  changed_when: False
-  check_mode: no
+- import_tasks: list-configured-runners-container.yml
 
 - name: Register runner to GitLab
   docker_container:
@@ -186,6 +156,7 @@
     cleanup: yes
     auto_remove: yes
     network_mode: "{{ gitlab_runner_container_network }}"
-  when: ('\n' + gitlab_runner.name|default(ansible_hostname+'-'+gitlab_runner_index|string) + ' ') not in configured_runners.container.Output and
-        gitlab_runner.state|default('present') == 'present'
+  when: 
+    - gitlab_runner.name|default(ansible_hostname+'-'+gitlab_runner_index|string) not in registered_gitlab_runner_names
+    - gitlab_runner.state|default('present') == 'present'
   no_log: false
