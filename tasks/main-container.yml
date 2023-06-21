@@ -3,7 +3,7 @@
   import_tasks: install-container.yml
   when: gitlab_runner_container_install
 
-- name: (Container) Delete no longer existing runners
+- name: (Container) Delete runners which were removed in GitLab
   docker_container:
     name: "{{ gitlab_runner_container_name }}-check"
     image: "{{ gitlab_runner_container_image }}:{{ gitlab_runner_container_tag }}"

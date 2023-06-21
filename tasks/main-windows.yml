@@ -1,7 +1,7 @@
 - name: Install GitLab Runner (Windows)
   import_tasks: install-windows.yml
 
-- name: (Windows) Delete no longer existing runners
+- name: (Windows) Delete runners which were removed in GitLab
   win_command: "{{ gitlab_runner_executable }} verify --delete"
   args:
     chdir: "{{ gitlab_runner_config_file_location }}"
