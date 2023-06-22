@@ -1,0 +1,33 @@
+---
+
+- name: List configured runners as json
+  docker_container:
+    name: "{{ gitlab_runner_container_name }}-list"
+    image: "{{ gitlab_runner_container_image }}:{{ gitlab_runner_container_tag }}"
+    command: --log-format json list
+    mounts:
+      - type: bind
+        source: "{{ gitlab_runner_container_mount_path }}"
+        target: /etc/gitlab-runner
+    cleanup: yes
+    interactive: yes
+    tty: yes
+    detach: no
+  register: registered_runners_json_result
+  changed_when: False
+  check_mode: no
+
+- name: Initialze runner list
+  set_fact:
+    registered_gitlab_runner_names: []
+
+- name: Create list of configured runners
+  set_fact:
+    registered_gitlab_runner_names: "{{ registered_gitlab_runner_names + [json_item['msg']] }}"
+  vars:
+    json_item: "{{ item | from_json }}"
+  loop: "{{ registered_runners_json_result.container.Output.split('\n') }}"
+  when: "'Executor' in json_item"
+
+- name: Print configured runners
+  debug: var=registered_gitlab_runner_names

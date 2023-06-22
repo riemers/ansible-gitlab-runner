@@ -14,7 +14,7 @@
   import_tasks: install-arch.yml
   when: ansible_os_family == 'Archlinux'
 
-- name: (Unix) Delete no longer existing runners
+- name: (Unix) Delete runners which were removed in GitLab
   command: "{{ gitlab_runner_executable }} verify --delete"
   register: verified_runners
   changed_when: '"Updated " in verified_runners.stderr'
@@ -23,6 +23,8 @@
 
 - name: (Unix) Register GitLab Runner
   include_tasks: register-runner.yml
+  vars:
+    - actual_gitlab_runner_name: "{{ gitlab_runner.name|default(ansible_hostname+'-'+gitlab_runner_index|string) }}"
   when: gitlab_runner.token is defined or gitlab_runner_registration_token | string | length > 0
   loop: "{{ gitlab_runner_runners }}"
   loop_control:

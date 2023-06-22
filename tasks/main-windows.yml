@@ -1,7 +1,7 @@
 - name: Install GitLab Runner (Windows)
   import_tasks: install-windows.yml
 
-- name: (Windows) Delete no longer existing runners
+- name: (Windows) Delete runners which were removed in GitLab
   win_command: "{{ gitlab_runner_executable }} verify --delete"
   args:
     chdir: "{{ gitlab_runner_config_file_location }}"
@@ -11,6 +11,8 @@
 
 - name: (Windows) Register GitLab Runner
   include_tasks: register-runner-windows.yml
+  vars:
+    - actual_gitlab_runner_name: "{{ gitlab_runner.name|default(ansible_hostname+'-'+gitlab_runner_index|string) }}"
   when: gitlab_runner.token is defined or gitlab_runner_registration_token | string | length > 0
   loop: "{{ gitlab_runner_runners }}"
   loop_control:

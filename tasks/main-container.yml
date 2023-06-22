@@ -3,7 +3,7 @@
   import_tasks: install-container.yml
   when: gitlab_runner_container_install
 
-- name: (Container) Delete no longer existing runners
+- name: (Container) Delete runners which were removed in GitLab
   docker_container:
     name: "{{ gitlab_runner_container_name }}-check"
     image: "{{ gitlab_runner_container_image }}:{{ gitlab_runner_container_tag }}"
@@ -22,6 +22,8 @@
 
 - name: (Container) Register GitLab Runner
   include_tasks: register-runner-container.yml
+  vars:
+    - actual_gitlab_runner_name: "{{ gitlab_runner.name|default(ansible_hostname+'-'+gitlab_runner_index|string) }}"
   when: gitlab_runner.token is defined or gitlab_runner_registration_token | string | length > 0
   loop: "{{ gitlab_runner_runners }}"
   loop_control:
