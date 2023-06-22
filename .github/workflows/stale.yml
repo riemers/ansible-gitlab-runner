@@ -17,3 +17,7 @@ jobs:
         with:
           stale-issue-message: 'Seems this message did not get a lot of love. This does not mean it was not seen but time wise might not have made it to proper attention. This is just the clean up action ;)'
           stale-pr-message: 'Although PRs are appreciated, if it sits for too long nothing happens. Can always update and do again :) This is just the automation talking'
+          days-before-issue-stale: 30
+          days-before-pr-stale: 45
+          days-before-issue-close: 5
+          days-before-pr-close: 10
