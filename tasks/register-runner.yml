@@ -35,17 +35,8 @@
       {% for env_var in gitlab_runner.env_vars|default([]) %}
       --env '{{ env_var }}'
       {% endfor %}
-      {% if gitlab_runner.pre_clone_script|default(false) %}
-      --pre-clone-script "{{ gitlab_runner.pre_clone_script }}"
-      {% endif %}
-      {% if gitlab_runner.pre_build_script|default(false) %}
-      --pre-build-script "{{ gitlab_runner.pre_build_script }}"
-      {% endif %}
       {% if gitlab_runner.tls_ca_file|default(false) %}
       --tls-ca-file "{{ gitlab_runner.tls_ca_file }}"
-      {% endif %}
-      {% if gitlab_runner.post_build_script|default(false) %}
-      --post-build-script "{{ gitlab_runner.post_build_script }}"
       {% endif %}
       --docker-image '{{ gitlab_runner.docker_image|default("alpine") }}'
       {% if gitlab_runner.docker_helper_image is defined %}
