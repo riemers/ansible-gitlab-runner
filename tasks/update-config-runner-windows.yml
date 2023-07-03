@@ -168,6 +168,17 @@
   check_mode: no
   notify: restart_gitlab_runner_windows
 
+- name: "(Windows) {{ runn_name_prefix }} Set docker network_mode option"
+  win_lineinfile:
+    dest: "{{ temp_runner_config.path }}"
+    regexp: '^\s*network_mode =.*'
+    line: '  network_mode = {{ gitlab_runner.docker_network_mode }}'
+    state: "{{ 'present' if gitlab_runner.docker_network_mode is defined else 'absent' }}"
+    insertafter: '^\s*executor ='
+    backrefs: no
+  check_mode: no
+  notify: restart_gitlab_runner_windows
+
 - name: "(Windows) {{ runn_name_prefix }} Set cache type option"
   win_lineinfile:
     dest: "{{ temp_runner_config.path }}"
