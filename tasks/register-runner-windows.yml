@@ -40,6 +40,9 @@
       {% for device in gitlab_runner.docker_devices | default([]) %}
       --docker-devices "{{ device }}"
       {% endfor %}
+      {% if gitlab_runner.docker_network_mode is defined %}
+      --docker-network-mode '{{ gitlab_runner.docker_network_mode }}'
+      {% endif %}
       {% if gitlab_runner.ssh_user is defined %}
       --ssh-user '{{ gitlab_runner.ssh_user }}'
       {% endif %}
