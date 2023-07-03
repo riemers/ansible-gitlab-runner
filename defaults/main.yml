@@ -26,6 +26,12 @@ gitlab_runner_registration_token: ''
 
 gitlab_runner_sentry_dsn: ''
 
+# GitLab server IP
+gitlab_server_ip: ''
+
+# GitLab TLS CA file
+tls_ca_file: ''
+
 # Prometheus Metrics & Monitoring
 gitlab_runner_listen_address: ''
 
