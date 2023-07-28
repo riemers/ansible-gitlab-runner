@@ -1,17 +1,17 @@
 - name: Install GitLab Runner (Debian)
-  import_tasks: install-debian.yml
+  include_tasks: install-debian.yml
   when: ansible_os_family == 'Debian'
 
 - name: Install GitLab Runner (RedHat)
-  import_tasks: install-redhat.yml
+  include_tasks: install-redhat.yml
   when: ansible_os_family == 'RedHat'
 
 - name: Install GitLab Runner (macOS)
-  import_tasks: install-macos.yml
+  include_tasks: install-macos.yml
   when: ansible_os_family == 'Darwin'
 
 - name: Install GitLab Runner (Arch)
-  import_tasks: install-arch.yml
+  include_tasks: install-arch.yml
   when: ansible_os_family == 'Archlinux'
 
 - name: (Unix) Delete runners which were removed in GitLab
