@@ -1,0 +1,18 @@
+
+- name: Get the names of all configured runner executors
+  set_fact:
+    local_gitlab_executor_names: "{{ gitlab_runner_runners | map(attribute='name') | list }}"
+
+- name: Find all executors which are not longer configured in ansible
+  set_fact:
+    available_runners_not_longer_configured: "{{ registered_gitlab_runner_names | difference(local_gitlab_executor_names) }}"
+
+- name: These runners are going to be unregistered
+  debug: var=available_runners_not_longer_configured
+  when: available_runners_not_longer_configured | length > 0
+
+- include_tasks: unregister-runner.yml
+  loop: "{{ available_runners_not_longer_configured }}"
+  loop_control:
+    loop_var: actual_gitlab_runner_name
+  when: available_runners_not_longer_configured | length > 0

@@ -24,6 +24,7 @@ On Linux, use `gitlab_runner_package_version` instead.
 - `gitlab_runner_runners` - A list of gitlab runners to register & configure. Defaults to a single shell executor.
 - `gitlab_runner_skip_package_repo_install`- Skip the APT or YUM repository installation (by default, false). You should provide a repository containing the needed packages before running this role.
 - `gitlab_runner_config_update_mode`- Set to `by_config_toml` (default) if this role should apply config changes by updating the `config.toml` itself or set it to `by_registering` if config changes should be applied by unregistering and regeistering the runner in case the config has changed.
+- `gitlab_unregister_runner_executors_which_are_not_longer_configured` - Set to `true` if executors should be unregistered from a runner in case it is are not longer configured in ansible. Default: `false`
 
 See the [`defaults/main.yml`](https://github.com/riemers/ansible-gitlab-runner/blob/master/defaults/main.yml) file listing all possible options which you can be passed to a runner registration command.
 

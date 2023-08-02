@@ -9,6 +9,8 @@
   changed_when: '"Updated " in verified_runners.stderr'
   check_mode: no
 
+- import_tasks: list-configured-runners-windows.yml
+
 - name: (Windows) Register GitLab Runner
   include_tasks: register-runner-windows.yml
   vars:
@@ -18,6 +20,10 @@
   loop_control:
     index_var: gitlab_runner_index
     loop_var: gitlab_runner
+
+- name: Unregister runners which are not longer configured
+  include_tasks: unregister-runner-if-not-longer-configured.yml
+  when: gitlab_unregister_runner_executors_which_are_not_longer_configured
 
 - name: (Windows) Set global options
   import_tasks: global-setup-windows.yml

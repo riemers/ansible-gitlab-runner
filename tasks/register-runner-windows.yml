@@ -105,12 +105,7 @@
         dest: '{{ gitlab_runner_config_file_location }}/last-runner-config-{{ actual_gitlab_runner_name }}'
       register: runner_config_state
 
-    - import_tasks: list-configured-runners-windows.yml
-
-    - name: (Windows) Unregister runner when config has changed
-      win_command: '{{ gitlab_runner_executable }} unregister --name {{ actual_gitlab_runner_name }}'
-      args:
-        chdir: "{{ gitlab_runner_config_file_location }}"
+    - import_tasks: unregister-runner.yml
       when:
         - actual_gitlab_runner_name in registered_gitlab_runner_names
         - runner_config_state.changed

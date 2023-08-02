@@ -141,11 +141,8 @@
         dest: '{{ gitlab_runner_config_file_location }}/last-runner-config-{{ actual_gitlab_runner_name }}'
       register: runner_config_state
 
-    - import_tasks: list-configured-runners-unix.yml
-
-    - name: Unregister runner when config has changed
-      ansible.builtin.command: '{{ gitlab_runner_executable }} unregister --name {{ actual_gitlab_runner_name }}'
-      when: 
+    - import_tasks: unregister-runner.yml
+      when:
         - actual_gitlab_runner_name in registered_gitlab_runner_names
         - runner_config_state.changed
   when: gitlab_runner_config_update_mode == 'by_registering'
