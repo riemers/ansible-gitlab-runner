@@ -80,7 +80,7 @@ gitlab_runner_restart_state: restarted
 # default value for force accept self signed certificates
 force_accept_gitlab_server_self_signed: false
 
-# controls diffs for assemle config file
+# controls diffs for assemble config file
 gitlab_runner_show_config_diff: no
 
 # controls logs on ansible configuration tasks, uncomment to prevent secret leaks (Unix support only).
