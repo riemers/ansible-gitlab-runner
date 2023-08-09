@@ -21,6 +21,7 @@
     line: '\1concurrent = {{ gitlab_runner_concurrent }}'
     state: present
     backrefs: yes
+  no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
   become: "{{ gitlab_runner_system_mode }}"
   notify:
     - restart_gitlab_runner
@@ -33,6 +34,7 @@
     line: 'listen_address = "{{ gitlab_runner_listen_address }}"'
     insertafter: '\s*concurrent.*'
     state: present
+  no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
   when: gitlab_runner_listen_address | length > 0  # Ensure value is set
   become: "{{ gitlab_runner_system_mode }}"
   notify:
@@ -46,6 +48,7 @@
     line: 'log_format = "{{ gitlab_runner_log_format|default("runner") }}"'
     insertbefore: BOF
     state: present
+  no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
   when: gitlab_runner_log_format is defined # Ensure value is set
   become: "{{ gitlab_runner_system_mode }}"
   notify:
@@ -59,6 +62,7 @@
     line: 'sentry_dsn = "{{ gitlab_runner_sentry_dsn }}"'
     insertafter: '\s*concurrent.*'
     state: present
+  no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
   when: gitlab_runner_sentry_dsn | length > 0  # Ensure value is set
   become: "{{ gitlab_runner_system_mode }}"
   notify:
@@ -72,6 +76,7 @@
     line: '  listen_address = "{{ gitlab_runner_session_server_listen_address }}"'
     insertafter: '^\s*\[session_server\]'
     state: "{{ 'present' if gitlab_runner_session_server_listen_address | length > 0 else 'absent' }}"
+  no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
   become: "{{ gitlab_runner_system_mode }}"
   notify:
     - restart_gitlab_runner
@@ -85,6 +90,7 @@
     insertafter: '^\s*\[session_server\]'
     state: "{{ 'present' if gitlab_runner_session_server_advertise_address | length > 0 else 'absent' }}"
   become: "{{ gitlab_runner_system_mode }}"
+  no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
   notify:
     - restart_gitlab_runner
     - restart_gitlab_runner_macos
@@ -96,6 +102,7 @@
     line: "  session_timeout = {{ gitlab_runner_session_server_session_timeout }}"
     insertafter: '^\s*\[session_server\]'
     state: present
+  no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
   when: gitlab_runner_session_server_session_timeout
   become: "{{ gitlab_runner_system_mode }}"
   notify:

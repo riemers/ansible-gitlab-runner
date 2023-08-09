@@ -83,6 +83,9 @@ force_accept_gitlab_server_self_signed: false
 # controls diffs for assemle config file
 gitlab_runner_show_config_diff: no
 
+# controls logs on ansible configuration tasks, uncomment to prevent secret leaks (Unix support only).
+# gitlab_runner_no_log_secrets: yes
+
 # A list of runners to register and configure
 gitlab_runner_runners:
     # The identifier of the runner.
