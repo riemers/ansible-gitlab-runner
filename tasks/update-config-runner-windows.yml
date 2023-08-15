@@ -67,6 +67,18 @@
   notify: restart_gitlab_runner
   when: gitlab_runner.pre_get_sources_script is defined
 
+- name: "(Windows) {{ runn_name_prefix }} Set post_get_sources_script"
+  win_lineinfile:
+    dest: "{{ temp_runner_config.path }}"
+    regexp: '^\s*post_get_sources_script ='
+    line: '  post_get_sources_script = {{ gitlab_runner.post_get_sources_script | to_json }}'
+    state: present
+    insertafter: '^\s*url ='
+    backrefs: no
+  check_mode: no
+  notify: restart_gitlab_runner
+  when: gitlab_runner.post_get_sources_script is defined
+
 - name: "(Windows) {{ runn_name_prefix }} Set pre_build_script"
   win_lineinfile:
     dest: "{{ temp_runner_config.path }}"
