@@ -127,8 +127,8 @@ gitlab_runner_runners:
     # Sets the clone_url. The default is not set.
     # clone_url:
     #
-    # Sets the pre_clone_script. The default is not set.
-    # pre_clone_script:
+    # Sets the pre_get_sources_script. The default is not set.
+    # pre_get_sources_script:
     #
     # Sets the pre_build_script. The default is not set.
     # pre_build_script:
