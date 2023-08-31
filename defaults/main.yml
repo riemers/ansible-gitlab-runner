@@ -59,6 +59,10 @@ gitlab_runner_windows_service_password: ''
 # https://docs.gitlab.com/runner/install/osx.html#limitations-on-macos
 gitlab_runner_macos_start_runner: true
 
+# Whether to try to start the runner on Windows.
+# If set to `false`, it should be started manually.
+gitlab_runner_windows_start_runner: true
+
 # default values for gitlab in container
 gitlab_runner_container_install: false
 gitlab_runner_container_image: gitlab/gitlab-runner

@@ -36,3 +36,5 @@
   win_command: "{{ gitlab_runner_executable }} start"
   args:
     chdir: "{{ gitlab_runner_config_file_location }}"
+  when: gitlab_runner_windows_start_runner
+  
