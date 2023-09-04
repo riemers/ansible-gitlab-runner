@@ -15,7 +15,7 @@
   win_command: "{{ gitlab_runner_executable }} restart"
   args:
     chdir: "{{ gitlab_runner_config_file_location }}"
-  when: ansible_os_family == 'Windows'
+  when: ansible_os_family == 'Windows' and gitlab_runner_windows_start_runner
 
 # Container
 - name: restart_gitlab_runner_container

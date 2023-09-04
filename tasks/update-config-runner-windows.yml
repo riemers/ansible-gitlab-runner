@@ -172,7 +172,7 @@
   win_lineinfile:
     dest: "{{ temp_runner_config.path }}"
     regexp: '^\s*network_mode =.*'
-    line: '  network_mode = {{ gitlab_runner.docker_network_mode }}'
+    line: '  network_mode = {{ gitlab_runner.docker_network_mode|default("bridge") | to_json }}'
     state: "{{ 'present' if gitlab_runner.docker_network_mode is defined else 'absent' }}"
     insertafter: '^\s*executor ='
     backrefs: no

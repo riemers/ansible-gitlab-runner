@@ -124,7 +124,7 @@
     --ssh-password '{{ gitlab_runner.ssh_password }}'
     {% endif %}
   when:
-    - actual_gitlab_runner_name) not in registered_gitlab_runner_names
+    - actual_gitlab_runner_name not in registered_gitlab_runner_names
     - gitlab_runner.state|default('present') == 'present'
   args:
     chdir: "{{ gitlab_runner_config_file_location }}"
