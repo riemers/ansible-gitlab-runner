@@ -10,6 +10,16 @@
       paths:
         - 'vars'
 
+- name: Validate GitLab Runner configurations
+  include_tasks: validate-runner-config.yml
+  vars:
+    actual_gitlab_runner_name: "{{ gitlab_runner.name|default(ansible_hostname+'-'+gitlab_runner_index|string) }}"
+  loop: "{{ gitlab_runner_runners }}"
+  loop_control:
+    label: "{{ actual_gitlab_runner_name }}"
+    index_var: gitlab_runner_index
+    loop_var: gitlab_runner
+
 - name: Install Gitlab Runner (Container)
   vars:
     gitlab_install_target_platform: container
