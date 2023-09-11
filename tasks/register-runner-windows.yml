@@ -93,7 +93,7 @@
   block:
     - name: Check if the configuration has changed since the last run
       ansible.builtin.copy:
-        content: >
+        content: >-
           {{ register_runner_cmd }}
           --registration-token '{{ gitlab_runner.token|default(gitlab_runner_registration_token)|hash("sha1") }}'
           {% if gitlab_runner.cache_s3_secret_key is defined %}
@@ -114,7 +114,7 @@
 - import_tasks: list-configured-runners-windows.yml
 
 - name: (Windows) Register runner to GitLab
-  win_shell: >
+  win_shell: >-
     {{ register_runner_cmd }}
     --registration-token '{{ gitlab_runner.token|default(gitlab_runner_registration_token) }}'
     {% if gitlab_runner.cache_s3_secret_key is defined %}
