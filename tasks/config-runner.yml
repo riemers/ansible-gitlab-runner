@@ -15,6 +15,7 @@
     content: "{{ runner_config }}"
   check_mode: no
   changed_when: false
+  no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
 
 - include_tasks: update-config-runner.yml
   vars:
@@ -26,6 +27,7 @@
   loop_control:
     index_var: gitlab_runner_index
     loop_var: gitlab_runner
+  no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
 
 - name: "{{ conf_name_prefix }} Remove runner config"
   file:
@@ -38,3 +40,4 @@
   loop_control:
     index_var: gitlab_runner_index
     loop_var: gitlab_runner
+  no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"

@@ -32,6 +32,7 @@
   loop_control:
     index_var: gitlab_runner_index
     loop_var: gitlab_runner
+  no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
 
 - name: Unregister runners which are not longer configured
   include_tasks: unregister-runner-if-not-longer-configured.yml

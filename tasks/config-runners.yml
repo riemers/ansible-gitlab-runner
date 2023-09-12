@@ -8,6 +8,7 @@
 - name: Get pre-existing runner configs
   set_fact:
     runner_configs: "{{ (runner_config_file['content'] | b64decode).split('[[runners]]\n') }}"
+  no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
 
 - name: Create temporary directory
   tempfile:
@@ -25,6 +26,7 @@
   loop_control:
     index_var: runner_config_index
     loop_var: runner_config
+  no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
 
 - name: Assemble new config.toml
   assemble:
