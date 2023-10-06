@@ -26,7 +26,7 @@
     registered_gitlab_runner_names: "{{ registered_gitlab_runner_names + [json_item['msg']] }}"
   vars:
     json_item: "{{ item | from_json }}"
-  loop: "{{ registered_runners_json_result.container.Output.split('\n') }}"
+  loop: "{{ registered_runners_json_result.container.Output | trim('\n') | split('\n') }}"
   when: "'Executor' in json_item"
 
 - name: Print configured runners
