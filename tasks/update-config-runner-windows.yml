@@ -1,371 +1,370 @@
 ---
-- name: "(Windows) {{ runn_name_prefix }} Set \"[[runners]]\" section"
+- name: (Windows) {{ runn_name_prefix }} Set "[[runners]]" section
   win_lineinfile:
     dest: "{{ temp_runner_config.path }}"
-    regexp: '\n'
-    line: '[[runners]]'
+    regexp: \n
+    line: "[[runners]]"
     state: present
-    insertbefore: '^\s*name ='
-    backrefs: no
-  check_mode: no
+    insertbefore: ^\s*name =
+    backrefs: false
+  check_mode: false
   notify: restart_gitlab_runner_windows
 
-- name: "(Windows) {{ runn_name_prefix }} Set concurrent limit option"
+- name: (Windows) {{ runn_name_prefix }} Set concurrent limit option
   win_lineinfile:
     dest: "{{ temp_runner_config.path }}"
-    regexp: '^\s*limit =.*'
-    line: '  limit = {{ gitlab_runner.concurrent_specific|default(0) }}'
+    regexp: ^\s*limit =.*
+    line: "  limit = {{ gitlab_runner.concurrent_specific|default(0) }}"
     state: present
-    insertafter: '^\s*name ='
-    backrefs: no
-  check_mode: no
+    insertafter: ^\s*name =
+    backrefs: false
+  check_mode: false
   notify: restart_gitlab_runner_windows
 
-- name: "(Windows) {{ runn_name_prefix }} Set coordinator URL"
+- name: (Windows) {{ runn_name_prefix }} Set coordinator URL
   win_lineinfile:
     dest: "{{ temp_runner_config.path }}"
-    regexp: '^\s*url =.*'
-    line: '  url = {{ gitlab_runner.url|default(gitlab_runner_coordinator_url) | to_json }}'
+    regexp: ^\s*url =.*
+    line: "  url = {{ gitlab_runner.url|default(gitlab_runner_coordinator_url) | to_json }}"
     state: present
-    insertafter: '^\s*limit ='
-    backrefs: no
-  check_mode: no
+    insertafter: ^\s*limit =
+    backrefs: false
+  check_mode: false
   notify: restart_gitlab_runner_windows
 
-- name: "(Windows) {{ runn_name_prefix }} Set clone URL"
+- name: (Windows) {{ runn_name_prefix }} Set clone URL
   win_lineinfile:
     dest: "{{ temp_runner_config.path }}"
-    regexp: '^\s*clone_url ='
-    line: '  clone_url = {{ gitlab_runner.clone_url | to_json }}'
+    regexp: ^\s*clone_url =
+    line: "  clone_url = {{ gitlab_runner.clone_url | to_json }}"
     state: present
-    insertafter: '^\s*url ='
-    backrefs: no
-  check_mode: no
+    insertafter: ^\s*url =
+    backrefs: false
+  check_mode: false
   notify: restart_gitlab_runner
   when: gitlab_runner.clone_url is defined
 
-- name: "(Windows) {{ runn_name_prefix }} Set environment option"
+- name: (Windows) {{ runn_name_prefix }} Set environment option
   win_lineinfile:
     dest: "{{ temp_runner_config.path }}"
-    regexp: '^\s*environment =.*'
-    line: '  environment = {{ gitlab_runner.env_vars|default([]) | to_json }}'
+    regexp: ^\s*environment =.*
+    line: "  environment = {{ gitlab_runner.env_vars|default([]) | to_json }}"
     state: present
-    insertafter: '^\s*url ='
-    backrefs: no
-  check_mode: no
+    insertafter: ^\s*url =
+    backrefs: false
+  check_mode: false
   notify: restart_gitlab_runner_windows
 
-- name: "(Windows) {{ runn_name_prefix }} Set pre_get_sources_script"
+- name: (Windows) {{ runn_name_prefix }} Set pre_get_sources_script
   win_lineinfile:
     dest: "{{ temp_runner_config.path }}"
-    regexp: '^\s*pre_get_sources_script ='
-    line: '  pre_get_sources_script = {{ gitlab_runner.pre_get_sources_script | to_json }}'
+    regexp: ^\s*pre_get_sources_script =
+    line: "  pre_get_sources_script = {{ gitlab_runner.pre_get_sources_script | to_json }}"
     state: present
-    insertafter: '^\s*url ='
-    backrefs: no
-  check_mode: no
+    insertafter: ^\s*url =
+    backrefs: false
+  check_mode: false
   notify: restart_gitlab_runner
   when: gitlab_runner.pre_get_sources_script is defined
 
-- name: "(Windows) {{ runn_name_prefix }} Set post_get_sources_script"
+- name: (Windows) {{ runn_name_prefix }} Set post_get_sources_script
   win_lineinfile:
     dest: "{{ temp_runner_config.path }}"
-    regexp: '^\s*post_get_sources_script ='
-    line: '  post_get_sources_script = {{ gitlab_runner.post_get_sources_script | to_json }}'
+    regexp: ^\s*post_get_sources_script =
+    line: "  post_get_sources_script = {{ gitlab_runner.post_get_sources_script | to_json }}"
     state: present
-    insertafter: '^\s*url ='
-    backrefs: no
-  check_mode: no
+    insertafter: ^\s*url =
+    backrefs: false
+  check_mode: false
   notify: restart_gitlab_runner
   when: gitlab_runner.post_get_sources_script is defined
 
-- name: "(Windows) {{ runn_name_prefix }} Set pre_build_script"
+- name: (Windows) {{ runn_name_prefix }} Set pre_build_script
   win_lineinfile:
     dest: "{{ temp_runner_config.path }}"
-    regexp: '^\s*pre_build_script ='
-    line: '  pre_build_script = {{ gitlab_runner.pre_build_script | to_json }}'
+    regexp: ^\s*pre_build_script =
+    line: "  pre_build_script = {{ gitlab_runner.pre_build_script | to_json }}"
     state: present
-    insertafter: '^\s*url ='
-    backrefs: no
-  check_mode: no
+    insertafter: ^\s*url =
+    backrefs: false
+  check_mode: false
   notify: restart_gitlab_runner
   when: gitlab_runner.pre_build_script is defined
 
-- name: "(Windows) {{ runn_name_prefix }} Set post_build_script"
+- name: (Windows) {{ runn_name_prefix }} Set post_build_script
   win_lineinfile:
     dest: "{{ temp_runner_config.path }}"
-    regexp: '^\s*post_build_script ='
-    line: '  post_build_script = {{ gitlab_runner.post_build_script | to_json }}'
+    regexp: ^\s*post_build_script =
+    line: "  post_build_script = {{ gitlab_runner.post_build_script | to_json }}"
     state: present
-    insertafter: '^\s*url ='
-    backrefs: no
-  check_mode: no
+    insertafter: ^\s*url =
+    backrefs: false
+  check_mode: false
   notify: restart_gitlab_runner
   when: gitlab_runner.post_build_script is defined
 
-- name: "(Windows) {{ runn_name_prefix }} Set runner executor option"
+- name: (Windows) {{ runn_name_prefix }} Set runner executor option
   win_lineinfile:
     dest: "{{ temp_runner_config.path }}"
-    regexp: '^\s*executor =.*'
+    regexp: ^\s*executor =.*
     line: '  executor = {{ gitlab_runner.executor|default("shell") | to_json }}'
     state: present
-    insertafter: '^\s*url ='
-    backrefs: no
-  check_mode: no
+    insertafter: ^\s*url =
+    backrefs: false
+  check_mode: false
   notify: restart_gitlab_runner_windows
 
-- name: "(Windows) {{ runn_name_prefix }} Set runner shell option"
+- name: (Windows) {{ runn_name_prefix }} Set runner shell option
   win_lineinfile:
     dest: "{{ temp_runner_config.path }}"
-    regexp: '^\s*shell =.*'
+    regexp: ^\s*shell =.*
     line: '  shell = {{ gitlab_runner.shell|default("") | to_json }}'
     state: "{{ 'present' if gitlab_runner.shell is defined else 'absent' }}"
-    insertafter: '^\s*executor ='
-    backrefs: no
-  check_mode: no
+    insertafter: ^\s*executor =
+    backrefs: false
+  check_mode: false
   notify: restart_gitlab_runner_windows
 
-- name: "(Windows) {{ runn_name_prefix }} Set output_limit option"
+- name: (Windows) {{ runn_name_prefix }} Set output_limit option
   win_lineinfile:
     dest: "{{ temp_runner_config.path }}"
-    regexp: '^\s*output_limit =.*'
-    line: '  output_limit = {{ gitlab_runner.output_limit|default(4096) }}'
+    regexp: ^\s*output_limit =.*
+    line: "  output_limit = {{ gitlab_runner.output_limit|default(4096) }}"
     state: present
-    insertafter: '^\s*executor ='
-    backrefs: no
-  check_mode: no
+    insertafter: ^\s*executor =
+    backrefs: false
+  check_mode: false
   notify: restart_gitlab_runner_windows
 
-- name: "(Windows) {{ runn_name_prefix }} Set runner docker image option"
+- name: (Windows) {{ runn_name_prefix }} Set runner docker image option
   win_lineinfile:
     dest: "{{ temp_runner_config.path }}"
-    regexp: '^\s*image =.*'
+    regexp: ^\s*image =.*
     line: '  image = {{ gitlab_runner.docker_image|default("") | to_json }}'
     state: "{{ 'present' if gitlab_runner.docker_image is defined else 'absent' }}"
-    insertafter: '^\s*executor ='
-    backrefs: no
-  check_mode: no
+    insertafter: ^\s*executor =
+    backrefs: false
+  check_mode: false
   notify: restart_gitlab_runner_windows
 
-- name: "(Windows) {{ runn_name_prefix }} Set docker privileged option"
+- name: (Windows) {{ runn_name_prefix }} Set docker privileged option
   win_lineinfile:
     dest: "{{ temp_runner_config.path }}"
-    regexp: '^\s*privileged =.*'
-    line: '  privileged = {{ gitlab_runner.docker_privileged|default(false) | lower }}'
+    regexp: ^\s*privileged =.*
+    line: "  privileged = {{ gitlab_runner.docker_privileged|default(false) | lower }}"
     state: "{{ 'present' if gitlab_runner.docker_privileged is defined else 'absent' }}"
-    insertafter: '^\s*executor ='
-    backrefs: no
-  check_mode: no
+    insertafter: ^\s*executor =
+    backrefs: false
+  check_mode: false
   notify: restart_gitlab_runner_windows
 
-- name: "(Windows) {{ runn_name_prefix }} Set docker volumes option"
+- name: (Windows) {{ runn_name_prefix }} Set docker volumes option
   win_lineinfile:
     dest: "{{ temp_runner_config.path }}"
-    regexp: '^\s*volumes =.*'
-    line: '  volumes = {{ gitlab_runner.docker_volumes|default([])|to_json }}'
+    regexp: ^\s*volumes =.*
+    line: "  volumes = {{ gitlab_runner.docker_volumes|default([])|to_json }}"
     state: "{{ 'present' if gitlab_runner.docker_volumes is defined else 'absent' }}"
-    insertafter: '^\s*executor ='
-    backrefs: no
-  check_mode: no
+    insertafter: ^\s*executor =
+    backrefs: false
+  check_mode: false
   notify: restart_gitlab_runner_windows
 
-- name: "(Windows) {{ runn_name_prefix }} Set docker devices option"
+- name: (Windows) {{ runn_name_prefix }} Set docker devices option
   win_lineinfile:
     dest: "{{ temp_runner_config.path }}"
-    regexp: '^\s*devices =.*'
-    line: '  devices = {{ gitlab_runner.docker_devices|default([])|to_json }}'
+    regexp: ^\s*devices =.*
+    line: "  devices = {{ gitlab_runner.docker_devices|default([])|to_json }}"
     state: "{{ 'present' if gitlab_runner.docker_devices is defined else 'absent' }}"
-    insertafter: '^\s*executor ='
-    backrefs: no
-  check_mode: no
+    insertafter: ^\s*executor =
+    backrefs: false
+  check_mode: false
   notify: restart_gitlab_runner_windows
 
-- name: "(Windows) {{ runn_name_prefix }} Set docker network_mode option"
+- name: (Windows) {{ runn_name_prefix }} Set docker network_mode option
   win_lineinfile:
     dest: "{{ temp_runner_config.path }}"
-    regexp: '^\s*network_mode =.*'
+    regexp: ^\s*network_mode =.*
     line: '  network_mode = {{ gitlab_runner.docker_network_mode|default("bridge") | to_json }}'
     state: "{{ 'present' if gitlab_runner.docker_network_mode is defined else 'absent' }}"
-    insertafter: '^\s*executor ='
-    backrefs: no
-  check_mode: no
+    insertafter: ^\s*executor =
+    backrefs: false
+  check_mode: false
   notify: restart_gitlab_runner_windows
 
-- name: "(Windows) {{ runn_name_prefix }} Set cache type option"
+- name: (Windows) {{ runn_name_prefix }} Set cache type option
   win_lineinfile:
     dest: "{{ temp_runner_config.path }}"
-    regexp: '^\s*Type =.*'
+    regexp: ^\s*Type =.*
     line: '  Type = {{ gitlab_runner.cache_type|default("") | to_json }}'
     state: "{{ 'present' if gitlab_runner.cache_type is defined else 'absent' }}"
-    insertafter: '^\s*executor ='
-    backrefs: no
-  check_mode: no
+    insertafter: ^\s*executor =
+    backrefs: false
+  check_mode: false
   notify: restart_gitlab_runner_windows
 
-- name: "(Windows) {{ runn_name_prefix }} Set cache path option"
+- name: (Windows) {{ runn_name_prefix }} Set cache path option
   win_lineinfile:
     dest: "{{ temp_runner_config.path }}"
-    regexp: '^\s*Path =.*'
+    regexp: ^\s*Path =.*
     line: '  Path = {{ gitlab_runner.cache_path|default("") | to_json }}'
     state: "{{ 'present' if gitlab_runner.cache_path is defined else 'absent' }}"
-    insertafter: '^\s*executor ='
-    backrefs: no
-  check_mode: no
+    insertafter: ^\s*executor =
+    backrefs: false
+  check_mode: false
   notify: restart_gitlab_runner_windows
 
-- name: "(Windows) {{ runn_name_prefix }} Set cache s3 server address"
+- name: (Windows) {{ runn_name_prefix }} Set cache s3 server address
   win_lineinfile:
     dest: "{{ temp_runner_config.path }}"
-    regexp: '^\s*ServerAddress =.*'
+    regexp: ^\s*ServerAddress =.*
     line: '  ServerAddress = {{ gitlab_runner.cache_s3_server_address|default("") | to_json }}'
     state: "{{ 'present' if gitlab_runner.cache_s3_server_address is defined else 'absent' }}"
-    insertafter: '^\s*\[runners\.cache\.s3\]'
-    backrefs: no
-  check_mode: no
+    insertafter: ^\s*\[runners\.cache\.s3\]
+    backrefs: false
+  check_mode: false
   notify: restart_gitlab_runner_windows
 
-- name: "(Windows) {{ runn_name_prefix }} Set cache s3 access key"
+- name: (Windows) {{ runn_name_prefix }} Set cache s3 access key
   win_lineinfile:
     dest: "{{ temp_runner_config.path }}"
-    regexp: '^\s*AccessKey =.*'
+    regexp: ^\s*AccessKey =.*
     line: '  AccessKey = {{ gitlab_runner.cache_s3_access_key|default("") | to_json }}'
     state: "{{ 'present' if gitlab_runner.cache_s3_access_key is defined else 'absent' }}"
-    insertafter: '^\s*\[runners\.cache\.s3\]'
-    backrefs: no
-  check_mode: no
+    insertafter: ^\s*\[runners\.cache\.s3\]
+    backrefs: false
+  check_mode: false
   notify: restart_gitlab_runner_windows
 
-- name: "(Windows) {{ runn_name_prefix }} Set cache s3 secret key"
+- name: (Windows) {{ runn_name_prefix }} Set cache s3 secret key
   win_lineinfile:
     dest: "{{ temp_runner_config.path }}"
-    regexp: '^\s*SecretKey =.*'
+    regexp: ^\s*SecretKey =.*
     line: '  SecretKey = {{ gitlab_runner.cache_s3_secret_key|default("") | to_json }}'
     state: "{{ 'present' if gitlab_runner.cache_s3_secret_key is defined else 'absent' }}"
-    insertafter: '^\s*\[runners\.cache\.s3\]'
-    backrefs: no
-  check_mode: no
+    insertafter: ^\s*\[runners\.cache\.s3\]
+    backrefs: false
+  check_mode: false
   notify: restart_gitlab_runner_windows
 
-
-- name: "(Windows) {{ runn_name_prefix }} Set cache shared option"
+- name: (Windows) {{ runn_name_prefix }} Set cache shared option
   win_lineinfile:
     dest: "{{ temp_runner_config.path }}"
-    regexp: '^\s*Shared =.*'
+    regexp: ^\s*Shared =.*
     line: '  Shared = {{ gitlab_runner.cache_shared|default("") | lower }}'
     state: "{{ 'present' if gitlab_runner.cache_shared is defined else 'absent' }}"
-    insertafter: '^\s*executor ='
-    backrefs: no
-  check_mode: no
+    insertafter: ^\s*executor =
+    backrefs: false
+  check_mode: false
   notify: restart_gitlab_runner_windows
 
-- name: "(Windows) {{ runn_name_prefix }} Set cache s3 bucket name option"
+- name: (Windows) {{ runn_name_prefix }} Set cache s3 bucket name option
   win_lineinfile:
     dest: "{{ temp_runner_config.path }}"
-    regexp: '^\s*BucketName =.*'
+    regexp: ^\s*BucketName =.*
     line: '  BucketName = {{ gitlab_runner.cache_s3_bucket_name|default("")  | to_json }}'
     state: "{{ 'present' if gitlab_runner.cache_s3_bucket_name is defined else 'absent' }}"
-    insertafter: '^\s*\[runners\.cache\.s3\]'
-    backrefs: no
-  check_mode: no
+    insertafter: ^\s*\[runners\.cache\.s3\]
+    backrefs: false
+  check_mode: false
   notify: restart_gitlab_runner_windows
 
-- name: "(Windows) {{ runn_name_prefix }} Set cache s3 bucket location option"
+- name: (Windows) {{ runn_name_prefix }} Set cache s3 bucket location option
   win_lineinfile:
     dest: "{{ temp_runner_config.path }}"
-    regexp: '^\s*BucketLocation =.*'
+    regexp: ^\s*BucketLocation =.*
     line: '  BucketLocation = {{ gitlab_runner.cache_s3_bucket_location|default("") | to_json }}'
     state: "{{ 'present' if gitlab_runner.cache_s3_bucket_location is defined else 'absent' }}"
-    insertafter: '^\s*\[runners\.cache\.s3\]'
-    backrefs: no
-  check_mode: no
+    insertafter: ^\s*\[runners\.cache\.s3\]
+    backrefs: false
+  check_mode: false
   notify: restart_gitlab_runner_windows
 
-- name: "(Windows) {{ runn_name_prefix }} Set cache s3 insecure option"
+- name: (Windows) {{ runn_name_prefix }} Set cache s3 insecure option
   win_lineinfile:
     dest: "{{ temp_runner_config.path }}"
-    regexp: '^\s*Insecure =.*'
+    regexp: ^\s*Insecure =.*
     line: '  Insecure = {{ gitlab_runner.cache_s3_insecure|default("") | lower }}'
     state: "{{ 'present' if gitlab_runner.cache_s3_insecure is defined else 'absent' }}"
-    insertafter: '^\s*\[runners\.cache\.s3\]'
-    backrefs: no
-  check_mode: no
+    insertafter: ^\s*\[runners\.cache\.s3\]
+    backrefs: false
+  check_mode: false
   notify: restart_gitlab_runner_windows
 
-- name: "(Windows) {{ runn_name_prefix }} Set ssh user option"
+- name: (Windows) {{ runn_name_prefix }} Set ssh user option
   win_lineinfile:
     dest: "{{ temp_runner_config.path }}"
-    regexp: '^\s*user =.*'
+    regexp: ^\s*user =.*
     line: '  user = {{ gitlab_runner.ssh_user|default("") | to_json }}'
     state: "{{ 'present' if gitlab_runner.ssh_user is defined else 'absent' }}"
-    insertafter: '^\s*executor ='
-    backrefs: no
-  check_mode: no
+    insertafter: ^\s*executor =
+    backrefs: false
+  check_mode: false
   notify: restart_gitlab_runner_windows
 
-- name: "(Windows) {{ runn_name_prefix }} Set ssh host option"
+- name: (Windows) {{ runn_name_prefix }} Set ssh host option
   win_lineinfile:
     dest: "{{ temp_runner_config.path }}"
-    regexp: '^\s*host =.*'
+    regexp: ^\s*host =.*
     line: '  host = {{ gitlab_runner.ssh_host|default("") | to_json }}'
     state: "{{ 'present' if gitlab_runner.ssh_host is defined else 'absent' }}"
-    insertafter: '^\s*executor ='
-    backrefs: no
-  check_mode: no
+    insertafter: ^\s*executor =
+    backrefs: false
+  check_mode: false
   notify: restart_gitlab_runner_windows
 
-- name: "(Windows) {{ runn_name_prefix }} Set ssh port option"
+- name: (Windows) {{ runn_name_prefix }} Set ssh port option
   win_lineinfile:
     dest: "{{ temp_runner_config.path }}"
-    regexp: '^\s*port =.*'
+    regexp: ^\s*port =.*
     line: '  port = {{ gitlab_runner.ssh_port|default("") | to_json }}'
     state: "{{ 'present' if gitlab_runner.ssh_port is defined else 'absent' }}"
-    insertafter: '^\s*executor ='
-    backrefs: no
-  check_mode: no
+    insertafter: ^\s*executor =
+    backrefs: false
+  check_mode: false
   notify: restart_gitlab_runner_windows
 
-- name: "(Windows) {{ runn_name_prefix }} Set ssh password option"
+- name: (Windows) {{ runn_name_prefix }} Set ssh password option
   win_lineinfile:
     dest: "{{ temp_runner_config.path }}"
-    regexp: '^\s*password =.*'
+    regexp: ^\s*password =.*
     line: '  password = {{ gitlab_runner.ssh_password|default("") | to_json }}'
     state: "{{ 'present' if gitlab_runner.ssh_password is defined else 'absent' }}"
-    insertafter: '^\s*executor ='
-    backrefs: no
-  check_mode: no
+    insertafter: ^\s*executor =
+    backrefs: false
+  check_mode: false
   notify: restart_gitlab_runner_windows
 
-- name: "(Windows) {{ runn_name_prefix }} Set ssh identity file option"
+- name: (Windows) {{ runn_name_prefix }} Set ssh identity file option
   win_lineinfile:
     dest: "{{ temp_runner_config.path }}"
-    regexp: '^\s*identity_file =.*'
+    regexp: ^\s*identity_file =.*
     line: '  identity_file = {{ gitlab_runner.ssh_identity_file|default("") | to_json }}'
     state: "{{ 'present' if gitlab_runner.ssh_identity_file is defined else 'absent' }}"
-    insertafter: '^\s*executor ='
-    backrefs: no
-  check_mode: no
+    insertafter: ^\s*executor =
+    backrefs: false
+  check_mode: false
   notify: restart_gitlab_runner_windows
 
-- name: "(Windows) {{ runn_name_prefix }} Set builds dir file option"
+- name: (Windows) {{ runn_name_prefix }} Set builds dir file option
   win_lineinfile:
     dest: "{{ temp_runner_config.path }}"
-    regexp: '^\s*builds_dir =.*'
+    regexp: ^\s*builds_dir =.*
     line: '  builds_dir = {{ gitlab_runner.builds_dir|default("") | to_json }}'
     state: "{{ 'present' if gitlab_runner.builds_dir is defined else 'absent' }}"
-    insertafter: '^\s*executor ='
-    backrefs: no
-  check_mode: no
+    insertafter: ^\s*executor =
+    backrefs: false
+  check_mode: false
   notify: restart_gitlab_runner_windows
 
-- name: "(Windows) {{ runn_name_prefix }} Set cache dir file option"
+- name: (Windows) {{ runn_name_prefix }} Set cache dir file option
   win_lineinfile:
     dest: "{{ temp_runner_config.path }}"
-    regexp: '^\s*cache_dir =.*'
+    regexp: ^\s*cache_dir =.*
     line: '  cache_dir = {{ gitlab_runner.cache_dir|default("") | to_json }}'
     state: "{{ 'present' if gitlab_runner.cache_dir is defined else 'absent' }}"
-    insertafter: '^\s*executor ='
-    backrefs: no
-  check_mode: no
+    insertafter: ^\s*executor =
+    backrefs: false
+  check_mode: false
   notify: restart_gitlab_runner_windows
 
 - name: (Windows) Remove empty lines

@@ -15,7 +15,7 @@
     state: directory
     suffix: gitlab-runner-config
   register: temp_runner_config_dir
-  check_mode: no
+  check_mode: false
   changed_when: false
 
 - name: Write config section for each runner
@@ -32,9 +32,9 @@
   assemble:
     src: "{{ temp_runner_config_dir.path }}"
     dest: "{{ gitlab_runner_config_file }}"
-    delimiter: '[[runners]]\n'
-    backup: yes
+    delimiter: "[[runners]]\\n"
+    backup: true
     validate: "{{ gitlab_runner_executable }} verify -c %s"
-    mode: 0600
+    mode: "0600"
   become: "{{ gitlab_runner_system_mode }}"
   diff: "{{ gitlab_runner_show_config_diff|bool }}"

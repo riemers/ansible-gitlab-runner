@@ -3,16 +3,16 @@
   tempfile:
     state: file
     path: "{{ temp_runner_config_dir.path }}"
-    prefix: "gitlab-runner.{{ runner_config_index }}."
+    prefix: gitlab-runner.{{ runner_config_index }}.
   register: temp_runner_config
-  check_mode: no
+  check_mode: false
   changed_when: false
 
 - name: "{{ conf_name_prefix }} Isolate runner configuration"
   copy:
     dest: "{{ temp_runner_config.path }}"
     content: "{{ runner_config }}"
-  check_mode: no
+  check_mode: false
   changed_when: false
 
 - include_tasks: update-config-runner.yml

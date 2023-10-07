@@ -1,4 +1,4 @@
-
+---
 - name: Get the names of all configured runner executors
   set_fact:
     local_gitlab_executor_names: "{{ gitlab_runner_runners | map(attribute='name') | list }}"

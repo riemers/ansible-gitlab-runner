@@ -1,7 +1,6 @@
 ---
-
 - name: Accept gitlab server self signed cert as valid CA
-  shell: "openssl s_client -connect {{gitlab_server_ip}}:443 -showcerts </dev/null 2>/dev/null | sed -e '/-----BEGIN/,/-----END/!d' | tee {{tls_ca_file}} >/dev/null"
+  shell: openssl s_client -connect {{gitlab_server_ip}}:443 -showcerts </dev/null 2>/dev/null | sed -e '/-----BEGIN/,/-----END/!d' | tee {{tls_ca_file}} >/dev/null
   when: force_accept_gitlab_server_self_signed
 
 - name: Update CA bundle with self signe cert of the gitlab server
@@ -138,7 +137,7 @@
           {% if gitlab_runner.ssh_password is defined %}
           --ssh-password '{{ gitlab_runner.ssh_password|hash("sha1") }}'
           {% endif %}
-        dest: '{{ gitlab_runner_config_file_location }}/last-runner-config-{{ actual_gitlab_runner_name }}'
+        dest: "{{ gitlab_runner_config_file_location }}/last-runner-config-{{ actual_gitlab_runner_name }}"
       register: runner_config_state
 
     - import_tasks: unregister-runner.yml
@@ -159,7 +158,7 @@
     {% if gitlab_runner.ssh_password is defined %}
     --ssh-password '{{ gitlab_runner.ssh_password }}'
     {% endif %}
-  when: 
+  when:
     - actual_gitlab_runner_name not in registered_gitlab_runner_names
     - gitlab_runner.state|default('present') == 'present'
   no_log: true

@@ -1,12 +1,11 @@
 ---
-
 - name: List configured runners as json
   win_command: "{{ gitlab_runner_executable }} --log-format json list"
   args:
     chdir: "{{ gitlab_runner_config_file_location }}"
   register: registered_runners_json_result
-  changed_when: False
-  check_mode: no
+  changed_when: false
+  check_mode: false
 
 - name: Initialze runner list
   set_fact:

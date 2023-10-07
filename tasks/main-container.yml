@@ -12,13 +12,13 @@
       - type: bind
         source: "{{ gitlab_runner_container_mount_path }}"
         target: /etc/gitlab-runner
-    cleanup: yes
-    interactive: yes
-    tty: yes
-    detach: no
+    cleanup: true
+    interactive: true
+    tty: true
+    detach: false
   register: verified_runners
   changed_when: '"Updated " in verified_runners.container.Output'
-  check_mode: no
+  check_mode: false
 
 - import_tasks: list-configured-runners-container.yml
 
@@ -49,10 +49,10 @@
     image: "{{ gitlab_runner_container_image }}:{{ gitlab_runner_container_tag }}"
     restart_policy: "{{ gitlab_runner_container_restart_policy }}"
     mounts:
-    - type: bind
-      source: "{{ gitlab_runner_container_mount_path }}"
-      target: /etc/gitlab-runner
-    - type: bind
-      source: /var/run/docker.sock
-      target: /var/run/docker.sock
+      - type: bind
+        source: "{{ gitlab_runner_container_mount_path }}"
+        target: /etc/gitlab-runner
+      - type: bind
+        source: /var/run/docker.sock
+        target: /var/run/docker.sock
     network_mode: "{{ gitlab_runner_container_network }}"

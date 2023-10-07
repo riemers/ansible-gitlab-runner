@@ -1,935 +1,932 @@
 ---
-- name:  "{{ runn_name_prefix }} Set concurrent limit option"
+- name: "{{ runn_name_prefix }} Set concurrent limit option"
   lineinfile:
     dest: "{{ temp_runner_config.path }}"
-    regexp: '^\s*limit ='
-    line: '  limit = {{ gitlab_runner.concurrent_specific|default(0) }}'
+    regexp: ^\s*limit =
+    line: "  limit = {{ gitlab_runner.concurrent_specific|default(0) }}"
     state: present
-    insertafter: '^\s*name ='
-    backrefs: no
-  check_mode: no
-  no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
-  notify:
-  - restart_gitlab_runner
-  - restart_gitlab_runner_macos
-
-- name:  "{{ runn_name_prefix }} Set coordinator URL"
-  lineinfile:
-    dest: "{{ temp_runner_config.path }}"
-    regexp: '^\s*url ='
-    line: '  url = {{ gitlab_runner.url|default(gitlab_runner_coordinator_url) | to_json }}'
-    state: present
-    insertafter: '^\s*limit ='
-    backrefs: no
-  check_mode: no
-  no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
-  notify:
-  - restart_gitlab_runner
-  - restart_gitlab_runner_macos
-
-- name:  "{{ runn_name_prefix }} Set clone URL"
-  lineinfile:
-    dest: "{{ temp_runner_config.path }}"
-    regexp: '^\s*clone_url ='
-    line: '  clone_url = {{ gitlab_runner.clone_url | to_json }}'
-    state: present
-    insertafter: '^\s*url ='
-    backrefs: no
-  check_mode: no
-  no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
-  notify:
-  - restart_gitlab_runner
-  - restart_gitlab_runner_macos
-  when: gitlab_runner.clone_url is defined
-
-- name:  "{{ runn_name_prefix }} Set environment option"
-  lineinfile:
-    dest: "{{ temp_runner_config.path }}"
-    regexp: '^\s*environment ='
-    line: '  environment = {{ gitlab_runner.env_vars|default([]) | to_json }}'
-    state: present
-    insertafter: '^\s*url ='
-    backrefs: no
-  check_mode: no
-  no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
-  notify:
-  - restart_gitlab_runner
-  - restart_gitlab_runner_macos
-
-- name:  "{{ runn_name_prefix }} Set pre_get_sources_script"
-  lineinfile:
-    dest: "{{ temp_runner_config.path }}"
-    regexp: '^\s*pre_get_sources_script ='
-    line: '  pre_get_sources_script = {{ gitlab_runner.pre_get_sources_script | to_json }}'
-    state: present
-    insertafter: '^\s*url ='
-    backrefs: no
-  check_mode: no
-  no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
-  notify:
-  - restart_gitlab_runner
-  - restart_gitlab_runner_macos
-  when: gitlab_runner.pre_get_sources_script is defined
-
-- name:  "{{ runn_name_prefix }} Set post_get_sources_script"
-  lineinfile:
-    dest: "{{ temp_runner_config.path }}"
-    regexp: '^\s*post_get_sources_script ='
-    line: '  post_get_sources_script = {{ gitlab_runner.post_get_sources_script | to_json }}'
-    state: present
-    insertafter: '^\s*url ='
-    backrefs: no
-  check_mode: no
-  notify:
-  - restart_gitlab_runner
-  - restart_gitlab_runner_macos
-  when: gitlab_runner.post_get_sources_script is defined
-
-- name:  "{{ runn_name_prefix }} Set pre_build_script"
-  lineinfile:
-    dest: "{{ temp_runner_config.path }}"
-    regexp: '^\s*pre_build_script ='
-    line: '  pre_build_script = {{ gitlab_runner.pre_build_script | to_json }}'
-    state: present
-    insertafter: '^\s*url ='
-    backrefs: no
-  check_mode: no
-  no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
-  notify:
-  - restart_gitlab_runner
-  - restart_gitlab_runner_macos
-  when: gitlab_runner.pre_build_script is defined
-
-- name: "{{ runn_name_prefix }} Set tls_ca_file"
-  lineinfile:
-    dest: "{{ temp_runner_config.path }}"
-    regexp: '^\s*tls-ca-file ='
-    line: '  tls-ca-file = {{ gitlab_runner.tls_ca_file | to_json }}'
-    state: present
-    insertafter: '^\s*url ='
-    backrefs: no
-  check_mode: no
-  no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
-  notify:
-  - restart_gitlab_runner
-  - restart_gitlab_runner_macos
-  when: gitlab_runner.tls_ca_file is defined
-
-- name:  "{{ runn_name_prefix }} Set post_build_script"
-  lineinfile:
-    dest: "{{ temp_runner_config.path }}"
-    regexp: '^\s*post_build_script ='
-    line: '  post_build_script = {{ gitlab_runner.post_build_script | to_json }}'
-    state: present
-    insertafter: '^\s*url ='
-    backrefs: no
-  check_mode: no
-  no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
-  notify:
-  - restart_gitlab_runner
-  - restart_gitlab_runner_macos
-  when: gitlab_runner.post_build_script is defined
-
-- name:  "{{ runn_name_prefix }} Set runner executor option"
-  lineinfile:
-    dest: "{{ temp_runner_config.path }}"
-    regexp: '^\s*executor ='
-    line: '  executor = {{ gitlab_runner.executor|default("shell") | to_json }}'
-    state: present
-    insertafter: '^\s*url ='
-    backrefs: no
-  check_mode: no
-  no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
-  notify:
-  - restart_gitlab_runner
-  - restart_gitlab_runner_macos
-
-- name:  "{{ runn_name_prefix }} Set runner shell option"
-  lineinfile:
-    dest: "{{ temp_runner_config.path }}"
-    regexp: '^\s*shell ='
-    line: '  shell = {{ gitlab_runner.shell|default("") | to_json }}'
-    state: "{{ 'present' if gitlab_runner.shell is defined else 'absent' }}"
-    insertafter: '^\s*executor ='
-    backrefs: no
-  check_mode: no
-  no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
-  notify:
-  - restart_gitlab_runner
-  - restart_gitlab_runner_macos
-
-- name:  "{{ runn_name_prefix }} Set runner executor section"
-  lineinfile:
-    dest: "{{ temp_runner_config.path }}"
-    regexp: '^\s*\[runners\.{{ gitlab_runner.executor|default("shell") }}\]'
-    line: '  [runners.{{ gitlab_runner.executor|replace("docker+machine","machine")|default("shell") }}]'
-    state: "{{ 'absent' if (gitlab_runner.executor|default('shell')) == 'shell' else 'present' }}"
-    insertafter: '^\s*executor ='
-    backrefs: no
-  check_mode: no
-  no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
-  notify:
-  - restart_gitlab_runner
-  - restart_gitlab_runner_macos
-
-- name:  "{{ runn_name_prefix }} Set output_limit option"
-  lineinfile:
-    dest: "{{ temp_runner_config.path }}"
-    regexp: '^\s*output_limit ='
-    line: '  output_limit = {{ gitlab_runner.output_limit|default(4096) }}'
-    state: present
-    insertafter: '^\s*executor ='
-    backrefs: no
-  check_mode: no
-  no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
-  notify:
-  - restart_gitlab_runner
-  - restart_gitlab_runner_macos
-
-
-#### [runners.docker] section ####
-- name:  "{{ runn_name_prefix }} Set runner docker image option"
-  lineinfile:
-    dest: "{{ temp_runner_config.path }}"
-    regexp: '^\s*image ='
-    line: '    image = {{ gitlab_runner.docker_image|default("") | to_json }}'
-    state: "{{ 'present' if gitlab_runner.docker_image is defined else 'absent' }}"
-    insertafter: '^\s*\[runners\.docker\]'
-    backrefs: no
-  check_mode: no
-  no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
-  notify:
-  - restart_gitlab_runner
-  - restart_gitlab_runner_macos
-
-- name:  "{{ runn_name_prefix }} Set docker helper image option"
-  lineinfile:
-    dest: "{{ temp_runner_config.path }}"
-    regexp: '^\s*helper_image ='
-    line: '    helper_image = {{ gitlab_runner.docker_helper_image|default("") | to_json }}'
-    state: "{{ 'present' if gitlab_runner.docker_helper_image is defined else 'absent' }}"
-    insertafter: '^\s*\[runners\.docker\]'
-    backrefs: no
-  check_mode: no
-  no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
-  notify:
-  - restart_gitlab_runner
-  - restart_gitlab_runner_macos
-
-- name:  "{{ runn_name_prefix }} Set docker privileged option"
-  lineinfile:
-    dest: "{{ temp_runner_config.path }}"
-    regexp: '^\s*privileged ='
-    line: '    privileged = {{ gitlab_runner.docker_privileged|default(false) | lower }}'
-    state: "{{ 'present' if gitlab_runner.docker_privileged is defined else 'absent' }}"
-    insertafter: '^\s*\[runners\.docker\]'
-    backrefs: no
-  check_mode: no
-  no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
-  notify:
-  - restart_gitlab_runner
-  - restart_gitlab_runner_macos
-
-- name:  "{{ runn_name_prefix }} Set docker wait_for_services_timeout option"
-  lineinfile:
-    dest: "{{ temp_runner_config.path }}"
-    regexp: '^\s*wait_for_services_timeout ='
-    line: '    wait_for_services_timeout = {{ gitlab_runner.docker_wait_for_services_timeout|default(30) }}'
-    state: "{{ 'present' if gitlab_runner.docker_wait_for_services_timeout is defined else 'absent' }}"
-    insertafter: '^\s*\[runners\.docker\]'
-    backrefs: no
-  check_mode: no
+    insertafter: ^\s*name =
+    backrefs: false
+  check_mode: false
   no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
   notify:
     - restart_gitlab_runner
     - restart_gitlab_runner_macos
 
-- name:  "{{ runn_name_prefix }} Set docker tlsverify option"
+- name: "{{ runn_name_prefix }} Set coordinator URL"
   lineinfile:
     dest: "{{ temp_runner_config.path }}"
-    regexp: '^\s*tls_verify ='
-    line: '    tls_verify = {{ gitlab_runner.docker_tlsverify|default(false) | lower }}'
-    state: "{{ 'present' if gitlab_runner.docker_tlsverify is defined else 'absent' }}"
-    insertafter: '^\s*\[runners\.docker\]'
-    backrefs: no
-  check_mode: no
+    regexp: ^\s*url =
+    line: "  url = {{ gitlab_runner.url|default(gitlab_runner_coordinator_url) | to_json }}"
+    state: present
+    insertafter: ^\s*limit =
+    backrefs: false
+  check_mode: false
   no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
   notify:
-  - restart_gitlab_runner
-  - restart_gitlab_runner_macos
+    - restart_gitlab_runner
+    - restart_gitlab_runner_macos
+
+- name: "{{ runn_name_prefix }} Set clone URL"
+  lineinfile:
+    dest: "{{ temp_runner_config.path }}"
+    regexp: ^\s*clone_url =
+    line: "  clone_url = {{ gitlab_runner.clone_url | to_json }}"
+    state: present
+    insertafter: ^\s*url =
+    backrefs: false
+  check_mode: false
+  no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
+  notify:
+    - restart_gitlab_runner
+    - restart_gitlab_runner_macos
+  when: gitlab_runner.clone_url is defined
+
+- name: "{{ runn_name_prefix }} Set environment option"
+  lineinfile:
+    dest: "{{ temp_runner_config.path }}"
+    regexp: ^\s*environment =
+    line: "  environment = {{ gitlab_runner.env_vars|default([]) | to_json }}"
+    state: present
+    insertafter: ^\s*url =
+    backrefs: false
+  check_mode: false
+  no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
+  notify:
+    - restart_gitlab_runner
+    - restart_gitlab_runner_macos
+
+- name: "{{ runn_name_prefix }} Set pre_get_sources_script"
+  lineinfile:
+    dest: "{{ temp_runner_config.path }}"
+    regexp: ^\s*pre_get_sources_script =
+    line: "  pre_get_sources_script = {{ gitlab_runner.pre_get_sources_script | to_json }}"
+    state: present
+    insertafter: ^\s*url =
+    backrefs: false
+  check_mode: false
+  no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
+  notify:
+    - restart_gitlab_runner
+    - restart_gitlab_runner_macos
+  when: gitlab_runner.pre_get_sources_script is defined
+
+- name: "{{ runn_name_prefix }} Set post_get_sources_script"
+  lineinfile:
+    dest: "{{ temp_runner_config.path }}"
+    regexp: ^\s*post_get_sources_script =
+    line: "  post_get_sources_script = {{ gitlab_runner.post_get_sources_script | to_json }}"
+    state: present
+    insertafter: ^\s*url =
+    backrefs: false
+  check_mode: false
+  notify:
+    - restart_gitlab_runner
+    - restart_gitlab_runner_macos
+  when: gitlab_runner.post_get_sources_script is defined
+
+- name: "{{ runn_name_prefix }} Set pre_build_script"
+  lineinfile:
+    dest: "{{ temp_runner_config.path }}"
+    regexp: ^\s*pre_build_script =
+    line: "  pre_build_script = {{ gitlab_runner.pre_build_script | to_json }}"
+    state: present
+    insertafter: ^\s*url =
+    backrefs: false
+  check_mode: false
+  no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
+  notify:
+    - restart_gitlab_runner
+    - restart_gitlab_runner_macos
+  when: gitlab_runner.pre_build_script is defined
+
+- name: "{{ runn_name_prefix }} Set tls_ca_file"
+  lineinfile:
+    dest: "{{ temp_runner_config.path }}"
+    regexp: ^\s*tls-ca-file =
+    line: "  tls-ca-file = {{ gitlab_runner.tls_ca_file | to_json }}"
+    state: present
+    insertafter: ^\s*url =
+    backrefs: false
+  check_mode: false
+  no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
+  notify:
+    - restart_gitlab_runner
+    - restart_gitlab_runner_macos
+  when: gitlab_runner.tls_ca_file is defined
+
+- name: "{{ runn_name_prefix }} Set post_build_script"
+  lineinfile:
+    dest: "{{ temp_runner_config.path }}"
+    regexp: ^\s*post_build_script =
+    line: "  post_build_script = {{ gitlab_runner.post_build_script | to_json }}"
+    state: present
+    insertafter: ^\s*url =
+    backrefs: false
+  check_mode: false
+  no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
+  notify:
+    - restart_gitlab_runner
+    - restart_gitlab_runner_macos
+  when: gitlab_runner.post_build_script is defined
+
+- name: "{{ runn_name_prefix }} Set runner executor option"
+  lineinfile:
+    dest: "{{ temp_runner_config.path }}"
+    regexp: ^\s*executor =
+    line: '  executor = {{ gitlab_runner.executor|default("shell") | to_json }}'
+    state: present
+    insertafter: ^\s*url =
+    backrefs: false
+  check_mode: false
+  no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
+  notify:
+    - restart_gitlab_runner
+    - restart_gitlab_runner_macos
+
+- name: "{{ runn_name_prefix }} Set runner shell option"
+  lineinfile:
+    dest: "{{ temp_runner_config.path }}"
+    regexp: ^\s*shell =
+    line: '  shell = {{ gitlab_runner.shell|default("") | to_json }}'
+    state: "{{ 'present' if gitlab_runner.shell is defined else 'absent' }}"
+    insertafter: ^\s*executor =
+    backrefs: false
+  check_mode: false
+  no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
+  notify:
+    - restart_gitlab_runner
+    - restart_gitlab_runner_macos
+
+- name: "{{ runn_name_prefix }} Set runner executor section"
+  lineinfile:
+    dest: "{{ temp_runner_config.path }}"
+    regexp: ^\s*\[runners\.{{ gitlab_runner.executor|default("shell") }}\]
+    line: '  [runners.{{ gitlab_runner.executor|replace("docker+machine","machine")|default("shell") }}]'
+    state: "{{ 'absent' if (gitlab_runner.executor|default('shell')) == 'shell' else 'present' }}"
+    insertafter: ^\s*executor =
+    backrefs: false
+  check_mode: false
+  no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
+  notify:
+    - restart_gitlab_runner
+    - restart_gitlab_runner_macos
+
+- name: "{{ runn_name_prefix }} Set output_limit option"
+  lineinfile:
+    dest: "{{ temp_runner_config.path }}"
+    regexp: ^\s*output_limit =
+    line: "  output_limit = {{ gitlab_runner.output_limit|default(4096) }}"
+    state: present
+    insertafter: ^\s*executor =
+    backrefs: false
+  check_mode: false
+  no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
+  notify:
+    - restart_gitlab_runner
+    - restart_gitlab_runner_macos
+
+#### [runners.docker] section ####
+- name: "{{ runn_name_prefix }} Set runner docker image option"
+  lineinfile:
+    dest: "{{ temp_runner_config.path }}"
+    regexp: ^\s*image =
+    line: '    image = {{ gitlab_runner.docker_image|default("") | to_json }}'
+    state: "{{ 'present' if gitlab_runner.docker_image is defined else 'absent' }}"
+    insertafter: ^\s*\[runners\.docker\]
+    backrefs: false
+  check_mode: false
+  no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
+  notify:
+    - restart_gitlab_runner
+    - restart_gitlab_runner_macos
+
+- name: "{{ runn_name_prefix }} Set docker helper image option"
+  lineinfile:
+    dest: "{{ temp_runner_config.path }}"
+    regexp: ^\s*helper_image =
+    line: '    helper_image = {{ gitlab_runner.docker_helper_image|default("") | to_json }}'
+    state: "{{ 'present' if gitlab_runner.docker_helper_image is defined else 'absent' }}"
+    insertafter: ^\s*\[runners\.docker\]
+    backrefs: false
+  check_mode: false
+  no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
+  notify:
+    - restart_gitlab_runner
+    - restart_gitlab_runner_macos
+
+- name: "{{ runn_name_prefix }} Set docker privileged option"
+  lineinfile:
+    dest: "{{ temp_runner_config.path }}"
+    regexp: ^\s*privileged =
+    line: "    privileged = {{ gitlab_runner.docker_privileged|default(false) | lower }}"
+    state: "{{ 'present' if gitlab_runner.docker_privileged is defined else 'absent' }}"
+    insertafter: ^\s*\[runners\.docker\]
+    backrefs: false
+  check_mode: false
+  no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
+  notify:
+    - restart_gitlab_runner
+    - restart_gitlab_runner_macos
+
+- name: "{{ runn_name_prefix }} Set docker wait_for_services_timeout option"
+  lineinfile:
+    dest: "{{ temp_runner_config.path }}"
+    regexp: ^\s*wait_for_services_timeout =
+    line: "    wait_for_services_timeout = {{ gitlab_runner.docker_wait_for_services_timeout|default(30) }}"
+    state: "{{ 'present' if gitlab_runner.docker_wait_for_services_timeout is defined else 'absent' }}"
+    insertafter: ^\s*\[runners\.docker\]
+    backrefs: false
+  check_mode: false
+  no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
+  notify:
+    - restart_gitlab_runner
+    - restart_gitlab_runner_macos
+
+- name: "{{ runn_name_prefix }} Set docker tlsverify option"
+  lineinfile:
+    dest: "{{ temp_runner_config.path }}"
+    regexp: ^\s*tls_verify =
+    line: "    tls_verify = {{ gitlab_runner.docker_tlsverify|default(false) | lower }}"
+    state: "{{ 'present' if gitlab_runner.docker_tlsverify is defined else 'absent' }}"
+    insertafter: ^\s*\[runners\.docker\]
+    backrefs: false
+  check_mode: false
+  no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
+  notify:
+    - restart_gitlab_runner
+    - restart_gitlab_runner_macos
 
 - name: "{{ runn_name_prefix }} Set docker shm_size option"
   lineinfile:
     dest: "{{ temp_runner_config.path }}"
-    regexp: '^\s*shm_size ='
-    line: '    shm_size = {{ gitlab_runner.docker_shm_size|default(false) | lower }}'
+    regexp: ^\s*shm_size =
+    line: "    shm_size = {{ gitlab_runner.docker_shm_size|default(false) | lower }}"
     state: "{{ 'present' if gitlab_runner.docker_shm_size is defined else 'absent' }}"
-    insertafter: '^\s*\[runners\.docker\]'
-    backrefs: no
-  check_mode: no
+    insertafter: ^\s*\[runners\.docker\]
+    backrefs: false
+  check_mode: false
   no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
   notify:
-  - restart_gitlab_runner
-  - restart_gitlab_runner_macos
+    - restart_gitlab_runner
+    - restart_gitlab_runner_macos
 
-- name:  "{{ runn_name_prefix }} Set docker disable_cache option"
+- name: "{{ runn_name_prefix }} Set docker disable_cache option"
   lineinfile:
     dest: "{{ temp_runner_config.path }}"
-    regexp: '^\s*disable_cache ='
-    line: '    disable_cache = {{ gitlab_runner.docker_disable_cache|default(false) | lower }}'
+    regexp: ^\s*disable_cache =
+    line: "    disable_cache = {{ gitlab_runner.docker_disable_cache|default(false) | lower }}"
     state: "{{ 'present' if gitlab_runner.docker_disable_cache is defined else 'absent' }}"
-    insertafter: '^\s*\[runners\.docker\]'
-    backrefs: no
-  check_mode: no
+    insertafter: ^\s*\[runners\.docker\]
+    backrefs: false
+  check_mode: false
   no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
   notify:
-  - restart_gitlab_runner
-  - restart_gitlab_runner_macos
+    - restart_gitlab_runner
+    - restart_gitlab_runner_macos
 
-- name:  "{{ runn_name_prefix }} Set docker DNS option"
+- name: "{{ runn_name_prefix }} Set docker DNS option"
   lineinfile:
     dest: "{{ temp_runner_config.path }}"
-    regexp: '^\s*dns ='
-    line: '    dns = {{ gitlab_runner.docker_dns|default(false) | to_json }}'
+    regexp: ^\s*dns =
+    line: "    dns = {{ gitlab_runner.docker_dns|default(false) | to_json }}"
     state: "{{ 'present' if gitlab_runner.docker_dns is defined else 'absent' }}"
-    insertafter: '^\s*\[runners\.docker\]'
-    backrefs: no
-  check_mode: no
+    insertafter: ^\s*\[runners\.docker\]
+    backrefs: false
+  check_mode: false
   no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
   notify:
-  - restart_gitlab_runner
-  - restart_gitlab_runner_macos
+    - restart_gitlab_runner
+    - restart_gitlab_runner_macos
 
-- name:  "{{ runn_name_prefix }} Set docker DNS search option"
+- name: "{{ runn_name_prefix }} Set docker DNS search option"
   lineinfile:
     dest: "{{ temp_runner_config.path }}"
-    regexp: '^\s*dns_search ='
-    line: '    dns_search = {{ gitlab_runner.docker_dns_search|default(false) | to_json }}'
+    regexp: ^\s*dns_search =
+    line: "    dns_search = {{ gitlab_runner.docker_dns_search|default(false) | to_json }}"
     state: "{{ 'present' if gitlab_runner.docker_dns_search is defined else 'absent' }}"
-    insertafter: '^\s*\[runners\.docker\]'
-    backrefs: no
-  check_mode: no
+    insertafter: ^\s*\[runners\.docker\]
+    backrefs: false
+  check_mode: false
   no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
   notify:
-  - restart_gitlab_runner
-  - restart_gitlab_runner_macos
+    - restart_gitlab_runner
+    - restart_gitlab_runner_macos
 
-- name:  "{{ runn_name_prefix }} Set docker pull_policy option"
+- name: "{{ runn_name_prefix }} Set docker pull_policy option"
   lineinfile:
     dest: "{{ temp_runner_config.path }}"
-    regexp: '^\s*pull_policy ='
-    line: '    pull_policy = {{ gitlab_runner.docker_pull_policy|default([])|to_json }}'
+    regexp: ^\s*pull_policy =
+    line: "    pull_policy = {{ gitlab_runner.docker_pull_policy|default([])|to_json }}"
     state: "{{ 'present' if gitlab_runner.docker_pull_policy is defined else 'absent' }}"
-    insertafter: '^\s*\[runners\.docker\]'
-    backrefs: no
-  check_mode: no
+    insertafter: ^\s*\[runners\.docker\]
+    backrefs: false
+  check_mode: false
   no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
   notify:
-  - restart_gitlab_runner
-  - restart_gitlab_runner_macos
+    - restart_gitlab_runner
+    - restart_gitlab_runner_macos
 
-- name:  "{{ runn_name_prefix }} Set docker volumes option"
+- name: "{{ runn_name_prefix }} Set docker volumes option"
   lineinfile:
     dest: "{{ temp_runner_config.path }}"
-    regexp: '^\s*volumes ='
-    line: '    volumes = {{ gitlab_runner.docker_volumes|default([])|to_json }}'
+    regexp: ^\s*volumes =
+    line: "    volumes = {{ gitlab_runner.docker_volumes|default([])|to_json }}"
     state: "{{ 'present' if gitlab_runner.docker_volumes is defined else 'absent' }}"
-    insertafter: '^\s*\[runners\.docker\]'
-    backrefs: no
-  check_mode: no
+    insertafter: ^\s*\[runners\.docker\]
+    backrefs: false
+  check_mode: false
   no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
   notify:
-  - restart_gitlab_runner
-  - restart_gitlab_runner_macos
+    - restart_gitlab_runner
+    - restart_gitlab_runner_macos
 
-- name:  "{{ runn_name_prefix }} Set docker devices option"
+- name: "{{ runn_name_prefix }} Set docker devices option"
   lineinfile:
     dest: "{{ temp_runner_config.path }}"
-    regexp: '^\s*devices ='
-    line: '    devices = {{ gitlab_runner.docker_devices|default([])|to_json }}'
+    regexp: ^\s*devices =
+    line: "    devices = {{ gitlab_runner.docker_devices|default([])|to_json }}"
     state: "{{ 'present' if gitlab_runner.docker_devices is defined else 'absent' }}"
-    insertafter: '^\s*\[runners\.docker\]'
-    backrefs: no
-  check_mode: no
+    insertafter: ^\s*\[runners\.docker\]
+    backrefs: false
+  check_mode: false
   no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
   notify:
-  - restart_gitlab_runner
-  - restart_gitlab_runner_macos
+    - restart_gitlab_runner
+    - restart_gitlab_runner_macos
 
-- name:  "{{ runn_name_prefix }} Set runner docker network option"
+- name: "{{ runn_name_prefix }} Set runner docker network option"
   lineinfile:
     dest: "{{ temp_runner_config.path }}"
-    regexp: '^\s*network_mode ='
+    regexp: ^\s*network_mode =
     line: '    network_mode = {{ gitlab_runner.docker_network_mode|default("bridge") | to_json }}'
     state: "{{ 'present' if gitlab_runner.docker_network_mode is defined else 'absent' }}"
-    insertafter: '^\s*\[runners\.docker\]'
-    backrefs: no
-  check_mode: no
+    insertafter: ^\s*\[runners\.docker\]
+    backrefs: false
+  check_mode: false
   no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
   notify:
-  - restart_gitlab_runner
-  - restart_gitlab_runner_macos
+    - restart_gitlab_runner
+    - restart_gitlab_runner_macos
 
-- name:  "{{ runn_name_prefix }} Set tls-cert-file option"
+- name: "{{ runn_name_prefix }} Set tls-cert-file option"
   lineinfile:
     dest: "{{ temp_runner_config.path }}"
-    regexp: '^\s*tls-cert-file ='
-    line: '  tls-cert-file = {{ gitlab_runner.tls_cert_file|default([]) | to_json }}'
+    regexp: ^\s*tls-cert-file =
+    line: "  tls-cert-file = {{ gitlab_runner.tls_cert_file|default([]) | to_json }}"
     state: "{{ 'present' if gitlab_runner.tls_cert_file is defined else 'absent' }}"
-    insertafter: '^\s*url ='
-    backrefs: no
-  check_mode: no
+    insertafter: ^\s*url =
+    backrefs: false
+  check_mode: false
   no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
   notify:
-  - restart_gitlab_runner
-  - restart_gitlab_runner_macos
+    - restart_gitlab_runner
+    - restart_gitlab_runner_macos
 
-- name:  "{{ runn_name_prefix }} Set tls-key-file option"
+- name: "{{ runn_name_prefix }} Set tls-key-file option"
   lineinfile:
     dest: "{{ temp_runner_config.path }}"
-    regexp: '^\s*tls-key-file ='
-    line: '  tls-key-file = {{ gitlab_runner.tls_key_file|default([]) | to_json }}'
+    regexp: ^\s*tls-key-file =
+    line: "  tls-key-file = {{ gitlab_runner.tls_key_file|default([]) | to_json }}"
     state: "{{ 'present' if gitlab_runner.tls_key_file is defined else 'absent' }}"
-    insertafter: '^\s*url ='
-    backrefs: no
-  check_mode: no
+    insertafter: ^\s*url =
+    backrefs: false
+  check_mode: false
   no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
   notify:
-  - restart_gitlab_runner
-  - restart_gitlab_runner_macos
+    - restart_gitlab_runner
+    - restart_gitlab_runner_macos
 
 #### [[runners.docker.services]] section ####
-- name:  "{{ runn_name_prefix }} Set additional services"
+- name: "{{ runn_name_prefix }} Set additional services"
   blockinfile:
     dest: "{{ temp_runner_config.path }}"
     content: "{{ lookup('template', 'config.runners.docker.services.j2') if gitlab_runner.docker_services is defined }}"
     state: "{{ 'present' if gitlab_runner.docker_services is defined else 'absent' }}"
     marker: "# {mark} runners.docker.services"
     insertafter: EOF
-  check_mode: no
+  check_mode: false
   no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
   notify:
-  - restart_gitlab_runner
-  - restart_gitlab_runner_macos
+    - restart_gitlab_runner
+    - restart_gitlab_runner_macos
 
 #### [runners.custom_build_dir] section #####
-- name:  "{{ runn_name_prefix }} Set custom_build_dir section"
+- name: "{{ runn_name_prefix }} Set custom_build_dir section"
   lineinfile:
     dest: "{{ temp_runner_config.path }}"
-    regexp: '^\s*\[runners\.custom_build_dir\]'
-    line: '  [runners.custom_build_dir]'
+    regexp: ^\s*\[runners\.custom_build_dir\]
+    line: "  [runners.custom_build_dir]"
     state: "{{ 'present' if gitlab_runner.custom_build_dir_enabled is defined else 'absent' }}"
     insertafter: EOF
-    backrefs: no
-  check_mode: no
+    backrefs: false
+  check_mode: false
   no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
   notify:
-  - restart_gitlab_runner
-  - restart_gitlab_runner_macos
+    - restart_gitlab_runner
+    - restart_gitlab_runner_macos
 
-- name:  "{{ runn_name_prefix }} Set docker custom_build_dir-enabled option"
+- name: "{{ runn_name_prefix }} Set docker custom_build_dir-enabled option"
   lineinfile:
     dest: "{{ temp_runner_config.path }}"
-    regexp: '^\s*enabled ='
-    line: '    enabled = {{ gitlab_runner.custom_build_dir_enabled|default(false) | lower }}'
+    regexp: ^\s*enabled =
+    line: "    enabled = {{ gitlab_runner.custom_build_dir_enabled|default(false) | lower }}"
     state: "{{ 'present' if gitlab_runner.custom_build_dir_enabled is defined else 'absent' }}"
-    insertafter: '^\s*\[runners\.custom_build_dir\]'
-    backrefs: no
-  check_mode: no
+    insertafter: ^\s*\[runners\.custom_build_dir\]
+    backrefs: false
+  check_mode: false
   no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
   notify:
-  - restart_gitlab_runner
-  - restart_gitlab_runner_macos
+    - restart_gitlab_runner
+    - restart_gitlab_runner_macos
 
 #### [runners.cache] section ####
-- name:  "{{ runn_name_prefix }} Set cache section"
+- name: "{{ runn_name_prefix }} Set cache section"
   lineinfile:
     dest: "{{ temp_runner_config.path }}"
-    regexp: '^\s*\[runners\.cache\]'
-    line: '  [runners.cache]'
+    regexp: ^\s*\[runners\.cache\]
+    line: "  [runners.cache]"
     state: present
     insertafter: EOF
-    backrefs: no
-  check_mode: no
-  no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
-  notify:
-  - restart_gitlab_runner
-  - restart_gitlab_runner_macos
-
-- name:  "{{ runn_name_prefix }} Set cache s3 section"
-  lineinfile:
-    dest: "{{ temp_runner_config.path }}"
-    regexp: '^\s*\[runners\.cache\.s3\]'
-    line: '    [runners.cache.s3]'
-    state: "{{ 'present' if gitlab_runner.cache_s3_bucket_name is defined else 'absent' }}"
-    insertafter: '^\s*\[runners\.cache\]'
-    backrefs: no
-  check_mode: no
-  no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
-  notify:
-  - restart_gitlab_runner
-  - restart_gitlab_runner_macos
-
-- name:  "{{ runn_name_prefix }} Set cache gcs section"
-  lineinfile:
-    dest: "{{ temp_runner_config.path }}"
-    regexp: '^\s*\[runners\.cache\.gcs\]'
-    line: '    [runners.cache.gcs]'
-    state: "{{ 'present' if gitlab_runner.cache_gcs_bucket_name is defined else 'absent' }}"
-    insertafter: '^\s*\[runners\.cache\]'
-    backrefs: no
-  check_mode: no
-  no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
-  notify:
-  - restart_gitlab_runner
-  - restart_gitlab_runner_macos
-
-- name:  "{{ runn_name_prefix }} Set cache azure section"
-  lineinfile:
-    dest: "{{ temp_runner_config.path }}"
-    regexp: '^\s*\[runners\.cache\.azure\]'
-    line: '    [runners.cache.azure]'
-    state: "{{ 'present' if gitlab_runner.cache_azure_account_name is defined else 'absent' }}"
-    insertafter: '^\s*\[runners\.cache\]'
-    backrefs: no
-  check_mode: no
+    backrefs: false
+  check_mode: false
   no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
   notify:
     - restart_gitlab_runner
     - restart_gitlab_runner_macos
 
-- name:  "{{ runn_name_prefix }} Set cache type option"
+- name: "{{ runn_name_prefix }} Set cache s3 section"
   lineinfile:
     dest: "{{ temp_runner_config.path }}"
-    regexp: '^\s*Type ='
+    regexp: ^\s*\[runners\.cache\.s3\]
+    line: "    [runners.cache.s3]"
+    state: "{{ 'present' if gitlab_runner.cache_s3_bucket_name is defined else 'absent' }}"
+    insertafter: ^\s*\[runners\.cache\]
+    backrefs: false
+  check_mode: false
+  no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
+  notify:
+    - restart_gitlab_runner
+    - restart_gitlab_runner_macos
+
+- name: "{{ runn_name_prefix }} Set cache gcs section"
+  lineinfile:
+    dest: "{{ temp_runner_config.path }}"
+    regexp: ^\s*\[runners\.cache\.gcs\]
+    line: "    [runners.cache.gcs]"
+    state: "{{ 'present' if gitlab_runner.cache_gcs_bucket_name is defined else 'absent' }}"
+    insertafter: ^\s*\[runners\.cache\]
+    backrefs: false
+  check_mode: false
+  no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
+  notify:
+    - restart_gitlab_runner
+    - restart_gitlab_runner_macos
+
+- name: "{{ runn_name_prefix }} Set cache azure section"
+  lineinfile:
+    dest: "{{ temp_runner_config.path }}"
+    regexp: ^\s*\[runners\.cache\.azure\]
+    line: "    [runners.cache.azure]"
+    state: "{{ 'present' if gitlab_runner.cache_azure_account_name is defined else 'absent' }}"
+    insertafter: ^\s*\[runners\.cache\]
+    backrefs: false
+  check_mode: false
+  no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
+  notify:
+    - restart_gitlab_runner
+    - restart_gitlab_runner_macos
+
+- name: "{{ runn_name_prefix }} Set cache type option"
+  lineinfile:
+    dest: "{{ temp_runner_config.path }}"
+    regexp: ^\s*Type =
     line: '    Type = {{ gitlab_runner.cache_type|default("") | to_json }}'
     state: "{{ 'present' if gitlab_runner.cache_type is defined else 'absent' }}"
-    insertafter: '^\s*\[runners\.cache\]'
-    backrefs: no
-  check_mode: no
+    insertafter: ^\s*\[runners\.cache\]
+    backrefs: false
+  check_mode: false
   no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
   notify:
-  - restart_gitlab_runner
-  - restart_gitlab_runner_macos
+    - restart_gitlab_runner
+    - restart_gitlab_runner_macos
 
-- name:  "{{ runn_name_prefix }} Set cache path option"
+- name: "{{ runn_name_prefix }} Set cache path option"
   lineinfile:
     dest: "{{ temp_runner_config.path }}"
-    regexp: '^\s*Path ='
+    regexp: ^\s*Path =
     line: '    Path = {{ gitlab_runner.cache_path|default("") | to_json }}'
     state: "{{ 'present' if gitlab_runner.cache_path is defined else 'absent' }}"
-    insertafter: '^\s*\[runners\.cache\]'
-    backrefs: no
-  check_mode: no
+    insertafter: ^\s*\[runners\.cache\]
+    backrefs: false
+  check_mode: false
   no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
   notify:
-  - restart_gitlab_runner
-  - restart_gitlab_runner_macos
+    - restart_gitlab_runner
+    - restart_gitlab_runner_macos
 
-- name:  "{{ runn_name_prefix }} Set cache shared option"
+- name: "{{ runn_name_prefix }} Set cache shared option"
   lineinfile:
     dest: "{{ temp_runner_config.path }}"
-    regexp: '^\s*Shared ='
+    regexp: ^\s*Shared =
     line: '    Shared = {{ gitlab_runner.cache_shared|default("") | lower }}'
     state: "{{ 'present' if gitlab_runner.cache_shared is defined else 'absent' }}"
-    insertafter: '^\s*\[runners\.cache\]'
-    backrefs: no
-  check_mode: no
+    insertafter: ^\s*\[runners\.cache\]
+    backrefs: false
+  check_mode: false
   no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
   notify:
-  - restart_gitlab_runner
-  - restart_gitlab_runner_macos
-
+    - restart_gitlab_runner
+    - restart_gitlab_runner_macos
 
 #### [runners.cache.s3] section ####
-- name:  "{{ runn_name_prefix }} Set cache s3 server addresss"
+- name: "{{ runn_name_prefix }} Set cache s3 server addresss"
   lineinfile:
     dest: "{{ temp_runner_config.path }}"
-    regexp: '^\s*ServerAddress ='
+    regexp: ^\s*ServerAddress =
     line: '      ServerAddress = {{ gitlab_runner.cache_s3_server_address|default("") | to_json }}'
     state: "{{ 'present' if gitlab_runner.cache_s3_server_address is defined else 'absent' }}"
-    insertafter: '^\s*\[runners\.cache\.s3\]'
-    backrefs: no
-  check_mode: no
+    insertafter: ^\s*\[runners\.cache\.s3\]
+    backrefs: false
+  check_mode: false
   no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
   notify:
-  - restart_gitlab_runner
-  - restart_gitlab_runner_macos
+    - restart_gitlab_runner
+    - restart_gitlab_runner_macos
 
-- name:  "{{ runn_name_prefix }} Set cache s3 access key"
+- name: "{{ runn_name_prefix }} Set cache s3 access key"
   lineinfile:
     dest: "{{ temp_runner_config.path }}"
-    regexp: '^\s*AccessKey ='
+    regexp: ^\s*AccessKey =
     line: '      AccessKey = {{ gitlab_runner.cache_s3_access_key|default("") | to_json }}'
     state: "{{ 'present' if gitlab_runner.cache_s3_access_key is defined else 'absent' }}"
-    insertafter: '^\s*\[runners\.cache\.s3\]'
-    backrefs: no
-  check_mode: no
+    insertafter: ^\s*\[runners\.cache\.s3\]
+    backrefs: false
+  check_mode: false
   no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
   notify:
-  - restart_gitlab_runner
-  - restart_gitlab_runner_macos
+    - restart_gitlab_runner
+    - restart_gitlab_runner_macos
 
-- name:  "{{ runn_name_prefix }} Set cache s3 secret key"
+- name: "{{ runn_name_prefix }} Set cache s3 secret key"
   lineinfile:
     dest: "{{ temp_runner_config.path }}"
-    regexp: '^\s*SecretKey ='
+    regexp: ^\s*SecretKey =
     line: '      SecretKey = {{ gitlab_runner.cache_s3_secret_key|default("") | to_json }}'
     state: "{{ 'present' if gitlab_runner.cache_s3_secret_key is defined else 'absent' }}"
-    insertafter: '^\s*\[runners\.cache\.s3\]'
-    backrefs: no
-  check_mode: no
+    insertafter: ^\s*\[runners\.cache\.s3\]
+    backrefs: false
+  check_mode: false
   no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
   notify:
-  - restart_gitlab_runner
-  - restart_gitlab_runner_macos
+    - restart_gitlab_runner
+    - restart_gitlab_runner_macos
 
-- name:  "{{ runn_name_prefix }} Set cache s3 bucket name option"
+- name: "{{ runn_name_prefix }} Set cache s3 bucket name option"
   lineinfile:
     dest: "{{ temp_runner_config.path }}"
-    regexp: '^\s*BucketName ='
+    regexp: ^\s*BucketName =
     line: '      BucketName = {{ gitlab_runner.cache_s3_bucket_name|default("")  | to_json }}'
     state: "{{ 'present' if gitlab_runner.cache_s3_bucket_name is defined else 'absent' }}"
-    insertafter: '^\s*\[runners\.cache\.s3\]'
-    backrefs: no
-  check_mode: no
+    insertafter: ^\s*\[runners\.cache\.s3\]
+    backrefs: false
+  check_mode: false
   no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
   notify:
-  - restart_gitlab_runner
-  - restart_gitlab_runner_macos
+    - restart_gitlab_runner
+    - restart_gitlab_runner_macos
   when: gitlab_runner.cache_type is defined and gitlab_runner.cache_type == 's3'
 
-- name:  "{{ runn_name_prefix }} Set cache s3 bucket location option"
+- name: "{{ runn_name_prefix }} Set cache s3 bucket location option"
   lineinfile:
     dest: "{{ temp_runner_config.path }}"
-    regexp: '^\s*BucketLocation ='
+    regexp: ^\s*BucketLocation =
     line: '      BucketLocation = {{ gitlab_runner.cache_s3_bucket_location|default("") | to_json }}'
     state: "{{ 'present' if gitlab_runner.cache_s3_bucket_location is defined else 'absent' }}"
-    insertafter: '^\s*\[runners\.cache\.s3\]'
-    backrefs: no
-  check_mode: no
+    insertafter: ^\s*\[runners\.cache\.s3\]
+    backrefs: false
+  check_mode: false
   no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
   notify:
-  - restart_gitlab_runner
-  - restart_gitlab_runner_macos
+    - restart_gitlab_runner
+    - restart_gitlab_runner_macos
 
-- name:  "{{ runn_name_prefix }} Set cache s3 insecure option"
+- name: "{{ runn_name_prefix }} Set cache s3 insecure option"
   lineinfile:
     dest: "{{ temp_runner_config.path }}"
-    regexp: '^\s*Insecure ='
+    regexp: ^\s*Insecure =
     line: '      Insecure = {{ gitlab_runner.cache_s3_insecure|default("") | lower }}'
     state: "{{ 'present' if gitlab_runner.cache_s3_insecure is defined else 'absent' }}"
-    insertafter: '^\s*\[runners\.cache\.s3\]'
-    backrefs: no
-  check_mode: no
+    insertafter: ^\s*\[runners\.cache\.s3\]
+    backrefs: false
+  check_mode: false
   no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
   notify:
-  - restart_gitlab_runner
-  - restart_gitlab_runner_macos
-
+    - restart_gitlab_runner
+    - restart_gitlab_runner_macos
 
 #### [runners.cache.gcs] section ####
-- name:  "{{ runn_name_prefix }} Set cache gcs bucket name"
+- name: "{{ runn_name_prefix }} Set cache gcs bucket name"
   lineinfile:
     dest: "{{ temp_runner_config.path }}"
-    regexp: '^\s*BucketName ='
+    regexp: ^\s*BucketName =
     line: '      BucketName = {{ gitlab_runner.cache_gcs_bucket_name|default("") | to_json }}'
     state: "{{ 'present' if gitlab_runner.cache_gcs_bucket_name is defined else 'absent' }}"
-    insertafter: '^\s*\[runners\.cache\.gcs\]'
-    backrefs: no
-  check_mode: no
+    insertafter: ^\s*\[runners\.cache\.gcs\]
+    backrefs: false
+  check_mode: false
   notify:
-  - restart_gitlab_runner
-  - restart_gitlab_runner_macos
+    - restart_gitlab_runner
+    - restart_gitlab_runner_macos
   when: gitlab_runner.cache_type is defined and gitlab_runner.cache_type == 'gcs'
 
-- name:  "{{ runn_name_prefix }} Set cache gcs credentials file"
+- name: "{{ runn_name_prefix }} Set cache gcs credentials file"
   lineinfile:
     dest: "{{ temp_runner_config.path }}"
-    regexp: '^\s*CredentialsFile ='
+    regexp: ^\s*CredentialsFile =
     line: '      CredentialsFile = {{ gitlab_runner.cache_gcs_credentials_file|default("") | to_json }}'
     state: "{{ 'present' if gitlab_runner.cache_gcs_credentials_file is defined else 'absent' }}"
-    insertafter: '^\s*\[runners\.cache\.gcs\]'
-    backrefs: no
-  check_mode: no
+    insertafter: ^\s*\[runners\.cache\.gcs\]
+    backrefs: false
+  check_mode: false
   no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
   notify:
-  - restart_gitlab_runner
-  - restart_gitlab_runner_macos
+    - restart_gitlab_runner
+    - restart_gitlab_runner_macos
 
-- name:  "{{ runn_name_prefix }} Set cache gcs access id"
+- name: "{{ runn_name_prefix }} Set cache gcs access id"
   lineinfile:
     dest: "{{ temp_runner_config.path }}"
-    regexp: '^\s*AccessID ='
+    regexp: ^\s*AccessID =
     line: '      AccessID = {{ gitlab_runner.cache_gcs_access_id|default("") | to_json }}'
     state: "{{ 'present' if gitlab_runner.cache_gcs_access_id is defined else 'absent' }}"
-    insertafter: '^\s*\[runners\.cache\.gcs\]'
-    backrefs: no
-  check_mode: no
+    insertafter: ^\s*\[runners\.cache\.gcs\]
+    backrefs: false
+  check_mode: false
   no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
   notify:
-  - restart_gitlab_runner
-  - restart_gitlab_runner_macos
+    - restart_gitlab_runner
+    - restart_gitlab_runner_macos
 
-- name:  "{{ runn_name_prefix }} Set cache gcs private key"
+- name: "{{ runn_name_prefix }} Set cache gcs private key"
   lineinfile:
     dest: "{{ temp_runner_config.path }}"
-    regexp: '^\s*PrivateKey ='
+    regexp: ^\s*PrivateKey =
     line: '      PrivateKey = {{ gitlab_runner.cache_gcs_private_key|default("") | to_json }}'
     state: "{{ 'present' if gitlab_runner.cache_gcs_private_key is defined else 'absent' }}"
-    insertafter: '^\s*\[runners\.cache\.gcs\]'
-    backrefs: no
-  check_mode: no
+    insertafter: ^\s*\[runners\.cache\.gcs\]
+    backrefs: false
+  check_mode: false
   no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
   notify:
-  - restart_gitlab_runner
-  - restart_gitlab_runner_macos
+    - restart_gitlab_runner
+    - restart_gitlab_runner_macos
 
 #### [runners.cache.azure] section ####
-- name:  "{{ runn_name_prefix }} Set cache azure account name"
+- name: "{{ runn_name_prefix }} Set cache azure account name"
   lineinfile:
     dest: "{{ temp_runner_config.path }}"
-    regexp: '^\s*AccountName ='
+    regexp: ^\s*AccountName =
     line: '      AccountName = {{ gitlab_runner.cache_azure_account_name|default("") | to_json }}'
     state: "{{ 'present' if gitlab_runner.cache_azure_account_name is defined else 'absent' }}"
-    insertafter: '^\s*\[runners\.cache\.azure\]'
-    backrefs: no
-  check_mode: no
+    insertafter: ^\s*\[runners\.cache\.azure\]
+    backrefs: false
+  check_mode: false
   no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
   notify:
     - restart_gitlab_runner
     - restart_gitlab_runner_macos
 
-- name:  "{{ runn_name_prefix }} Set cache azure account key"
+- name: "{{ runn_name_prefix }} Set cache azure account key"
   lineinfile:
     dest: "{{ temp_runner_config.path }}"
-    regexp: '^\s*AccountKey ='
+    regexp: ^\s*AccountKey =
     line: '      AccountKey = {{ gitlab_runner.cache_azure_account_key|default("") | to_json }}'
     state: "{{ 'present' if gitlab_runner.cache_azure_account_key is defined else 'absent' }}"
-    insertafter: '^\s*\[runners\.cache\.azure\]'
-    backrefs: no
-  check_mode: no
+    insertafter: ^\s*\[runners\.cache\.azure\]
+    backrefs: false
+  check_mode: false
   no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
   notify:
     - restart_gitlab_runner
     - restart_gitlab_runner_macos
 
-- name:  "{{ runn_name_prefix }} Set cache azure container name"
+- name: "{{ runn_name_prefix }} Set cache azure container name"
   lineinfile:
     dest: "{{ temp_runner_config.path }}"
-    regexp: '^\s*ContainerName ='
+    regexp: ^\s*ContainerName =
     line: '      ContainerName = {{ gitlab_runner.cache_azure_container_name|default("") | to_json }}'
     state: "{{ 'present' if gitlab_runner.cache_azure_container_name is defined else 'absent' }}"
-    insertafter: '^\s*\[runners\.cache\.azure\]'
-    backrefs: no
-  check_mode: no
+    insertafter: ^\s*\[runners\.cache\.azure\]
+    backrefs: false
+  check_mode: false
   no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
   notify:
     - restart_gitlab_runner
     - restart_gitlab_runner_macos
 
-- name:  "{{ runn_name_prefix }} Set cache azure storage domain"
+- name: "{{ runn_name_prefix }} Set cache azure storage domain"
   lineinfile:
     dest: "{{ temp_runner_config.path }}"
-    regexp: '^\s*StorageDomain ='
+    regexp: ^\s*StorageDomain =
     line: '      StorageDomain = {{ gitlab_runner.cache_azure_storage_domain|default("") | to_json }}'
     state: "{{ 'present' if gitlab_runner.cache_azure_storage_domain is defined else 'absent' }}"
-    insertafter: '^\s*\[runners\.cache\.azure\]'
-    backrefs: no
-  check_mode: no
+    insertafter: ^\s*\[runners\.cache\.azure\]
+    backrefs: false
+  check_mode: false
   no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
   notify:
     - restart_gitlab_runner
     - restart_gitlab_runner_macos
 
 #### [runners.ssh] section #####
-- name:  "{{ runn_name_prefix }} Set ssh user option"
+- name: "{{ runn_name_prefix }} Set ssh user option"
   lineinfile:
     dest: "{{ temp_runner_config.path }}"
-    regexp: '^\s*user ='
+    regexp: ^\s*user =
     line: '  user = {{ gitlab_runner.ssh_user|default("") | to_json }}'
     state: "{{ 'present' if gitlab_runner.ssh_user is defined else 'absent' }}"
-    insertafter: '^\s*\[runners\.ssh\]'
-    backrefs: no
-  check_mode: no
+    insertafter: ^\s*\[runners\.ssh\]
+    backrefs: false
+  check_mode: false
   no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
   notify:
-  - restart_gitlab_runner
-  - restart_gitlab_runner_macos
+    - restart_gitlab_runner
+    - restart_gitlab_runner_macos
 
-- name:  "{{ runn_name_prefix }} Set ssh host option"
+- name: "{{ runn_name_prefix }} Set ssh host option"
   lineinfile:
     dest: "{{ temp_runner_config.path }}"
-    regexp: '^\s*host ='
+    regexp: ^\s*host =
     line: '  host = {{ gitlab_runner.ssh_host|default("") | to_json }}'
     state: "{{ 'present' if gitlab_runner.ssh_host is defined else 'absent' }}"
-    insertafter: '^\s*\[runners\.ssh\]'
-    backrefs: no
-  check_mode: no
+    insertafter: ^\s*\[runners\.ssh\]
+    backrefs: false
+  check_mode: false
   no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
   notify:
-  - restart_gitlab_runner
-  - restart_gitlab_runner_macos
+    - restart_gitlab_runner
+    - restart_gitlab_runner_macos
 
-- name:  "{{ runn_name_prefix }} Set ssh port option"
+- name: "{{ runn_name_prefix }} Set ssh port option"
   lineinfile:
     dest: "{{ temp_runner_config.path }}"
-    regexp: '^\s*port ='
+    regexp: ^\s*port =
     line: '  port = "{{ gitlab_runner.ssh_port|default("") | to_json }}"'
     state: "{{ 'present' if gitlab_runner.ssh_port is defined else 'absent' }}"
-    insertafter: '^\s*\[runners\.ssh\]'
-    backrefs: no
-  check_mode: no
+    insertafter: ^\s*\[runners\.ssh\]
+    backrefs: false
+  check_mode: false
   no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
   notify:
-  - restart_gitlab_runner
-  - restart_gitlab_runner_macos
+    - restart_gitlab_runner
+    - restart_gitlab_runner_macos
 
-- name:  "{{ runn_name_prefix }} Set ssh password option"
+- name: "{{ runn_name_prefix }} Set ssh password option"
   lineinfile:
     dest: "{{ temp_runner_config.path }}"
-    regexp: '^\s*password ='
+    regexp: ^\s*password =
     line: '  password = {{ gitlab_runner.ssh_password|default("") | to_json }}'
     state: "{{ 'present' if gitlab_runner.ssh_password is defined else 'absent' }}"
-    insertafter: '^\s*\[runners\.ssh\]'
-    backrefs: no
-  check_mode: no
+    insertafter: ^\s*\[runners\.ssh\]
+    backrefs: false
+  check_mode: false
   no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
   notify:
-  - restart_gitlab_runner
-  - restart_gitlab_runner_macos
+    - restart_gitlab_runner
+    - restart_gitlab_runner_macos
 
-- name:  "{{ runn_name_prefix }} Set ssh identity file option"
+- name: "{{ runn_name_prefix }} Set ssh identity file option"
   lineinfile:
     dest: "{{ temp_runner_config.path }}"
-    regexp: '^\s*identity_file ='
+    regexp: ^\s*identity_file =
     line: '  identity_file = {{ gitlab_runner.ssh_identity_file|default("") | to_json }}'
     state: "{{ 'present' if gitlab_runner.ssh_identity_file is defined else 'absent' }}"
-    insertafter: '^\s*\[runners\.ssh\]'
-    backrefs: no
-  check_mode: no
+    insertafter: ^\s*\[runners\.ssh\]
+    backrefs: false
+  check_mode: false
   no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
   notify:
-  - restart_gitlab_runner
-  - restart_gitlab_runner_macos
+    - restart_gitlab_runner
+    - restart_gitlab_runner_macos
 
 #### [runners.virtualbox] section #####
-- name:  "{{ runn_name_prefix }} Set virtualbox base name option"
+- name: "{{ runn_name_prefix }} Set virtualbox base name option"
   lineinfile:
     dest: "{{ temp_runner_config.path }}"
-    regexp: '^\s*base_name ='
-    line: '    base_name = {{ gitlab_runner.virtualbox_base_name | to_json }}'
+    regexp: ^\s*base_name =
+    line: "    base_name = {{ gitlab_runner.virtualbox_base_name | to_json }}"
     state: "{{ 'present' if gitlab_runner.virtualbox_base_name is defined else 'absent' }}"
-    insertafter: '^\s*\[runners\.virtualbox\]'
-    backrefs: no
-  check_mode: no
+    insertafter: ^\s*\[runners\.virtualbox\]
+    backrefs: false
+  check_mode: false
   no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
   when: gitlab_runner.executor == 'virtualbox' and gitlab_runner.virtualbox_base_name is defined
   notify:
-  - restart_gitlab_runner
-  - restart_gitlab_runner_macos
+    - restart_gitlab_runner
+    - restart_gitlab_runner_macos
 
-- name:  "{{ runn_name_prefix }} Set virtualbox base snapshot option"
+- name: "{{ runn_name_prefix }} Set virtualbox base snapshot option"
   lineinfile:
     dest: "{{ temp_runner_config.path }}"
-    regexp: '^\s*base_snapshot ='
-    line: '    base_snapshot = {{ gitlab_runner.virtualbox_base_snapshot | to_json }}'
+    regexp: ^\s*base_snapshot =
+    line: "    base_snapshot = {{ gitlab_runner.virtualbox_base_snapshot | to_json }}"
     state: "{{ 'present' if gitlab_runner.virtualbox_base_snapshot is defined else 'absent' }}"
-    insertafter: '^\s*\[runners\.virtualbox\]'
-    backrefs: no
-  check_mode: no
+    insertafter: ^\s*\[runners\.virtualbox\]
+    backrefs: false
+  check_mode: false
   no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
   when: gitlab_runner.executor == 'virtualbox' and gitlab_runner.virtualbox_base_name is defined
   notify:
-  - restart_gitlab_runner
-  - restart_gitlab_runner_macos
+    - restart_gitlab_runner
+    - restart_gitlab_runner_macos
 
-- name:  "{{ runn_name_prefix }} Set virtualbox base folder option"
+- name: "{{ runn_name_prefix }} Set virtualbox base folder option"
   lineinfile:
     dest: "{{ temp_runner_config.path }}"
-    regexp: '^\s*base_folder ='
-    line: '    base_folder = {{ gitlab_runner.virtualbox_base_folder | to_json }}'
+    regexp: ^\s*base_folder =
+    line: "    base_folder = {{ gitlab_runner.virtualbox_base_folder | to_json }}"
     state: "{{ 'present' if gitlab_runner.virtualbox_base_folder is defined else 'absent' }}"
-    insertafter: '^\s*\[runners\.virtualbox\]'
-    backrefs: no
-  check_mode: no
+    insertafter: ^\s*\[runners\.virtualbox\]
+    backrefs: false
+  check_mode: false
   when: gitlab_runner.executor == 'virtualbox' and gitlab_runner.virtualbox_base_name is defined
   no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
   notify:
-  - restart_gitlab_runner
-  - restart_gitlab_runner_macos
+    - restart_gitlab_runner
+    - restart_gitlab_runner_macos
 
-- name:  "{{ runn_name_prefix }} Set virtualbox disable snapshots option"
+- name: "{{ runn_name_prefix }} Set virtualbox disable snapshots option"
   lineinfile:
     dest: "{{ temp_runner_config.path }}"
-    regexp: '^\s*disable_snapshots ='
-    line: '    disable_snapshots = {{ gitlab_runner.virtualbox_disable_snapshots|default(false) | to_json }}'
+    regexp: ^\s*disable_snapshots =
+    line: "    disable_snapshots = {{ gitlab_runner.virtualbox_disable_snapshots|default(false) | to_json }}"
     state: "{{ 'present' if gitlab_runner.virtualbox_disable_snapshots is defined else 'absent' }}"
-    insertafter: '^\s*\[runners\.virtualbox\]'
-    backrefs: no
-  check_mode: no
+    insertafter: ^\s*\[runners\.virtualbox\]
+    backrefs: false
+  check_mode: false
   no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
   when: gitlab_runner.executor == 'virtualbox' and gitlab_runner.virtualbox_base_name is defined
   notify:
-  - restart_gitlab_runner
-  - restart_gitlab_runner_macos
+    - restart_gitlab_runner
+    - restart_gitlab_runner_macos
 
-- name:  "{{ runn_name_prefix }} Set builds dir file option"
+- name: "{{ runn_name_prefix }} Set builds dir file option"
   lineinfile:
     dest: "{{ temp_runner_config.path }}"
-    regexp: '^\s*builds_dir ='
+    regexp: ^\s*builds_dir =
     line: '  builds_dir = {{ gitlab_runner.builds_dir|default("") | to_json }}'
     state: "{{ 'present' if gitlab_runner.builds_dir is defined else 'absent' }}"
-    insertafter: '^\s*executor ='
-    backrefs: no
-  check_mode: no
+    insertafter: ^\s*executor =
+    backrefs: false
+  check_mode: false
   no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
   notify:
-  - restart_gitlab_runner
-  - restart_gitlab_runner_macos
+    - restart_gitlab_runner
+    - restart_gitlab_runner_macos
 
-- name:  "{{ runn_name_prefix }} Set cache dir file option"
+- name: "{{ runn_name_prefix }} Set cache dir file option"
   lineinfile:
     dest: "{{ temp_runner_config.path }}"
-    regexp: '^\s*cache_dir ='
+    regexp: ^\s*cache_dir =
     line: '  cache_dir = {{ gitlab_runner.cache_dir|default("") | to_json }}'
     state: "{{ 'present' if gitlab_runner.cache_dir is defined else 'absent' }}"
-    insertafter: '^\s*executor ='
-    backrefs: no
-  check_mode: no
+    insertafter: ^\s*executor =
+    backrefs: false
+  check_mode: false
   no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
   notify:
-  - restart_gitlab_runner
-  - restart_gitlab_runner_macos
+    - restart_gitlab_runner
+    - restart_gitlab_runner_macos
 
-- name:  "{{ runn_name_prefix }} Ensure directory permissions"
+- name: "{{ runn_name_prefix }} Ensure directory permissions"
   file:
     dest: "{{ item }}"
     state: directory
     owner: "{{ gitlab_runner_runtime_owner|default(omit) }}"
     group: "{{ gitlab_runner_runtime_group|default(omit) }}"
-    mode: 0770
+    mode: "0770"
     modification_time: preserve
     access_time: preserve
-    recurse: yes
+    recurse: true
   loop:
-    - "{{ gitlab_runner.builds_dir | default(\"\") }}"
-    - "{{ gitlab_runner.cache_dir | default(\"\") }}"
+    - '{{ gitlab_runner.builds_dir | default("") }}'
+    - '{{ gitlab_runner.cache_dir | default("") }}'
   when: item|length
 
-- name:  "{{ runn_name_prefix }} Ensure directory access test"
-  command: "/usr/bin/test -r {{ item }}"
+- name: "{{ runn_name_prefix }} Ensure directory access test"
+  command: /usr/bin/test -r {{ item }}
   loop:
-    - "{{ gitlab_runner.builds_dir | default(\"\") }}"
-    - "{{ gitlab_runner.cache_dir | default(\"\") }}"
+    - '{{ gitlab_runner.builds_dir | default("") }}'
+    - '{{ gitlab_runner.cache_dir | default("") }}'
   when: item|length
-  changed_when: False
-  become: yes
+  changed_when: false
+  become: true
   become_user: "{{ gitlab_runner_runtime_owner|default(omit) }}"
   register: ensure_directory_access
   ignore_errors: true
 
-- name:  "{{ runn_name_prefix }} Ensure directory access fail on error"
+- name: "{{ runn_name_prefix }} Ensure directory access fail on error"
   fail:
     msg: "Error: user gitlab-runner failed to test access to {{ item.item }}. Check parent folder(s) permissions"
   loop: "{{ ensure_directory_access.results }}"

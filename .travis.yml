@@ -59,6 +59,7 @@ jobs:
         - cd ../../
         - wsl ansible-playbook test.yml -i inventory --syntax-check
         # Running tests
-        - wsl ansible-playbook test.yml -i inventory --extra-vars 'ansible_user=ansible ansible_password=Ans1ble_User! ansible_connection=winrm ansible_winrm_server_cert_validation=ignore ansible_ssh_port=5986'
+        - wsl ansible-playbook test.yml -i inventory --extra-vars 'ansible_user=ansible ansible_password=Ans1ble_User! ansible_connection=winrm ansible_winrm_server_cert_validation=ignore
+          ansible_ssh_port=5986'
 notifications:
   webhooks: https://galaxy.ansible.com/api/v1/notifications/
