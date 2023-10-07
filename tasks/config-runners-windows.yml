@@ -17,7 +17,7 @@
     state: directory
     suffix: gitlab-runner-config
   register: temp_runner_config_dir
-  check_mode: no
+  check_mode: false
   changed_when: false
 
 - name: (Windows) Write config section for each runner

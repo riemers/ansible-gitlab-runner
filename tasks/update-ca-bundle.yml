@@ -1,3 +1,4 @@
+---
 - name: install ca package on rhel systems
   yum:
     name: ca-certificates
@@ -8,7 +9,7 @@
   apt:
     name: ca-certificates
     state: present
-    update_cache: yes
+    update_cache: true
   when: ansible_os_family == "Debian"
 
 - name: enable dynamic ca configuration on rhel6

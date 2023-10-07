@@ -1,3 +1,4 @@
+---
 - name: (MacOS) PRE-CHECK GitLab Runner exists
   block:
     - name: (MacOS) Check gitlab-runner executable exists
@@ -12,9 +13,9 @@
     - name: (MacOS) Get existing version
       shell: "{{ gitlab_runner_executable }} --version | awk '/Version: ([\\d\\.]*)/{print $2}'"
       register: existing_version_shell
-      failed_when: no
-      check_mode: no
-      changed_when: no
+      failed_when: false
+      check_mode: false
+      changed_when: false
 
     - name: (MacOS) Set fact -> gitlab_runner_existing_version
       set_fact:
@@ -23,19 +24,19 @@
 - name: (MacOS) Precreate necessary directories for arm64 architecture
   block:
     - name: (MacOS) Precreate gitlab-runner log directory
-      become: yes
+      become: true
       file:
         path: /usr/local/var/log
         state: directory
         owner: "{{ ansible_user_id | string }}"
 
     - name: (MacOS) Precreate {{ gitlab_runner_directory }} directory
-      become: yes
+      become: true
       file:
         mode: "755"
-        owner: "root"
+        owner: root
         path: "{{ gitlab_runner_directory }}"
-        state: "directory"
+        state: directory
 
   when: gitlab_runner_arch == 'arm64'
 
@@ -46,8 +47,8 @@
       get_url:
         url: "{{ gitlab_runner_download_url }}"
         dest: "{{ gitlab_runner_executable }}"
-        force: yes
-        mode: '+x'
+        force: true
+        mode: +x
 
     - name: (MacOS) Install GitLab Runner
       command: "{{ gitlab_runner_executable }} install"
@@ -67,15 +68,15 @@
       get_url:
         url: "{{ gitlab_runner_download_url }}"
         dest: "{{ gitlab_runner_executable }}"
-        force: yes
+        force: true
 
     - name: (MacOS) Setting Permissions for gitlab-runner executable
       file:
         path: "{{ gitlab_runner_executable }}"
         owner: "{{ ansible_user_id | string }}"
         group: "{{ ansible_user_gid | string }}"
-        mode: '+x'
-      become: yes
+        mode: +x
+      become: true
 
     - name: (MacOS) Start GitLab Runner
       command: "{{ gitlab_runner_executable }} start"

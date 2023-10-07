@@ -1,9 +1,9 @@
 ---
 
-gitlab_runner_download_url: 'https://gitlab-runner-downloads.s3.amazonaws.com/{{ gitlab_runner_wanted_tag }}/binaries/gitlab-runner-windows-amd64.exe'
+gitlab_runner_download_url: https://gitlab-runner-downloads.s3.amazonaws.com/{{ gitlab_runner_wanted_tag }}/binaries/gitlab-runner-windows-amd64.exe
 
-gitlab_runner_install_directory: "c:/gitlab-runner/"
+gitlab_runner_install_directory: c:/gitlab-runner/
 gitlab_runner_config_file_location: "{{ gitlab_runner_install_directory }}"
-gitlab_runner_config_file: "{{ gitlab_runner_config_file_location }}/config.toml"  # on Windows
+gitlab_runner_config_file: "{{ gitlab_runner_config_file_location }}/config.toml" # on Windows
 
 gitlab_runner_executable: "{{gitlab_runner_install_directory}}/{{ gitlab_runner_package_name }}.exe"

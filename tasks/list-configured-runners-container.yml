@@ -1,5 +1,4 @@
 ---
-
 - name: List configured runners as json
   docker_container:
     name: "{{ gitlab_runner_container_name }}-list"
@@ -9,13 +8,13 @@
       - type: bind
         source: "{{ gitlab_runner_container_mount_path }}"
         target: /etc/gitlab-runner
-    cleanup: yes
-    interactive: yes
-    tty: yes
-    detach: no
+    cleanup: true
+    interactive: true
+    tty: true
+    detach: false
   register: registered_runners_json_result
-  changed_when: False
-  check_mode: no
+  changed_when: false
+  check_mode: false
 
 - name: Initialze runner list
   set_fact:

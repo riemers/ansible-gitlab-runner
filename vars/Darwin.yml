@@ -2,7 +2,7 @@
 
 gitlab_runner_arch: "{{ (ansible_machine == 'arm64') | ternary('arm64', 'amd64') }}"
 
-gitlab_runner_download_url: 'https://gitlab-runner-downloads.s3.amazonaws.com/{{ gitlab_runner_wanted_tag }}/binaries/gitlab-runner-darwin-{{ gitlab_runner_arch }}'
+gitlab_runner_download_url: https://gitlab-runner-downloads.s3.amazonaws.com/{{ gitlab_runner_wanted_tag }}/binaries/gitlab-runner-darwin-{{ gitlab_runner_arch }}
 
-gitlab_runner_directory: "/usr/local/bin"
+gitlab_runner_directory: /usr/local/bin
 gitlab_runner_executable: "{{ gitlab_runner_directory }}/{{ gitlab_runner_package_name }}"

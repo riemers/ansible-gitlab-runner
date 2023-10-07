@@ -1,25 +1,26 @@
 ---
 galaxy_info:
   author: Erik-jan Riemers
+  namespace: riemers
   description: GitLab Runner
   license: MIT
   min_ansible_version: 2.7
   platforms:
-  - name: EL
-    versions:
-    - all
-  - name: Ubuntu
-    versions:
-    - all
-  - name: Debian
-    version:
-    - all
-  - name: MacOSX
-    versions:
-      - all
-  - name: Windows
-    versions:
-      - all
+    - name: EL
+      versions:
+        - all
+    - name: Ubuntu
+      versions:
+        - all
+    - name: Debian
+      version:
+        - all
+    - name: MacOSX
+      versions:
+        - all
+    - name: Windows
+      versions:
+        - all
   galaxy_tags:
     - gitlab
     - runner

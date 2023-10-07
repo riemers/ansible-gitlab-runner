@@ -1,6 +1,4 @@
-
-
-
+---
 - name: (Container) Unregister runner
   docker_container:
     name: "{{ gitlab_runner_container_name }}-list"
@@ -10,25 +8,23 @@
       - type: bind
         source: "{{ gitlab_runner_container_mount_path }}"
         target: /etc/gitlab-runner
-    cleanup: yes
-    interactive: yes
-    tty: yes
-    detach: no
-  changed_when: False
-  check_mode: no
-  when: 
+    cleanup: true
+    interactive: true
+    tty: true
+    detach: false
+  changed_when: false
+  check_mode: false
+  when:
     - gitlab_install_target_platform == 'container'
 
-
 - name: (Windows) Unregister runner
-  win_command: '{{ gitlab_runner_executable }} unregister --name {{ actual_gitlab_runner_name }}'
+  win_command: "{{ gitlab_runner_executable }} unregister --name {{ actual_gitlab_runner_name }}"
   args:
     chdir: "{{ gitlab_runner_config_file_location }}"
   when:
     - gitlab_install_target_platform == 'windows'
 
-
 - name: Unregister runner
-  ansible.builtin.command: '{{ gitlab_runner_executable }} unregister --name {{ actual_gitlab_runner_name }}'
-  when: 
+  ansible.builtin.command: "{{ gitlab_runner_executable }} unregister --name {{ actual_gitlab_runner_name }}"
+  when:
     - gitlab_install_target_platform == 'unix'

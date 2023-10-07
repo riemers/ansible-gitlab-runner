@@ -1,3 +1,4 @@
+---
 - name: Install GitLab Runner (Debian)
   include_tasks: install-debian.yml
   when: ansible_os_family == 'Debian'
@@ -18,7 +19,7 @@
   command: "{{ gitlab_runner_executable }} verify --delete"
   register: verified_runners
   changed_when: '"Updated " in verified_runners.stderr'
-  check_mode: no
+  check_mode: false
   become: "{{ gitlab_runner_system_mode }}"
 
 - import_tasks: list-configured-runners-unix.yml

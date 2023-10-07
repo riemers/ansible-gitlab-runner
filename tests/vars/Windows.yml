@@ -1,11 +1,12 @@
+---
 gitlab_runner_runners:
-  - name: "Shell Runner"
+  - name: Shell Runner
     tags:
       - windows
       - shell
     executor: shell
     state: present
-  - name: "Shell Bash Runner"
+  - name: Shell Bash Runner
     tags:
       - windows
       - shell
@@ -13,7 +14,7 @@ gitlab_runner_runners:
     executor: shell
     shell: bash
     state: present
-  - name: "Shell Cmd Runner"
+  - name: Shell Cmd Runner
     tags:
       - windows
       - shell
@@ -21,7 +22,7 @@ gitlab_runner_runners:
     executor: shell
     shell: cmd
     state: present
-  - name: "Shell Runner S3 Cache"
+  - name: Shell Runner S3 Cache
     tags:
       - windows
       - shell
@@ -34,15 +35,15 @@ gitlab_runner_runners:
     cache_s3_bucket_name: build-cache-bucket
     cache_s3_insecure: false
     state: present
-  - name: "Docker Runner"
+  - name: Docker Runner
     tags:
       - windows
       - docker
     executor: docker-windows
     state: present
 
-gitlab_runner_listen_address: '0.0.0.0:9001'
+gitlab_runner_listen_address: "0.0.0.0:9001"
 
-run_mock_server: no
-gitlab_runner_coordinator_url: "http://localhost:7070/"
-gitlab_runner_registration_token: ''
+run_mock_server: false
+gitlab_runner_coordinator_url: http://localhost:7070/
+gitlab_runner_registration_token: ""

@@ -1,18 +1,18 @@
 ---
-- name: "(Windows) {{ conf_name_prefix }} Create temporary file"
+- name: (Windows) {{ conf_name_prefix }} Create temporary file
   win_tempfile:
     state: file
     path: "{{ temp_runner_config_dir.path }}"
-    prefix: "gitlab-runner.{{ runner_config_index }}."
+    prefix: gitlab-runner.{{ runner_config_index }}.
   register: temp_runner_config
-  check_mode: no
+  check_mode: false
   changed_when: false
 
-- name: "(Windows) {{ conf_name_prefix }} Isolate runner configuration"
+- name: (Windows) {{ conf_name_prefix }} Isolate runner configuration
   win_copy:
     dest: "{{ temp_runner_config.path }}"
     content: "{{ runner_config }}"
-  check_mode: no
+  check_mode: false
   changed_when: false
 
 - include_tasks: update-config-runner-windows.yml
@@ -26,7 +26,7 @@
     index_var: gitlab_runner_index
     loop_var: gitlab_runner
 
-- name: "(Windows) {{ conf_name_prefix }} Remove runner config"
+- name: (Windows) {{ conf_name_prefix }} Remove runner config
   win_file:
     path: "{{ temp_runner_config.path }}"
     state: absent

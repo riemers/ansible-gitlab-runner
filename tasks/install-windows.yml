@@ -1,3 +1,4 @@
+---
 - name: (Windows) PRE-CHECK GitLab Runner exists
   block:
     - name: (Windows) Check gitlab-runner executable exists
@@ -12,9 +13,9 @@
     - name: (Windows) Get existing version
       win_shell: "{{ gitlab_runner_executable }} --version | Select-String 'Version:' -CaseSensitive | %{ $_.Line.Split(' ')[-1].Trim(); }"
       register: existing_version_shell
-      failed_when: no
-      check_mode: no
-      changed_when: no
+      failed_when: false
+      check_mode: false
+      changed_when: false
 
     - name: (Windows) Set fact -> gitlab_runner_existing_version
       set_fact:
@@ -31,7 +32,7 @@
       win_get_url:
         url: "{{ gitlab_runner_download_url }}"
         dest: "{{ gitlab_runner_executable }}"
-        force: yes
+        force: true
 
     - name: (Windows) Install GitLab Runner
       win_command: "{{ gitlab_runner_executable }} install"
@@ -40,7 +41,8 @@
       when: (gitlab_runner_windows_service_user | length == 0) or (gitlab_runner_windows_service_password | length == 0)
 
     - name: (Windows) Install GitLab Runner
-      win_command: "{{ gitlab_runner_executable }} install --user \"{{ gitlab_runner_windows_service_user }}\" --password \"{{ gitlab_runner_windows_service_password }}\"" # noqa 204
+      win_command: '{{ gitlab_runner_executable }} install --user "{{ gitlab_runner_windows_service_user }}" --password "{{ gitlab_runner_windows_service_password
+        }}"' # noqa 204
       args:
         chdir: "{{ gitlab_runner_config_file_location }}"
       when:
@@ -51,7 +53,7 @@
 
 - name: (Windows) Make sure runner is stopped
   win_command: "{{ gitlab_runner_executable }} stop"
-  ignore_errors: yes
+  ignore_errors: true
   when:
     - gitlab_runner_exists
 
@@ -61,7 +63,7 @@
       win_get_url:
         url: "{{ gitlab_runner_download_url }}"
         dest: "{{ gitlab_runner_executable }}"
-        force: yes
+        force: true
   when:
     - gitlab_runner_exists
     - gitlab_runner_existing_version != gitlab_runner_wanted_version or gitlab_runner_wanted_version == 'latest'
