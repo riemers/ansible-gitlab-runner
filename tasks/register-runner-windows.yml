@@ -75,6 +75,24 @@
       {% if gitlab_runner.cache_s3_bucket_location is defined %}
       --cache-s3-bucket-location '{{ gitlab_runner.cache_s3_bucket_location }}'
       {% endif %}
+      {% if gitlab_runner.cache_gcs_bucket_name is defined %}
+      --cache-gcs-bucket-name '{{ gitlab_runner.cache_gcs_bucket_name }}'
+      {% endif %}
+      {% if gitlab_runner.cache_gcs_credentials_file is defined %}
+      --cache-gcs-credentials-file '{{ gitlab_runner.cache_gcs_credentials_file }}'
+      {% endif %}
+      {% if gitlab_runner.cache_gcs_access_id is defined %}
+      --cache-gcs-access-id '{{ gitlab_runner.cache_gcs_access_id }}'
+      {% endif %}
+      {% if gitlab_runner.cache_azure_account_name is defined %}
+      --cache-azure-account-name '{{ gitlab_runner.cache_azure_account_name }}'
+      {% endif %}
+      {% if gitlab_runner.cache_azure_container_name is defined %}
+      --cache-azure-container-name '{{ gitlab_runner.cache_azure_container_name }}'
+      {% endif %}
+      {% if gitlab_runner.cache_azure_storage_domain is defined %}
+      --cache-azure-storage-domain '{{ gitlab_runner.cache_azure_storage_domain }}'
+      {% endif %}
       {% if gitlab_runner.builds_dir|default(false) %}
       --builds-dir '{{ gitlab_runner.builds_dir }}'
       {% endif %}
@@ -98,6 +116,12 @@
           {% if gitlab_runner.cache_s3_secret_key is defined %}
           --cache-s3-secret-key '{{ gitlab_runner.cache_s3_secret_key|hash("sha1") }}'
           {% endif %}
+          {% if gitlab_runner.cache_gcs_private_key is defined %}
+          --cache-gcs-private-key '{{ gitlab_runner.cache_gcs_private_key }}'
+          {% endif %}
+          {% if gitlab_runner.cache_azure_account_key is defined %}
+          --cache-azure-account-key '{{ gitlab_runner.cache_azure_account_key }}'
+          {% endif %}
           {% if gitlab_runner.ssh_password is defined %}
           --ssh-password '{{ gitlab_runner.ssh_password|hash("sha1") }}'
           {% endif %}
@@ -118,6 +142,12 @@
     --registration-token '{{ gitlab_runner.token|default(gitlab_runner_registration_token) }}'
     {% if gitlab_runner.cache_s3_secret_key is defined %}
     --cache-s3-secret-key '{{ gitlab_runner.cache_s3_secret_key }}'
+    {% endif %}
+    {% if gitlab_runner.cache_gcs_private_key is defined %}
+    --cache-gcs-private-key '{{ gitlab_runner.cache_gcs_private_key }}'
+    {% endif %}
+    {% if gitlab_runner.cache_azure_account_key is defined %}
+    --cache-azure-account-key '{{ gitlab_runner.cache_azure_account_key }}'
     {% endif %}
     {% if gitlab_runner.ssh_password is defined %}
     --ssh-password '{{ gitlab_runner.ssh_password }}'
