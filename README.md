@@ -161,6 +161,11 @@ Example:
 docker-machine rm test
 ```
 
+Run As A Different User
+-----------------------
+To run the Gitlab Runner as a different user (rather than the default `gitlab-runner` user), there is a workaround requiring a little
+extra Ansible to be run. See https://github.com/riemers/ansible-gitlab-runner/issues/277 for details.
+
 Contributors
 ------------
 Feel free to add your name to the readme if you make a PR. A full list of people from the PR's is [here](https://github.com/riemers/ansible-gitlab-runner/pulls?q=is%3Apr+is%3Aclosed)
