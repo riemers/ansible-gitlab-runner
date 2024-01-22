@@ -1,18 +1,6 @@
 GitLab Runner [![Build Status](https://app.travis-ci.com/riemers/ansible-gitlab-runner.svg?branch=master)](https://travis-ci.org/riemers/ansible-gitlab-runner) [![Ansible Role](https://img.shields.io/badge/role-riemers.gitlab--runner-blue.svg?maxAge=2592000)](https://galaxy.ansible.com/ui/standalone/roles/riemers/gitlab-runner/)
 =============
 
-**GOODBYE**
-Since ansible galaxy has screwed it up so much i am throwing in the towel. If someone wants to maintain this feel free to mention it. As i am quitting. Blame Ansible Galaxy and the way they made the changes and 0 support. I don't want to put time and effort in something like that.
-
-This is how i feel about it.
-
-![image](https://github.com/riemers/ansible-gitlab-runner/assets/682041/a4f8d579-25d3-42d2-af38-d5f14278b2db)
-
-
-**IMPORTANT**! ansible galaxy made a mess of it. The role is now under ansible-gitlab-runner instead of gitlab-runner. See [item here](https://forum.ansible.com/t/lost-all-history-of-ansible-role-after-delete-of-a-another-role/1753)
-=============
-Will try and see if it can be reverted, depending if someone is willing to reach out for it. Putting some replies on the post might help, don't know what else i can do more.
-
 This role will install the [official GitLab Runner](https://gitlab.com/gitlab-org/gitlab-runner)
 (fork from haroldb) with updates. Needed something simple and working, this did the trick for me. Open for changes though.
 
