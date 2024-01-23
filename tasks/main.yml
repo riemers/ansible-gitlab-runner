@@ -13,7 +13,7 @@
 - name: Validate GitLab Runner configurations
   ansible.builtin.include_tasks: validate-runner-config.yml
   vars:
-    actual_gitlab_runner_name: "{{ gitlab_runner.name|default(ansible_hostname+'-'+gitlab_runner_index|string) }}"
+    actual_gitlab_runner_name: "{{ gitlab_runner.name | default(ansible_hostname + '-' + gitlab_runner_index | string) }}"
   loop: "{{ gitlab_runner_runners }}"
   loop_control:
     label: "{{ actual_gitlab_runner_name }}"
