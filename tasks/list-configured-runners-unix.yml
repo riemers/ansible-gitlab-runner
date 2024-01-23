@@ -20,4 +20,5 @@
   no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
 
 - name: Print registered runners
-  ansible.builtin.debug: var=registered_gitlab_runner_names
+  ansible.builtin.debug:
+    var: registered_gitlab_runner_names

@@ -29,4 +29,5 @@
   when: "'Executor' in json_item"
 
 - name: Print configured runners
-  ansible.builtin.debug: var=registered_gitlab_runner_names
+  ansible.builtin.debug:
+    var: registered_gitlab_runner_names
