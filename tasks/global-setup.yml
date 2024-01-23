@@ -12,6 +12,7 @@
     state: touch
     modification_time: preserve
     access_time: preserve
+    mode: 0600
   become: "{{ gitlab_runner_system_mode }}"
 
 - name: Set concurrent option
@@ -45,7 +46,7 @@
   ansible.builtin.lineinfile:
     dest: "{{ gitlab_runner_config_file }}"
     regexp: ^log_format =
-    line: log_format = "{{ gitlab_runner_log_format|default("runner") }}"
+    line: log_format = "{{ gitlab_runner_log_format | default("runner") }}"
     insertbefore: BOF
     state: present
   no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"

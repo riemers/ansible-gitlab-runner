@@ -15,6 +15,7 @@
     content: |
       [Service]
       ExecReload=/bin/kill -HUP $MAINPID
+    mode: 0644
   register: gitlab_runner_exec_reload
 
 # https://docs.gitlab.com/runner/configuration/init.html#overriding-systemd
@@ -26,6 +27,7 @@
       [Service]
       TimeoutStopSec={{ gitlab_runner_timeout_stop_seconds }}
       KillSignal=SIGQUIT
+    mode: 0644
   when: gitlab_runner_timeout_stop_seconds > 0
   register: gitlab_runner_kill_timeout
 
