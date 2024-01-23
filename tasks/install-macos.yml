@@ -30,12 +30,12 @@
       ansible.builtin.file:
         path: /usr/local/var/log
         state: directory
-        mode: 0755
+        mode: "0755"
         owner: "{{ ansible_user_id | string }}"
 
     - name: (MacOS) Precreate directory {{ gitlab_runner_directory }}
       ansible.builtin.file:
-        mode: "755"
+        mode: "0755"
         owner: root
         path: "{{ gitlab_runner_directory }}"
         state: directory
