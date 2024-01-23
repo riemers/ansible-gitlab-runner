@@ -1,17 +1,17 @@
 ---
 - name: List configured runners as json
-  command: "{{ gitlab_runner_executable }} --log-format json list"
+  ansible.builtin.command: "{{ gitlab_runner_executable }} --log-format json list"
   register: registered_runners_json_result
   changed_when: false
   check_mode: false
   become: "{{ gitlab_runner_system_mode }}"
 
 - name: Initialze runner list
-  set_fact:
+  ansible.builtin.set_fact:
     registered_gitlab_runner_names: []
 
 - name: Create list of configured runners
-  set_fact:
+  ansible.builtin.set_fact:
     registered_gitlab_runner_names: "{{ registered_gitlab_runner_names + [json_item['msg']] }}"
   vars:
     json_item: "{{ item | from_json }}"
@@ -19,4 +19,4 @@
   when: "'Executor' in json_item"
 
 - name: Print registered runners
-  debug: var=registered_gitlab_runner_names
+  ansible.builtin.debug: var=registered_gitlab_runner_names

@@ -1,6 +1,6 @@
 ---
 - name: Construct the runner command without secrets
-  set_fact:
+  ansible.builtin.set_fact:
     register_runner_cmd: >-
       register
       --non-interactive
@@ -129,16 +129,15 @@
         dest: "{{ gitlab_runner_config_file_location }}/last-runner-config-{{ actual_gitlab_runner_name }}"
       register: runner_config_state
 
-    - import_tasks: unregister-runner.yml
+    - ansible.builtin.import_tasks: unregister-runner.yml
       when:
         - actual_gitlab_runner_name in registered_gitlab_runner_names
         - runner_config_state.changed
   when: gitlab_runner_config_update_mode == 'by_registering'
 
-- import_tasks: list-configured-runners-container.yml
-
+- ansible.builtin.import_tasks: list-configured-runners-container.yml
 - name: Register runner to GitLab
-  docker_container:
+  community.docker.docker_container:
     name: "{{ gitlab_runner_container_name }}"
     image: "{{ gitlab_runner_container_image }}:{{ gitlab_runner_container_tag }}"
     command: >

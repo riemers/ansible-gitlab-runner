@@ -1,25 +1,25 @@
 ---
 # non macOS
 - name: restart_gitlab_runner
-  service: name=gitlab-runner state={{ gitlab_runner_restart_state }}
+  ansible.builtin.service: name=gitlab-runner state={{ gitlab_runner_restart_state }}
   become: true
   when: ansible_os_family != 'Darwin' and ansible_os_family != 'Windows' and not gitlab_runner_container_install
 
 # macOS
 - name: restart_gitlab_runner_macos
-  command: "{{ gitlab_runner_executable }} restart"
+  ansible.builtin.command: "{{ gitlab_runner_executable }} restart"
   become: "{{ gitlab_runner_system_mode }}"
   when: ansible_os_family == 'Darwin' and gitlab_runner_macos_start_runner
 
 - name: restart_gitlab_runner_windows
-  win_command: "{{ gitlab_runner_executable }} restart"
+  ansible.windows.win_command: "{{ gitlab_runner_executable }} restart"
   args:
     chdir: "{{ gitlab_runner_config_file_location }}"
   when: ansible_os_family == 'Windows' and gitlab_runner_windows_start_runner
 
 # Container
 - name: restart_gitlab_runner_container
-  docker_container:
+  community.docker.docker_container:
     name: "{{ gitlab_runner_container_name }}"
     restart: true
   when: gitlab_runner_container_install

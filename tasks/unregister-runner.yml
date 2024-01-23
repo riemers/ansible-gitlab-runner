@@ -1,6 +1,6 @@
 ---
 - name: (Container) Unregister runner
-  docker_container:
+  community.docker.docker_container:
     name: "{{ gitlab_runner_container_name }}-list"
     image: "{{ gitlab_runner_container_image }}:{{ gitlab_runner_container_tag }}"
     command: unregister --name {{ actual_gitlab_runner_name }}'
@@ -18,7 +18,7 @@
     - gitlab_install_target_platform == 'container'
 
 - name: (Windows) Unregister runner
-  win_command: "{{ gitlab_runner_executable }} unregister --name {{ actual_gitlab_runner_name }}"
+  ansible.windows.win_command: "{{ gitlab_runner_executable }} unregister --name {{ actual_gitlab_runner_name }}"
   args:
     chdir: "{{ gitlab_runner_config_file_location }}"
   when:

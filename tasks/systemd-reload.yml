@@ -1,7 +1,7 @@
 ---
 - name: Ensure /etc/systemd/system/gitlab-runner.service.d/ exists
   become: true
-  file:
+  ansible.builtin.file:
     path: /etc/systemd/system/gitlab-runner.service.d
     state: directory
     owner: root
@@ -10,7 +10,7 @@
 
 - name: Add reload command to GitLab Runner system service
   become: true
-  copy:
+  ansible.builtin.copy:
     dest: /etc/systemd/system/gitlab-runner.service.d/exec-reload.conf
     content: |
       [Service]
@@ -20,7 +20,7 @@
 # https://docs.gitlab.com/runner/configuration/init.html#overriding-systemd
 - name: Configure graceful stop for GitLab Runner system service
   become: true
-  copy:
+  ansible.builtin.copy:
     dest: /etc/systemd/system/gitlab-runner.service.d/kill.conf
     content: |
       [Service]
@@ -31,6 +31,6 @@
 
 - name: Force systemd to reread configs
   become: true
-  systemd:
+  ansible.builtin.systemd:
     daemon_reload: true
   when: gitlab_runner_exec_reload.changed or gitlab_runner_kill_timeout

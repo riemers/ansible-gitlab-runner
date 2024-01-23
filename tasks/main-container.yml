@@ -1,10 +1,10 @@
 ---
 - name: (Container) Install Gitlab Runner
-  import_tasks: install-container.yml
+  ansible.builtin.import_tasks: install-container.yml
   when: gitlab_runner_container_install
 
 - name: (Container) Delete runners which were removed in GitLab
-  docker_container:
+  community.docker.docker_container:
     name: "{{ gitlab_runner_container_name }}-check"
     image: "{{ gitlab_runner_container_image }}:{{ gitlab_runner_container_tag }}"
     command: verify --delete
@@ -20,10 +20,9 @@
   changed_when: '"Updated " in verified_runners.container.Output'
   check_mode: false
 
-- import_tasks: list-configured-runners-container.yml
-
+- ansible.builtin.import_tasks: list-configured-runners-container.yml
 - name: (Container) Register GitLab Runner
-  include_tasks: register-runner-container.yml
+  ansible.builtin.include_tasks: register-runner-container.yml
   vars:
     actual_gitlab_runner_name: "{{ gitlab_runner.name | default(ansible_hostname + '-' + gitlab_runner_index | string) }}"
   when: gitlab_runner.token is defined or gitlab_runner_registration_token | string | length > 0
@@ -33,18 +32,17 @@
     loop_var: gitlab_runner
 
 - name: Unregister runners which are not longer configured
-  include_tasks: unregister-runner-if-not-longer-configured.yml
+  ansible.builtin.include_tasks: unregister-runner-if-not-longer-configured.yml
   when: gitlab_unregister_runner_executors_which_are_not_longer_configured
 
 - name: (Container) Set global options
-  import_tasks: global-setup.yml
-
+  ansible.builtin.import_tasks: global-setup.yml
 - name: (Container) Configure GitLab Runner
-  include_tasks: config-runners-container.yml
+  ansible.builtin.include_tasks: config-runners-container.yml
   when: gitlab_runner_config_update_mode == 'by_config_toml'
 
 - name: (Container) Start the container
-  docker_container:
+  community.docker.docker_container:
     name: "{{ gitlab_runner_container_name }}"
     image: "{{ gitlab_runner_container_image }}:{{ gitlab_runner_container_tag }}"
     restart_policy: "{{ gitlab_runner_container_restart_policy }}"

@@ -1,14 +1,15 @@
 ---
 - name: Accept gitlab server self signed cert as valid CA
-  shell: openssl s_client -connect {{gitlab_server_ip}}:443 -showcerts </dev/null 2>/dev/null | sed -e '/-----BEGIN/,/-----END/!d' | tee {{tls_ca_file}} >/dev/null
+  ansible.builtin.shell: openssl s_client -connect {{gitlab_server_ip}}:443 -showcerts </dev/null 2>/dev/null | sed -e '/-----BEGIN/,/-----END/!d' | tee {{tls_ca_file}}
+    >/dev/null
   when: force_accept_gitlab_server_self_signed
 
 - name: Update CA bundle with self signe cert of the gitlab server
-  import_tasks: update-ca-bundle.yml
+  ansible.builtin.import_tasks: update-ca-bundle.yml
   when: force_accept_gitlab_server_self_signed
 
 - name: Construct the runner command without secrets
-  set_fact:
+  ansible.builtin.set_fact:
     register_runner_cmd: >-
       {{ gitlab_runner_executable }} register
       --non-interactive
@@ -164,16 +165,15 @@
         dest: "{{ gitlab_runner_config_file_location }}/last-runner-config-{{ actual_gitlab_runner_name }}"
       register: runner_config_state
 
-    - import_tasks: unregister-runner.yml
+    - ansible.builtin.import_tasks: unregister-runner.yml
       when:
         - actual_gitlab_runner_name in registered_gitlab_runner_names
         - runner_config_state.changed
   when: gitlab_runner_config_update_mode == 'by_registering'
 
-- import_tasks: list-configured-runners-unix.yml
-
+- ansible.builtin.import_tasks: list-configured-runners-unix.yml
 - name: Register runner to GitLab
-  command: >
+  ansible.builtin.command: >
     {{ register_runner_cmd }}
     --registration-token '{{ gitlab_runner.token|default(gitlab_runner_registration_token) }}'
     {% if gitlab_runner.cache_s3_secret_key is defined %}
