@@ -1,0 +1,16 @@
+---
+on:
+  pull_request:
+    branches:
+      - master
+  workflow_dispatch:
+
+
+jobs:
+  ansible-lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Lint role
+        uses: ansible/ansible-lint@main
