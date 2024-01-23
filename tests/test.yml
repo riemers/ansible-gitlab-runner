@@ -46,6 +46,6 @@
         src: ~/mock_ci.pid
       register: pidfile_b64
       when: run_mock_server
-    - name: kill the mock CI
+    - name: Kill the mock CI
       ansible.builtin.command: kill {{ pidfile_b64.content | b64decode }}
       when: run_mock_server
