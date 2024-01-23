@@ -12,7 +12,7 @@
   ansible.builtin.copy:
     dest: "{{ temp_runner_config.path }}"
     content: "{{ runner_config }}"
-    mode: 0644
+    mode: "0644"
   check_mode: false
   changed_when: false
   no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"

@@ -127,7 +127,7 @@
           --ssh-password '{{ gitlab_runner.ssh_password | hash("sha1") }}'
           {% endif %}
         dest: "{{ gitlab_runner_config_file_location }}/last-runner-config-{{ actual_gitlab_runner_name }}"
-        mode: 0644
+        mode: "0644"
       register: runner_config_state
 
     - name: Unregister runner

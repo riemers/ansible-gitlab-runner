@@ -12,7 +12,7 @@
     state: touch
     modification_time: preserve
     access_time: preserve
-    mode: 0600
+    mode: "0600"
   become: "{{ gitlab_runner_system_mode }}"
 
 - name: Set concurrent option

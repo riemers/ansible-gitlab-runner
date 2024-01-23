@@ -17,7 +17,7 @@
       ansible.builtin.copy:
         src: mock_gitlab_runner_ci.py
         dest: ~/mock_gitlab_runner_ci.py
-        mode: 0644
+        mode: "0644"
       when: run_mock_server
 
     - name: Ensure mock CI pidfile is absent

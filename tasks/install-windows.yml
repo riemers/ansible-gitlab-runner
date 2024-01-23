@@ -42,8 +42,8 @@
       when: (gitlab_runner_windows_service_user | length == 0) or (gitlab_runner_windows_service_password | length == 0)
 
     - name: (Windows) Install GitLab Runner
-      ansible.windows.win_command: '{{ gitlab_runner_executable }} install --user "{{ gitlab_runner_windows_service_user }}" --password "{{ gitlab_runner_windows_service_password
-        }}"'
+      ansible.windows.win_command: '{{ gitlab_runner_executable }} install --user "{{ gitlab_runner_windows_service_user }}" --password
+        "{{ gitlab_runner_windows_service_password }}"'
       args:
         chdir: "{{ gitlab_runner_config_file_location }}"
       when:
