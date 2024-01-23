@@ -11,7 +11,8 @@
         gitlab_runner_exists: "{{ gitlab_runner_exists.stat.exists }}"
 
     - name: (MacOS) Get existing version
-      ansible.builtin.shell: "{{ gitlab_runner_executable }} --version | awk '/Version: ([\\d\\.]*)/{print $2}'"
+      ansible.builtin.shell:
+        cmd: "set -o pipefail && {{ gitlab_runner_executable }} --version | awk '/Version: ([\\d\\.]*)/{print $2}'"
       register: existing_version_shell
       failed_when: false
       check_mode: false
@@ -22,25 +23,25 @@
         gitlab_runner_existing_version: "{{ existing_version_shell.stdout if existing_version_shell.rc == 0 else '0' }}"
 
 - name: (MacOS) Precreate necessary directories for arm64 architecture
+  when: gitlab_runner_arch == 'arm64'
+  become: true
   block:
     - name: (MacOS) Precreate gitlab-runner log directory
-      become: true
       ansible.builtin.file:
         path: /usr/local/var/log
         state: directory
+        mode: 0755
         owner: "{{ ansible_user_id | string }}"
 
-    - name: (MacOS) Precreate {{ gitlab_runner_directory }} directory
-      become: true
+    - name: (MacOS) Precreate directory {{ gitlab_runner_directory }}
       ansible.builtin.file:
         mode: "755"
         owner: root
         path: "{{ gitlab_runner_directory }}"
         state: directory
 
-  when: gitlab_runner_arch == 'arm64'
-
 - name: (MacOS) INSTALL GitLab Runner for macOS
+  when: (not gitlab_runner_exists)
   block:
     - name: (MacOS) Download GitLab Runner
       become: true
@@ -52,21 +53,25 @@
 
     - name: (MacOS) Install GitLab Runner
       ansible.builtin.command: "{{ gitlab_runner_executable }} install"
+
     - name: (MacOS) Start GitLab Runner
       ansible.builtin.command: "{{ gitlab_runner_executable }} start"
       when: gitlab_runner_macos_start_runner
 
-  when: (not gitlab_runner_exists)
-
 - name: (MacOS) UPGRADE GitLab Runner for macOS
+  when:
+    - gitlab_runner_exists
+    - gitlab_runner_existing_version != gitlab_runner_wanted_version or gitlab_runner_wanted_version == 'latest'
   block:
     - name: (MacOS) Stop GitLab Runner
       ansible.builtin.command: "{{ gitlab_runner_executable }} stop"
+
     - name: (MacOS) Download GitLab Runner
       ansible.builtin.get_url:
         url: "{{ gitlab_runner_download_url }}"
         dest: "{{ gitlab_runner_executable }}"
         force: true
+        mode: 0644
       become: true
 
     - name: (MacOS) Setting Permissions for gitlab-runner executable
@@ -79,6 +84,3 @@
 
     - name: (MacOS) Start GitLab Runner
       ansible.builtin.command: "{{ gitlab_runner_executable }} start"
-  when:
-    - gitlab_runner_exists
-    - gitlab_runner_existing_version != gitlab_runner_wanted_version or gitlab_runner_wanted_version == 'latest'

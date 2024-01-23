@@ -6,41 +6,41 @@
       --non-interactive
       --url '{{ gitlab_runner.url | default(gitlab_runner_coordinator_url) }}'
       --description '{{ actual_gitlab_runner_name }}'
-      --tag-list '{{ gitlab_runner.tags|default([]) | join(",") }}'
-      {% if gitlab_runner.clone_url|default(false) %}
+      --tag-list '{{ gitlab_runner.tags | default([]) | join(",") }}'
+      {% if gitlab_runner.clone_url | default(false) %}
       --clone-url "{{ gitlab_runner.clone_url }}"
       {% endif %}
-      {% if gitlab_runner.run_untagged|default(true) %}
+      {% if gitlab_runner.run_untagged | default(true) %}
       --run-untagged
       {% endif %}
-      {% if gitlab_runner.protected|default(false) %}
+      {% if gitlab_runner.protected | default(false) %}
       --access-level="ref_protected"
       {% endif %}
-      --executor '{{ gitlab_runner.executor|default("shell") }}'
-      --limit '{{ gitlab_runner.concurrent_specific|default(0) }}'
-      --output-limit '{{ gitlab_runner.output_limit|default(4096) }}'
-      --locked='{{ gitlab_runner.locked|default(false) }}'
-      {% for env_var in gitlab_runner.env_vars|default([]) %}
+      --executor '{{ gitlab_runner.executor | default("shell") }}'
+      --limit '{{ gitlab_runner.concurrent_specific | default(0) }}'
+      --output-limit '{{ gitlab_runner.output_limit | default(4096) }}'
+      --locked='{{ gitlab_runner.locked | default(false) }}'
+      {% for env_var in gitlab_runner.env_vars | default([]) %}
       --env '{{ env_var }}'
       {% endfor %}
-      --docker-image '{{ gitlab_runner.docker_image|default("alpine") }}'
-      {% if gitlab_runner.docker_privileged|default(false) %}
+      --docker-image '{{ gitlab_runner.docker_image | default("alpine") }}'
+      {% if gitlab_runner.docker_privileged | default(false) %}
       --docker-privileged
       {% endif %}
-      {% if gitlab_runner.docker_tlsverify|default(false) %}
-      --docker-tlsverify '{{ gitlab_runner.docker_tlsverify|default("true") }}'
+      {% if gitlab_runner.docker_tlsverify | default(false) %}
+      --docker-tlsverify '{{ gitlab_runner.docker_tlsverify | default("true") }}'
       {% endif %}
-      {% if gitlab_runner.docker_dns|default(false) %}
-      --docker-dns '{{ gitlab_runner.docker_dns|default("1.1.1.1") }}'
+      {% if gitlab_runner.docker_dns | default(false) %}
+      --docker-dns '{{ gitlab_runner.docker_dns | default("1.1.1.1") }}'
       {% endif %}
-      {% if gitlab_runner.docker_dns_search|default(false) %}
-      --docker-dns-search '{{ gitlab_runner.docker_dns_search|default([]) }}'
+      {% if gitlab_runner.docker_dns_search | default(false) %}
+      --docker-dns-search '{{ gitlab_runner.docker_dns_search | default([]) }}'
       {% endif %}
-      {% if gitlab_runner.docker_disable_cache|default(false) %}
+      {% if gitlab_runner.docker_disable_cache | default(false) %}
       --docker-disable-cache
       {% endif %}
-      {% if gitlab_runner.docker_oom_kill_disable|default(false) %}
-      --docker-oom-kill-disable '{{ gitlab_runner.docker_oom_kill_disable|default("false") }}'
+      {% if gitlab_runner.docker_oom_kill_disable | default(false) %}
+      --docker-oom-kill-disable '{{ gitlab_runner.docker_oom_kill_disable | default("false") }}'
       {% endif %}
       {% for volume in gitlab_runner.docker_volumes | default([]) %}
       --docker-volumes "{{ volume }}"
@@ -51,14 +51,14 @@
       {% if gitlab_runner.docker_network_mode is defined %}
       --docker-network-mode '{{ gitlab_runner.docker_network_mode }}'
       {% endif %}
-      --ssh-user '{{ gitlab_runner.ssh_user|default("") }}'
-      --ssh-host '{{ gitlab_runner.ssh_host|default("") }}'
-      --ssh-port '{{ gitlab_runner.ssh_port|default("") }}'
-      --ssh-identity-file '{{ gitlab_runner.ssh_identity_file|default("") }}'
+      --ssh-user '{{ gitlab_runner.ssh_user | default("") }}'
+      --ssh-host '{{ gitlab_runner.ssh_host | default("") }}'
+      --ssh-port '{{ gitlab_runner.ssh_port | default("") }}'
+      --ssh-identity-file '{{ gitlab_runner.ssh_identity_file | default("") }}'
       {% if gitlab_runner.cache_type is defined %}
       --cache-type '{{ gitlab_runner.cache_type }}'
       {% endif %}
-      {% if gitlab_runner.cache_shared|default(false) %}
+      {% if gitlab_runner.cache_shared | default(false) %}
       --cache-shared
       {% endif %}
       {% if gitlab_runner.cache_path is defined %}
@@ -94,13 +94,13 @@
       {% if gitlab_runner.cache_azure_storage_domain is defined %}
       --cache-azure-storage-domain '{{ gitlab_runner.cache_azure_storage_domain }}'
       {% endif %}
-      {% if gitlab_runner.builds_dir|default(false) %}
+      {% if gitlab_runner.builds_dir | default(false) %}
       --builds-dir '{{ gitlab_runner.builds_dir }}'
       {% endif %}
-      {% if gitlab_runner.cache_dir|default(false) %}
+      {% if gitlab_runner.cache_dir | default(false) %}
       --cache-dir '{{ gitlab_runner.cache_dir }}'
       {% endif %}
-      {% if gitlab_runner.cache_s3_insecure|default(false) %}
+      {% if gitlab_runner.cache_s3_insecure | default(false) %}
       --cache-s3-insecure
       {% endif %}
       {% if gitlab_runner.extra_registration_option is defined %}
@@ -108,14 +108,15 @@
       {% endif %}
 
 - name: Apply updates (if any) by unregister the runner and let it then register later on
+  when: gitlab_runner_config_update_mode == 'by_registering'
   block:
     - name: Check if the configuration has changed since the last run
       ansible.builtin.copy:
         content: >
           {{ register_runner_cmd }}
-          --registration-token '{{ gitlab_runner.token|default(gitlab_runner_registration_token)|hash("sha1") }}'
+          --registration-token '{{ gitlab_runner.token | default(gitlab_runner_registration_token) | hash("sha1") }}'
           {% if gitlab_runner.cache_s3_secret_key is defined %}
-          --cache-s3-secret-key '{{ gitlab_runner.cache_s3_secret_key|hash("sha1") }}'
+          --cache-s3-secret-key '{{ gitlab_runner.cache_s3_secret_key | hash("sha1") }}'
           {% endif %}
           {% if gitlab_runner.cache_gcs_private_key is defined %}
           --cache-gcs-private-key '{{ gitlab_runner.cache_gcs_private_key }}'
@@ -124,25 +125,28 @@
           --cache-azure-account-key '{{ gitlab_runner.cache_azure_account_key }}'
           {% endif %}
           {% if gitlab_runner.ssh_password is defined %}
-          --ssh-password '{{ gitlab_runner.ssh_password|hash("sha1") }}'
+          --ssh-password '{{ gitlab_runner.ssh_password | hash("sha1") }}'
           {% endif %}
         dest: "{{ gitlab_runner_config_file_location }}/last-runner-config-{{ actual_gitlab_runner_name }}"
+        mode: 0644
       register: runner_config_state
 
-    - ansible.builtin.import_tasks: unregister-runner.yml
+    - name: Unregister runner
+      ansible.builtin.import_tasks: unregister-runner.yml
       when:
         - actual_gitlab_runner_name in registered_gitlab_runner_names
         - runner_config_state.changed
-  when: gitlab_runner_config_update_mode == 'by_registering'
 
-- ansible.builtin.import_tasks: list-configured-runners-container.yml
+- name: List configured runners
+  ansible.builtin.import_tasks: list-configured-runners-container.yml
+
 - name: Register runner to GitLab
   community.docker.docker_container:
     name: "{{ gitlab_runner_container_name }}"
     image: "{{ gitlab_runner_container_image }}:{{ gitlab_runner_container_tag }}"
     command: >
       {{ register_runner_cmd }}
-      --registration-token '{{ gitlab_runner.token|default(gitlab_runner_registration_token) }}'
+      --registration-token '{{ gitlab_runner.token | default(gitlab_runner_registration_token) }}'
       {% if gitlab_runner.cache_s3_secret_key is defined %}
       --cache-s3-secret-key '{{ gitlab_runner.cache_s3_secret_key }}'
       {% endif %}
@@ -164,5 +168,5 @@
     network_mode: "{{ gitlab_runner_container_network }}"
   when:
     - actual_gitlab_runner_name not in registered_gitlab_runner_names
-    - gitlab_runner.state|default('present') == 'present'
+    - gitlab_runner.state | default('present') == 'present'
   no_log: false
