@@ -1,6 +1,6 @@
 ---
 - name: Construct the runner command without secrets
-  set_fact:
+  ansible.builtin.set_fact:
     register_runner_cmd: >-
       {{ gitlab_runner_executable }} register
       {% if gitlab_runner_registration_token_type != "authentication-token" %}
@@ -134,16 +134,15 @@
         dest: "{{ gitlab_runner_config_file_location }}/last-runner-config-{{ actual_gitlab_runner_name }}"
       register: runner_config_state
 
-    - import_tasks: unregister-runner.yml
+    - ansible.builtin.import_tasks: unregister-runner.yml
       when:
         - actual_gitlab_runner_name in registered_gitlab_runner_names
         - runner_config_state.changed
   when: gitlab_runner_config_update_mode == 'by_registering'
 
-- import_tasks: list-configured-runners-windows.yml
-
+- ansible.builtin.import_tasks: list-configured-runners-windows.yml
 - name: (Windows) Register runner to GitLab
-  win_shell: >-
+  ansible.windows.win_shell: >-
     {{ register_runner_cmd }}
     {% if gitlab_runner_registration_token_type == "authentication-token" %}
     --token '{{ gitlab_runner.token }}'

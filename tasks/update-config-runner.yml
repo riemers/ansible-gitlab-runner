@@ -1,6 +1,6 @@
 ---
 - name: "{{ runn_name_prefix }} Set concurrent limit option"
-  lineinfile:
+  ansible.builtin.lineinfile:
     dest: "{{ temp_runner_config.path }}"
     regexp: ^\s*limit =
     line: "  limit = {{ gitlab_runner.concurrent_specific|default(0) }}"
@@ -14,7 +14,7 @@
     - restart_gitlab_runner_macos
 
 - name: "{{ runn_name_prefix }} Set coordinator URL"
-  lineinfile:
+  ansible.builtin.lineinfile:
     dest: "{{ temp_runner_config.path }}"
     regexp: ^\s*url =
     line: "  url = {{ gitlab_runner.url|default(gitlab_runner_coordinator_url) | to_json }}"
@@ -28,7 +28,7 @@
     - restart_gitlab_runner_macos
 
 - name: "{{ runn_name_prefix }} Set clone URL"
-  lineinfile:
+  ansible.builtin.lineinfile:
     dest: "{{ temp_runner_config.path }}"
     regexp: ^\s*clone_url =
     line: "  clone_url = {{ gitlab_runner.clone_url | to_json }}"
@@ -43,7 +43,7 @@
   when: gitlab_runner.clone_url is defined
 
 - name: "{{ runn_name_prefix }} Set environment option"
-  lineinfile:
+  ansible.builtin.lineinfile:
     dest: "{{ temp_runner_config.path }}"
     regexp: ^\s*environment =
     line: "  environment = {{ gitlab_runner.env_vars|default([]) | to_json }}"
@@ -57,7 +57,7 @@
     - restart_gitlab_runner_macos
 
 - name: "{{ runn_name_prefix }} Set pre_get_sources_script"
-  lineinfile:
+  ansible.builtin.lineinfile:
     dest: "{{ temp_runner_config.path }}"
     regexp: ^\s*pre_get_sources_script =
     line: "  pre_get_sources_script = {{ gitlab_runner.pre_get_sources_script | to_json }}"
@@ -72,7 +72,7 @@
   when: gitlab_runner.pre_get_sources_script is defined
 
 - name: "{{ runn_name_prefix }} Set post_get_sources_script"
-  lineinfile:
+  ansible.builtin.lineinfile:
     dest: "{{ temp_runner_config.path }}"
     regexp: ^\s*post_get_sources_script =
     line: "  post_get_sources_script = {{ gitlab_runner.post_get_sources_script | to_json }}"
@@ -86,7 +86,7 @@
   when: gitlab_runner.post_get_sources_script is defined
 
 - name: "{{ runn_name_prefix }} Set pre_build_script"
-  lineinfile:
+  ansible.builtin.lineinfile:
     dest: "{{ temp_runner_config.path }}"
     regexp: ^\s*pre_build_script =
     line: "  pre_build_script = {{ gitlab_runner.pre_build_script | to_json }}"
@@ -101,7 +101,7 @@
   when: gitlab_runner.pre_build_script is defined
 
 - name: "{{ runn_name_prefix }} Set tls_ca_file"
-  lineinfile:
+  ansible.builtin.lineinfile:
     dest: "{{ temp_runner_config.path }}"
     regexp: ^\s*tls-ca-file =
     line: "  tls-ca-file = {{ gitlab_runner.tls_ca_file | to_json }}"
@@ -116,7 +116,7 @@
   when: gitlab_runner.tls_ca_file is defined
 
 - name: "{{ runn_name_prefix }} Set post_build_script"
-  lineinfile:
+  ansible.builtin.lineinfile:
     dest: "{{ temp_runner_config.path }}"
     regexp: ^\s*post_build_script =
     line: "  post_build_script = {{ gitlab_runner.post_build_script | to_json }}"
@@ -131,7 +131,7 @@
   when: gitlab_runner.post_build_script is defined
 
 - name: "{{ runn_name_prefix }} Set runner executor option"
-  lineinfile:
+  ansible.builtin.lineinfile:
     dest: "{{ temp_runner_config.path }}"
     regexp: ^\s*executor =
     line: '  executor = {{ gitlab_runner.executor|default("shell") | to_json }}'
@@ -145,7 +145,7 @@
     - restart_gitlab_runner_macos
 
 - name: "{{ runn_name_prefix }} Set runner shell option"
-  lineinfile:
+  ansible.builtin.lineinfile:
     dest: "{{ temp_runner_config.path }}"
     regexp: ^\s*shell =
     line: '  shell = {{ gitlab_runner.shell|default("") | to_json }}'
@@ -159,7 +159,7 @@
     - restart_gitlab_runner_macos
 
 - name: "{{ runn_name_prefix }} Set runner executor section"
-  lineinfile:
+  ansible.builtin.lineinfile:
     dest: "{{ temp_runner_config.path }}"
     regexp: ^\s*\[runners\.{{ gitlab_runner.executor|default("shell") }}\]
     line: '  [runners.{{ gitlab_runner.executor|replace("docker+machine","machine")|default("shell") }}]'
@@ -173,7 +173,7 @@
     - restart_gitlab_runner_macos
 
 - name: "{{ runn_name_prefix }} Set output_limit option"
-  lineinfile:
+  ansible.builtin.lineinfile:
     dest: "{{ temp_runner_config.path }}"
     regexp: ^\s*output_limit =
     line: "  output_limit = {{ gitlab_runner.output_limit|default(4096) }}"
@@ -188,7 +188,7 @@
 
 #### [runners.docker] section ####
 - name: "{{ runn_name_prefix }} Set runner docker image option"
-  lineinfile:
+  ansible.builtin.lineinfile:
     dest: "{{ temp_runner_config.path }}"
     regexp: ^\s*image =
     line: '    image = {{ gitlab_runner.docker_image|default("") | to_json }}'
@@ -202,7 +202,7 @@
     - restart_gitlab_runner_macos
 
 - name: "{{ runn_name_prefix }} Set docker helper image option"
-  lineinfile:
+  ansible.builtin.lineinfile:
     dest: "{{ temp_runner_config.path }}"
     regexp: ^\s*helper_image =
     line: '    helper_image = {{ gitlab_runner.docker_helper_image|default("") | to_json }}'
@@ -216,7 +216,7 @@
     - restart_gitlab_runner_macos
 
 - name: "{{ runn_name_prefix }} Set docker privileged option"
-  lineinfile:
+  ansible.builtin.lineinfile:
     dest: "{{ temp_runner_config.path }}"
     regexp: ^\s*privileged =
     line: "    privileged = {{ gitlab_runner.docker_privileged|default(false) | lower }}"
@@ -230,7 +230,7 @@
     - restart_gitlab_runner_macos
 
 - name: "{{ runn_name_prefix }} Set docker wait_for_services_timeout option"
-  lineinfile:
+  ansible.builtin.lineinfile:
     dest: "{{ temp_runner_config.path }}"
     regexp: ^\s*wait_for_services_timeout =
     line: "    wait_for_services_timeout = {{ gitlab_runner.docker_wait_for_services_timeout|default(30) }}"
@@ -244,7 +244,7 @@
     - restart_gitlab_runner_macos
 
 - name: "{{ runn_name_prefix }} Set docker tlsverify option"
-  lineinfile:
+  ansible.builtin.lineinfile:
     dest: "{{ temp_runner_config.path }}"
     regexp: ^\s*tls_verify =
     line: "    tls_verify = {{ gitlab_runner.docker_tlsverify|default(false) | lower }}"
@@ -258,7 +258,7 @@
     - restart_gitlab_runner_macos
 
 - name: "{{ runn_name_prefix }} Set docker shm_size option"
-  lineinfile:
+  ansible.builtin.lineinfile:
     dest: "{{ temp_runner_config.path }}"
     regexp: ^\s*shm_size =
     line: "    shm_size = {{ gitlab_runner.docker_shm_size|default(false) | lower }}"
@@ -272,7 +272,7 @@
     - restart_gitlab_runner_macos
 
 - name: "{{ runn_name_prefix }} Set docker disable_cache option"
-  lineinfile:
+  ansible.builtin.lineinfile:
     dest: "{{ temp_runner_config.path }}"
     regexp: ^\s*disable_cache =
     line: "    disable_cache = {{ gitlab_runner.docker_disable_cache|default(false) | lower }}"
@@ -286,7 +286,7 @@
     - restart_gitlab_runner_macos
 
 - name: "{{ runn_name_prefix }} Set docker DNS option"
-  lineinfile:
+  ansible.builtin.lineinfile:
     dest: "{{ temp_runner_config.path }}"
     regexp: ^\s*dns =
     line: "    dns = {{ gitlab_runner.docker_dns|default(false) | to_json }}"
@@ -300,7 +300,7 @@
     - restart_gitlab_runner_macos
 
 - name: "{{ runn_name_prefix }} Set docker DNS search option"
-  lineinfile:
+  ansible.builtin.lineinfile:
     dest: "{{ temp_runner_config.path }}"
     regexp: ^\s*dns_search =
     line: "    dns_search = {{ gitlab_runner.docker_dns_search|default(false) | to_json }}"
@@ -314,7 +314,7 @@
     - restart_gitlab_runner_macos
 
 - name: "{{ runn_name_prefix }} Set docker pull_policy option"
-  lineinfile:
+  ansible.builtin.lineinfile:
     dest: "{{ temp_runner_config.path }}"
     regexp: ^\s*pull_policy =
     line: "    pull_policy = {{ gitlab_runner.docker_pull_policy|default([])|to_json }}"
@@ -342,7 +342,7 @@
     - restart_gitlab_runner_macos
 
 - name: "{{ runn_name_prefix }} Set docker volumes option"
-  lineinfile:
+  ansible.builtin.lineinfile:
     dest: "{{ temp_runner_config.path }}"
     regexp: ^\s*volumes =
     line: "    volumes = {{ gitlab_runner.docker_volumes|default([])|to_json }}"
@@ -356,7 +356,7 @@
     - restart_gitlab_runner_macos
 
 - name: "{{ runn_name_prefix }} Set docker devices option"
-  lineinfile:
+  ansible.builtin.lineinfile:
     dest: "{{ temp_runner_config.path }}"
     regexp: ^\s*devices =
     line: "    devices = {{ gitlab_runner.docker_devices|default([])|to_json }}"
@@ -370,7 +370,7 @@
     - restart_gitlab_runner_macos
 
 - name: "{{ runn_name_prefix }} Set runner docker network option"
-  lineinfile:
+  ansible.builtin.lineinfile:
     dest: "{{ temp_runner_config.path }}"
     regexp: ^\s*network_mode =
     line: '    network_mode = {{ gitlab_runner.docker_network_mode|default("bridge") | to_json }}'
@@ -384,7 +384,7 @@
     - restart_gitlab_runner_macos
 
 - name: "{{ runn_name_prefix }} Set tls-cert-file option"
-  lineinfile:
+  ansible.builtin.lineinfile:
     dest: "{{ temp_runner_config.path }}"
     regexp: ^\s*tls-cert-file =
     line: "  tls-cert-file = {{ gitlab_runner.tls_cert_file|default([]) | to_json }}"
@@ -398,7 +398,7 @@
     - restart_gitlab_runner_macos
 
 - name: "{{ runn_name_prefix }} Set tls-key-file option"
-  lineinfile:
+  ansible.builtin.lineinfile:
     dest: "{{ temp_runner_config.path }}"
     regexp: ^\s*tls-key-file =
     line: "  tls-key-file = {{ gitlab_runner.tls_key_file|default([]) | to_json }}"
@@ -413,7 +413,7 @@
 
 #### [[runners.docker.services]] section ####
 - name: "{{ runn_name_prefix }} Set additional services"
-  blockinfile:
+  ansible.builtin.blockinfile:
     dest: "{{ temp_runner_config.path }}"
     content: "{{ lookup('template', 'config.runners.docker.services.j2') if gitlab_runner.docker_services is defined }}"
     state: "{{ 'present' if gitlab_runner.docker_services is defined else 'absent' }}"
@@ -427,7 +427,7 @@
 
 #### [runners.custom_build_dir] section #####
 - name: "{{ runn_name_prefix }} Set custom_build_dir section"
-  lineinfile:
+  ansible.builtin.lineinfile:
     dest: "{{ temp_runner_config.path }}"
     regexp: ^\s*\[runners\.custom_build_dir\]
     line: "  [runners.custom_build_dir]"
@@ -441,7 +441,7 @@
     - restart_gitlab_runner_macos
 
 - name: "{{ runn_name_prefix }} Set docker custom_build_dir-enabled option"
-  lineinfile:
+  ansible.builtin.lineinfile:
     dest: "{{ temp_runner_config.path }}"
     regexp: ^\s*enabled =
     line: "    enabled = {{ gitlab_runner.custom_build_dir_enabled|default(false) | lower }}"
@@ -456,7 +456,7 @@
 
 #### [runners.cache] section ####
 - name: "{{ runn_name_prefix }} Set cache section"
-  lineinfile:
+  ansible.builtin.lineinfile:
     dest: "{{ temp_runner_config.path }}"
     regexp: ^\s*\[runners\.cache\]
     line: "  [runners.cache]"
@@ -470,7 +470,7 @@
     - restart_gitlab_runner_macos
 
 - name: "{{ runn_name_prefix }} Set cache s3 section"
-  lineinfile:
+  ansible.builtin.lineinfile:
     dest: "{{ temp_runner_config.path }}"
     regexp: ^\s*\[runners\.cache\.s3\]
     line: "    [runners.cache.s3]"
@@ -484,7 +484,7 @@
     - restart_gitlab_runner_macos
 
 - name: "{{ runn_name_prefix }} Set cache gcs section"
-  lineinfile:
+  ansible.builtin.lineinfile:
     dest: "{{ temp_runner_config.path }}"
     regexp: ^\s*\[runners\.cache\.gcs\]
     line: "    [runners.cache.gcs]"
@@ -498,7 +498,7 @@
     - restart_gitlab_runner_macos
 
 - name: "{{ runn_name_prefix }} Set cache azure section"
-  lineinfile:
+  ansible.builtin.lineinfile:
     dest: "{{ temp_runner_config.path }}"
     regexp: ^\s*\[runners\.cache\.azure\]
     line: "    [runners.cache.azure]"
@@ -512,7 +512,7 @@
     - restart_gitlab_runner_macos
 
 - name: "{{ runn_name_prefix }} Set cache type option"
-  lineinfile:
+  ansible.builtin.lineinfile:
     dest: "{{ temp_runner_config.path }}"
     regexp: ^\s*Type =
     line: '    Type = {{ gitlab_runner.cache_type|default("") | to_json }}'
@@ -526,7 +526,7 @@
     - restart_gitlab_runner_macos
 
 - name: "{{ runn_name_prefix }} Set cache path option"
-  lineinfile:
+  ansible.builtin.lineinfile:
     dest: "{{ temp_runner_config.path }}"
     regexp: ^\s*Path =
     line: '    Path = {{ gitlab_runner.cache_path|default("") | to_json }}'
@@ -540,7 +540,7 @@
     - restart_gitlab_runner_macos
 
 - name: "{{ runn_name_prefix }} Set cache shared option"
-  lineinfile:
+  ansible.builtin.lineinfile:
     dest: "{{ temp_runner_config.path }}"
     regexp: ^\s*Shared =
     line: '    Shared = {{ gitlab_runner.cache_shared|default("") | lower }}'
@@ -555,7 +555,7 @@
 
 #### [runners.cache.s3] section ####
 - name: "{{ runn_name_prefix }} Set cache s3 server addresss"
-  lineinfile:
+  ansible.builtin.lineinfile:
     dest: "{{ temp_runner_config.path }}"
     regexp: ^\s*ServerAddress =
     line: '      ServerAddress = {{ gitlab_runner.cache_s3_server_address|default("") | to_json }}'
@@ -569,7 +569,7 @@
     - restart_gitlab_runner_macos
 
 - name: "{{ runn_name_prefix }} Set cache s3 access key"
-  lineinfile:
+  ansible.builtin.lineinfile:
     dest: "{{ temp_runner_config.path }}"
     regexp: ^\s*AccessKey =
     line: '      AccessKey = {{ gitlab_runner.cache_s3_access_key|default("") | to_json }}'
@@ -583,7 +583,7 @@
     - restart_gitlab_runner_macos
 
 - name: "{{ runn_name_prefix }} Set cache s3 secret key"
-  lineinfile:
+  ansible.builtin.lineinfile:
     dest: "{{ temp_runner_config.path }}"
     regexp: ^\s*SecretKey =
     line: '      SecretKey = {{ gitlab_runner.cache_s3_secret_key|default("") | to_json }}'
@@ -597,7 +597,7 @@
     - restart_gitlab_runner_macos
 
 - name: "{{ runn_name_prefix }} Set cache s3 bucket name option"
-  lineinfile:
+  ansible.builtin.lineinfile:
     dest: "{{ temp_runner_config.path }}"
     regexp: ^\s*BucketName =
     line: '      BucketName = {{ gitlab_runner.cache_s3_bucket_name|default("")  | to_json }}'
@@ -612,7 +612,7 @@
   when: gitlab_runner.cache_type is defined and gitlab_runner.cache_type == 's3'
 
 - name: "{{ runn_name_prefix }} Set cache s3 bucket location option"
-  lineinfile:
+  ansible.builtin.lineinfile:
     dest: "{{ temp_runner_config.path }}"
     regexp: ^\s*BucketLocation =
     line: '      BucketLocation = {{ gitlab_runner.cache_s3_bucket_location|default("") | to_json }}'
@@ -626,7 +626,7 @@
     - restart_gitlab_runner_macos
 
 - name: "{{ runn_name_prefix }} Set cache s3 insecure option"
-  lineinfile:
+  ansible.builtin.lineinfile:
     dest: "{{ temp_runner_config.path }}"
     regexp: ^\s*Insecure =
     line: '      Insecure = {{ gitlab_runner.cache_s3_insecure|default("") | lower }}'
@@ -641,7 +641,7 @@
 
 #### [runners.cache.gcs] section ####
 - name: "{{ runn_name_prefix }} Set cache gcs bucket name"
-  lineinfile:
+  ansible.builtin.lineinfile:
     dest: "{{ temp_runner_config.path }}"
     regexp: ^\s*BucketName =
     line: '      BucketName = {{ gitlab_runner.cache_gcs_bucket_name|default("") | to_json }}'
@@ -655,7 +655,7 @@
   when: gitlab_runner.cache_type is defined and gitlab_runner.cache_type == 'gcs'
 
 - name: "{{ runn_name_prefix }} Set cache gcs credentials file"
-  lineinfile:
+  ansible.builtin.lineinfile:
     dest: "{{ temp_runner_config.path }}"
     regexp: ^\s*CredentialsFile =
     line: '      CredentialsFile = {{ gitlab_runner.cache_gcs_credentials_file|default("") | to_json }}'
@@ -669,7 +669,7 @@
     - restart_gitlab_runner_macos
 
 - name: "{{ runn_name_prefix }} Set cache gcs access id"
-  lineinfile:
+  ansible.builtin.lineinfile:
     dest: "{{ temp_runner_config.path }}"
     regexp: ^\s*AccessID =
     line: '      AccessID = {{ gitlab_runner.cache_gcs_access_id|default("") | to_json }}'
@@ -683,7 +683,7 @@
     - restart_gitlab_runner_macos
 
 - name: "{{ runn_name_prefix }} Set cache gcs private key"
-  lineinfile:
+  ansible.builtin.lineinfile:
     dest: "{{ temp_runner_config.path }}"
     regexp: ^\s*PrivateKey =
     line: '      PrivateKey = {{ gitlab_runner.cache_gcs_private_key|default("") | to_json }}'
@@ -698,7 +698,7 @@
 
 #### [runners.cache.azure] section ####
 - name: "{{ runn_name_prefix }} Set cache azure account name"
-  lineinfile:
+  ansible.builtin.lineinfile:
     dest: "{{ temp_runner_config.path }}"
     regexp: ^\s*AccountName =
     line: '      AccountName = {{ gitlab_runner.cache_azure_account_name|default("") | to_json }}'
@@ -712,7 +712,7 @@
     - restart_gitlab_runner_macos
 
 - name: "{{ runn_name_prefix }} Set cache azure account key"
-  lineinfile:
+  ansible.builtin.lineinfile:
     dest: "{{ temp_runner_config.path }}"
     regexp: ^\s*AccountKey =
     line: '      AccountKey = {{ gitlab_runner.cache_azure_account_key|default("") | to_json }}'
@@ -726,7 +726,7 @@
     - restart_gitlab_runner_macos
 
 - name: "{{ runn_name_prefix }} Set cache azure container name"
-  lineinfile:
+  ansible.builtin.lineinfile:
     dest: "{{ temp_runner_config.path }}"
     regexp: ^\s*ContainerName =
     line: '      ContainerName = {{ gitlab_runner.cache_azure_container_name|default("") | to_json }}'
@@ -740,7 +740,7 @@
     - restart_gitlab_runner_macos
 
 - name: "{{ runn_name_prefix }} Set cache azure storage domain"
-  lineinfile:
+  ansible.builtin.lineinfile:
     dest: "{{ temp_runner_config.path }}"
     regexp: ^\s*StorageDomain =
     line: '      StorageDomain = {{ gitlab_runner.cache_azure_storage_domain|default("") | to_json }}'
@@ -755,7 +755,7 @@
 
 #### [runners.ssh] section #####
 - name: "{{ runn_name_prefix }} Set ssh user option"
-  lineinfile:
+  ansible.builtin.lineinfile:
     dest: "{{ temp_runner_config.path }}"
     regexp: ^\s*user =
     line: '  user = {{ gitlab_runner.ssh_user|default("") | to_json }}'
@@ -769,7 +769,7 @@
     - restart_gitlab_runner_macos
 
 - name: "{{ runn_name_prefix }} Set ssh host option"
-  lineinfile:
+  ansible.builtin.lineinfile:
     dest: "{{ temp_runner_config.path }}"
     regexp: ^\s*host =
     line: '  host = {{ gitlab_runner.ssh_host|default("") | to_json }}'
@@ -783,7 +783,7 @@
     - restart_gitlab_runner_macos
 
 - name: "{{ runn_name_prefix }} Set ssh port option"
-  lineinfile:
+  ansible.builtin.lineinfile:
     dest: "{{ temp_runner_config.path }}"
     regexp: ^\s*port =
     line: '  port = "{{ gitlab_runner.ssh_port|default("") | to_json }}"'
@@ -797,7 +797,7 @@
     - restart_gitlab_runner_macos
 
 - name: "{{ runn_name_prefix }} Set ssh password option"
-  lineinfile:
+  ansible.builtin.lineinfile:
     dest: "{{ temp_runner_config.path }}"
     regexp: ^\s*password =
     line: '  password = {{ gitlab_runner.ssh_password|default("") | to_json }}'
@@ -811,7 +811,7 @@
     - restart_gitlab_runner_macos
 
 - name: "{{ runn_name_prefix }} Set ssh identity file option"
-  lineinfile:
+  ansible.builtin.lineinfile:
     dest: "{{ temp_runner_config.path }}"
     regexp: ^\s*identity_file =
     line: '  identity_file = {{ gitlab_runner.ssh_identity_file|default("") | to_json }}'
@@ -826,7 +826,7 @@
 
 #### [runners.virtualbox] section #####
 - name: "{{ runn_name_prefix }} Set virtualbox base name option"
-  lineinfile:
+  ansible.builtin.lineinfile:
     dest: "{{ temp_runner_config.path }}"
     regexp: ^\s*base_name =
     line: "    base_name = {{ gitlab_runner.virtualbox_base_name | to_json }}"
@@ -841,7 +841,7 @@
     - restart_gitlab_runner_macos
 
 - name: "{{ runn_name_prefix }} Set virtualbox base snapshot option"
-  lineinfile:
+  ansible.builtin.lineinfile:
     dest: "{{ temp_runner_config.path }}"
     regexp: ^\s*base_snapshot =
     line: "    base_snapshot = {{ gitlab_runner.virtualbox_base_snapshot | to_json }}"
@@ -856,7 +856,7 @@
     - restart_gitlab_runner_macos
 
 - name: "{{ runn_name_prefix }} Set virtualbox base folder option"
-  lineinfile:
+  ansible.builtin.lineinfile:
     dest: "{{ temp_runner_config.path }}"
     regexp: ^\s*base_folder =
     line: "    base_folder = {{ gitlab_runner.virtualbox_base_folder | to_json }}"
@@ -871,7 +871,7 @@
     - restart_gitlab_runner_macos
 
 - name: "{{ runn_name_prefix }} Set virtualbox disable snapshots option"
-  lineinfile:
+  ansible.builtin.lineinfile:
     dest: "{{ temp_runner_config.path }}"
     regexp: ^\s*disable_snapshots =
     line: "    disable_snapshots = {{ gitlab_runner.virtualbox_disable_snapshots|default(false) | to_json }}"
@@ -1056,7 +1056,7 @@
     - restart_gitlab_runner_macos
 
 - name: "{{ runn_name_prefix }} Set builds dir file option"
-  lineinfile:
+  ansible.builtin.lineinfile:
     dest: "{{ temp_runner_config.path }}"
     regexp: ^\s*builds_dir =
     line: '  builds_dir = {{ gitlab_runner.builds_dir|default("") | to_json }}'
@@ -1070,7 +1070,7 @@
     - restart_gitlab_runner_macos
 
 - name: "{{ runn_name_prefix }} Set cache dir file option"
-  lineinfile:
+  ansible.builtin.lineinfile:
     dest: "{{ temp_runner_config.path }}"
     regexp: ^\s*cache_dir =
     line: '  cache_dir = {{ gitlab_runner.cache_dir|default("") | to_json }}'
@@ -1084,7 +1084,7 @@
     - restart_gitlab_runner_macos
 
 - name: "{{ runn_name_prefix }} Ensure directory permissions"
-  file:
+  ansible.builtin.file:
     dest: "{{ item }}"
     state: directory
     owner: "{{ gitlab_runner_runtime_owner|default(omit) }}"
@@ -1099,7 +1099,7 @@
   when: item|length
 
 - name: "{{ runn_name_prefix }} Ensure directory access test"
-  command: test -r {{ item }}
+  ansible.builtin.command: /usr/bin/test -r {{ item }}
   loop:
     - '{{ gitlab_runner.builds_dir | default("") }}'
     - '{{ gitlab_runner.cache_dir | default("") }}'
@@ -1111,13 +1111,13 @@
   ignore_errors: true
 
 - name: "{{ runn_name_prefix }} Ensure directory access fail on error"
-  fail:
+  ansible.builtin.fail:
     msg: "Error: user gitlab-runner failed to test access to {{ item.item }}. Check parent folder(s) permissions"
   loop: "{{ ensure_directory_access.results }}"
   when:
     - item.rc is defined and item.rc != 0
 
-- include_tasks: section-config-runner.yml
+- ansible.builtin.include_tasks: section-config-runner.yml
   vars:
     sect_name_prefix: "{{ runn_name_prefix }} section[{{ (section_index|int) + 1 }}/{{ gitlab_runner.extra_configs|list|length }}]:"
   loop: "{{ gitlab_runner.extra_configs|list }}"
