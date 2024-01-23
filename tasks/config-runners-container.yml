@@ -18,7 +18,7 @@
 
 - name: Write config section for each runner
   vars:
-    conf_name_prefix: "conf[{{ (runner_config_index|int) + 1 }}/{{ runner_configs|length }}]:"
+    conf_name_prefix: "conf[{{ (runner_config_index | int) + 1 }}/{{ runner_configs | length }}]:"
   ansible.builtin.include_tasks: config-runner-container.yml
   loop: "{{ runner_configs }}"
   loop_control:

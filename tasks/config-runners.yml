@@ -20,7 +20,7 @@
 
 - name: Write config section for each runner
   vars:
-    conf_name_prefix: "conf[{{ (runner_config_index|int) + 1 }}/{{ runner_configs|length }}]:"
+    conf_name_prefix: "conf[{{ (runner_config_index | int) + 1 }}/{{ runner_configs | length }}]:"
   ansible.builtin.include_tasks: config-runner.yml
   loop: "{{ runner_configs }}"
   loop_control:
@@ -37,4 +37,4 @@
     validate: "{{ gitlab_runner_executable }} verify -c %s"
     mode: "0600"
   become: "{{ gitlab_runner_system_mode }}"
-  diff: "{{ gitlab_runner_show_config_diff|bool }}"
+  diff: "{{ gitlab_runner_show_config_diff | bool }}"

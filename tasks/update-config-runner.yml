@@ -162,7 +162,7 @@
   ansible.builtin.lineinfile:
     dest: "{{ temp_runner_config.path }}"
     regexp: ^\s*\[runners\.{{ gitlab_runner.executor | default("shell") }}\]
-    line: '  [runners.{{ gitlab_runner.executor|replace("docker+machine","machine") | default("shell") }}]'
+    line: '  [runners.{{ gitlab_runner.executor | replace("docker+machine", "machine") | default("shell") }}]'
     state: "{{ 'absent' if (gitlab_runner.executor | default('shell')) == 'shell' else 'present' }}"
     insertafter: ^\s*executor =
     backrefs: false
@@ -317,7 +317,7 @@
   ansible.builtin.lineinfile:
     dest: "{{ temp_runner_config.path }}"
     regexp: ^\s*pull_policy =
-    line: "    pull_policy = {{ gitlab_runner.docker_pull_policy | default([])|to_json }}"
+    line: "    pull_policy = {{ gitlab_runner.docker_pull_policy | default([]) | to_json }}"
     state: "{{ 'present' if gitlab_runner.docker_pull_policy is defined else 'absent' }}"
     insertafter: ^\s*\[runners\.docker\]
     backrefs: false
@@ -331,7 +331,7 @@
   ansible.builtin.lineinfile:
     dest: "{{ temp_runner_config.path }}"
     regexp: ^\s*volumes =
-    line: "    volumes = {{ gitlab_runner.docker_volumes | default([])|to_json }}"
+    line: "    volumes = {{ gitlab_runner.docker_volumes | default([]) | to_json }}"
     state: "{{ 'present' if gitlab_runner.docker_volumes is defined else 'absent' }}"
     insertafter: ^\s*\[runners\.docker\]
     backrefs: false
@@ -586,7 +586,7 @@
   ansible.builtin.lineinfile:
     dest: "{{ temp_runner_config.path }}"
     regexp: ^\s*BucketName =
-    line: '      BucketName = {{ gitlab_runner.cache_s3_bucket_name | default("")  | to_json }}'
+    line: '      BucketName = {{ gitlab_runner.cache_s3_bucket_name | default("") | to_json }}'
     state: "{{ 'present' if gitlab_runner.cache_s3_bucket_name is defined else 'absent' }}"
     insertafter: ^\s*\[runners\.cache\.s3\]
     backrefs: false
