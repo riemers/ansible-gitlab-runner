@@ -22,6 +22,7 @@
         gitlab_runner_existing_version: "{{ existing_version_shell.stdout | trim if existing_version_shell.rc == 0 else '0' }}"
 
 - name: (Windows) INSTALL GitLab Runner for Windows
+  when: (not gitlab_runner_exists)
   block:
     - name: (Windows) Ensure install directory exists
       ansible.windows.win_file:
@@ -49,21 +50,19 @@
         - gitlab_runner_windows_service_user | length > 0
         - gitlab_runner_windows_service_password | length > 0
 
-  when: (not gitlab_runner_exists)
-
 - name: (Windows) Make sure runner is stopped
   ansible.windows.win_command: "{{ gitlab_runner_executable }} stop"
-  ignore_errors: true
+  failed_when: false
   when:
     - gitlab_runner_exists
 
 - name: (Windows) UPGRADE GitLab Runner for Windows
+  when:
+    - gitlab_runner_exists
+    - gitlab_runner_existing_version != gitlab_runner_wanted_version or gitlab_runner_wanted_version == 'latest'
   block:
     - name: (Windows) Download GitLab Runner
       ansible.windows.win_get_url:
         url: "{{ gitlab_runner_download_url }}"
         dest: "{{ gitlab_runner_executable }}"
         force: true
-  when:
-    - gitlab_runner_exists
-    - gitlab_runner_existing_version != gitlab_runner_wanted_version or gitlab_runner_wanted_version == 'latest'
