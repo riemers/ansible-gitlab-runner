@@ -13,13 +13,13 @@
   when: ansible_os_family == "Debian"
 
 - name: enable dynamic ca configuration on rhel6
-  ansible.builtin.shell: /bin/update-ca-trust enable
+  ansible.builtin.command: /bin/update-ca-trust enable
   when: ansible_os_family == "RedHat" and ansible_distribution_major_version|int == 6
 
 - name: update trusted ca debian
-  ansible.builtin.shell: /usr/sbin/update-ca-certificates
+  ansible.builtin.command: /usr/sbin/update-ca-certificates
   when: ansible_os_family == "Debian"
 
 - name: update trusted ca redhat
-  ansible.builtin.shell: /bin/update-ca-trust
+  ansible.builtin.command: /bin/update-ca-trust
   when: ansible_os_family == "RedHat"
