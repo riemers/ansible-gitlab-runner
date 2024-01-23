@@ -22,7 +22,9 @@
   check_mode: false
   become: "{{ gitlab_runner_system_mode }}"
 
-- ansible.builtin.import_tasks: list-configured-runners-unix.yml
+- name: List configured runners
+  ansible.builtin.import_tasks: list-configured-runners-unix.yml
+
 - name: (Unix) Register GitLab Runner
   ansible.builtin.include_tasks: register-runner.yml
   vars:
@@ -40,6 +42,7 @@
 
 - name: Set global options (macOS/Debian/RedHat)
   ansible.builtin.import_tasks: global-setup.yml
+
 - name: (Unix) Configure GitLab Runner
   ansible.builtin.include_tasks: config-runners.yml
   when: gitlab_runner_config_update_mode == 'by_config_toml'

@@ -12,7 +12,8 @@
     var: available_runners_not_longer_configured
   when: available_runners_not_longer_configured | length > 0
 
-- ansible.builtin.include_tasks: unregister-runner.yml
+- name: Unregister runner
+  ansible.builtin.include_tasks: unregister-runner.yml
   loop: "{{ available_runners_not_longer_configured }}"
   loop_control:
     loop_var: actual_gitlab_runner_name
