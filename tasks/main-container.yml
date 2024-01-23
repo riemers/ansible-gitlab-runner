@@ -25,7 +25,7 @@
 - name: (Container) Register GitLab Runner
   include_tasks: register-runner-container.yml
   vars:
-    - actual_gitlab_runner_name: "{{ gitlab_runner.name|default(ansible_hostname+'-'+gitlab_runner_index|string) }}"
+    actual_gitlab_runner_name: "{{ gitlab_runner.name | default(ansible_hostname + '-' + gitlab_runner_index | string) }}"
   when: gitlab_runner.token is defined or gitlab_runner_registration_token | string | length > 0
   loop: "{{ gitlab_runner_runners }}"
   loop_control:
