@@ -1,7 +1,9 @@
 ---
 # non macOS
 - name: Restart_gitlab_runner
-  ansible.builtin.service: name=gitlab-runner state={{ gitlab_runner_restart_state }}
+  ansible.builtin.service:
+    name: gitlab-runner
+    state: "{{ gitlab_runner_restart_state }}"
   listen: restart_gitlab_runner
   become: true
   when: ansible_os_family != 'Darwin' and ansible_os_family != 'Windows' and not gitlab_runner_container_install
