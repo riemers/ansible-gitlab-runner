@@ -9,3 +9,4 @@
   ansible.builtin.file:
     state: directory
     path: "{{ gitlab_runner_container_mount_path }}"
+    mode: 0755
