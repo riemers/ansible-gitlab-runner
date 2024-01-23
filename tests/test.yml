@@ -31,6 +31,7 @@
       async: 3600
       poll: 0
       register: mock_server
+      changed_when: true
       when: run_mock_server
 
     - name: Wait for pidfile to be created
@@ -57,4 +58,5 @@
 
     - name: Kill the mock CI
       ansible.builtin.command: kill {{ pidfile_b64.content | b64decode }}
+      changed_when: true
       when: run_mock_server

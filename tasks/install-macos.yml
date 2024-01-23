@@ -53,9 +53,11 @@
 
     - name: (MacOS) Install GitLab Runner
       ansible.builtin.command: "{{ gitlab_runner_executable }} install"
+      changed_when: true
 
     - name: (MacOS) Start GitLab Runner
       ansible.builtin.command: "{{ gitlab_runner_executable }} start"
+      changed_when: true
       when: gitlab_runner_macos_start_runner
 
 - name: (MacOS) UPGRADE GitLab Runner for macOS
@@ -65,18 +67,13 @@
   block:
     - name: (MacOS) Stop GitLab Runner
       ansible.builtin.command: "{{ gitlab_runner_executable }} stop"
+      changed_when: true
 
     - name: (MacOS) Download GitLab Runner
       ansible.builtin.get_url:
         url: "{{ gitlab_runner_download_url }}"
         dest: "{{ gitlab_runner_executable }}"
         force: true
-        mode: 0644
-      become: true
-
-    - name: (MacOS) Setting Permissions for gitlab-runner executable
-      ansible.builtin.file:
-        path: "{{ gitlab_runner_executable }}"
         owner: "{{ ansible_user_id | string }}"
         group: "{{ ansible_user_gid | string }}"
         mode: +x
@@ -84,3 +81,4 @@
 
     - name: (MacOS) Start GitLab Runner
       ansible.builtin.command: "{{ gitlab_runner_executable }} start"
+      changed_when: true
