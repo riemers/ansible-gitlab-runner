@@ -1,6 +1,7 @@
 ---
 - name: Install GitLab Runner (Windows)
   ansible.builtin.import_tasks: install-windows.yml
+
 - name: (Windows) Delete runners which were removed in GitLab
   ansible.windows.win_command: "{{ gitlab_runner_executable }} verify --delete"
   args:
@@ -9,7 +10,9 @@
   changed_when: '"Updated " in verified_runners.stderr'
   check_mode: false
 
-- ansible.builtin.import_tasks: list-configured-runners-windows.yml
+- name: List configured runners
+  ansible.builtin.import_tasks: list-configured-runners-windows.yml
+
 - name: (Windows) Register GitLab Runner
   ansible.builtin.include_tasks: register-runner-windows.yml
   vars:

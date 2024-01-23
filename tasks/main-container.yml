@@ -20,7 +20,9 @@
   changed_when: '"Updated " in verified_runners.container.Output'
   check_mode: false
 
-- ansible.builtin.import_tasks: list-configured-runners-container.yml
+- name: List configured runners
+  ansible.builtin.import_tasks: list-configured-runners-container.yml
+
 - name: (Container) Register GitLab Runner
   ansible.builtin.include_tasks: register-runner-container.yml
   vars:
@@ -37,6 +39,7 @@
 
 - name: (Container) Set global options
   ansible.builtin.import_tasks: global-setup.yml
+
 - name: (Container) Configure GitLab Runner
   ansible.builtin.include_tasks: config-runners-container.yml
   when: gitlab_runner_config_update_mode == 'by_config_toml'
