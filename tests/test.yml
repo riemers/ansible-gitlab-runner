@@ -37,7 +37,7 @@
 
 - hosts: localhost
   roles:
-    - ansible-gitlab-runner
+    - riemers.gitlab_runner
 
 - hosts: localhost
   tasks:

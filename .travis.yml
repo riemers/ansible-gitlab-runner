@@ -53,8 +53,8 @@ jobs:
         - powershell -ExecutionPolicy ByPass -File tests/travis-bootstrap-ansible.ps1
         - wsl ansible --version
       script:
-        - wsl mkdir -p tests/roles/ansible-gitlab-runner/
-        - cd tests/roles/ansible-gitlab-runner/
+        - wsl mkdir -p tests/roles/riemers.gitlab_runner/
+        - cd tests/roles/riemers.gitlab_runner/
         - wsl ln -s ../../../* .
         - cd ../../
         - wsl ansible-playbook test.yml -i inventory --syntax-check

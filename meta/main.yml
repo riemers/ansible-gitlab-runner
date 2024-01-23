@@ -1,6 +1,7 @@
 ---
 galaxy_info:
   author: Erik-jan Riemers
+  role_name: gitlab_runner
   namespace: riemers
   description: GitLab Runner
   license: MIT
