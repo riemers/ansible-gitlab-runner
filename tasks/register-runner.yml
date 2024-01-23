@@ -198,5 +198,6 @@
   when:
     - actual_gitlab_runner_name not in registered_gitlab_runner_names
     - gitlab_runner.state | default('present') == 'present'
+  changed_when: true
   no_log: true
   become: "{{ gitlab_runner_system_mode }}"
