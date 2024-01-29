@@ -59,7 +59,7 @@
   lineinfile:
     dest: "{{ gitlab_runner_config_file }}"
     regexp: ^log_level =
-    line: log_level = "{{ gitlab_runner_log_level|default("runner") }}"
+    line: log_level = "{{ gitlab_runner_log_level }}"
     insertbefore: BOF
     state: present
   no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
