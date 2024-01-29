@@ -250,7 +250,6 @@ gitlab_runner_runners:
     # See https://docs.gitlab.com/runner/configuration/advanced-configuration.html
     #
     # extra_configs:
-    #   log_level: "warning"
     #   runners.docker:
     #     memory: 512m
     #     allowed_images: ["ruby:*", "python:*", "php:*"]
