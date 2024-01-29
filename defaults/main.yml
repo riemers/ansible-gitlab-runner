@@ -84,7 +84,7 @@ gitlab_runner_restart_state: restarted
 # defines value for log_level
 # Defines the log level. Options are debug, info, warn, error, fatal, and panic. 
 # This setting has lower priority than the level set by the command-line arguments --debug, -l, or --log-level.
-gitlab_runner_log_level: "warning"
+# gitlab_runner_log_level: "warning"
 
 # default value for force accept self signed certificates
 force_accept_gitlab_server_self_signed: false
