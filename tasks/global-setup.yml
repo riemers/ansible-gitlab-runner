@@ -55,6 +55,20 @@
     - restart_gitlab_runner
     - restart_gitlab_runner_macos
 
+- name: Add log_level to config
+  lineinfile:
+    dest: "{{ gitlab_runner_config_file }}"
+    regexp: ^log_level =
+    line: log_level = "{{ gitlab_runner_log_level|default("runner") }}"
+    insertbefore: BOF
+    state: present
+  no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
+  when: gitlab_runner_log_level is defined # Ensure value is set
+  become: "{{ gitlab_runner_system_mode }}"
+  notify:
+    - restart_gitlab_runner
+    - restart_gitlab_runner_macos
+
 - name: Add sentry dsn to config
   lineinfile:
     dest: "{{ gitlab_runner_config_file }}"
