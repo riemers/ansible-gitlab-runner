@@ -35,7 +35,7 @@
     insertafter: \s*concurrent.*
     state: present
   no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
-  when: gitlab_runner_listen_address | length > 0 # Ensure value is set
+  when: gitlab_runner_listen_address | length > 0 
   become: "{{ gitlab_runner_system_mode }}"
   notify:
     - restart_gitlab_runner
@@ -49,7 +49,21 @@
     insertbefore: BOF
     state: present
   no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
-  when: gitlab_runner_log_format is defined # Ensure value is set
+  when: gitlab_runner_log_format is defined 
+  become: "{{ gitlab_runner_system_mode }}"
+  notify:
+    - restart_gitlab_runner
+    - restart_gitlab_runner_macos
+
+- name: Add log_level to config
+  lineinfile:
+    dest: "{{ gitlab_runner_config_file }}"
+    regexp: ^log_level =
+    line: log_level = "{{ gitlab_runner_log_level }}"
+    insertbefore: BOF
+    state: present
+  no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
+  when: gitlab_runner_log_level is defined
   become: "{{ gitlab_runner_system_mode }}"
   notify:
     - restart_gitlab_runner
@@ -63,7 +77,7 @@
     insertafter: \s*concurrent.*
     state: present
   no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
-  when: gitlab_runner_sentry_dsn | length > 0 # Ensure value is set
+  when: gitlab_runner_sentry_dsn | length > 0 
   become: "{{ gitlab_runner_system_mode }}"
   notify:
     - restart_gitlab_runner
