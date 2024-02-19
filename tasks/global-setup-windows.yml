@@ -23,6 +23,19 @@
     - restart_gitlab_runner_macos
     - restart_gitlab_runner_windows
 
+- name: (Windows) Set check_interval option
+  lineinfile:
+    dest: "{{ gitlab_runner_config_file }}"
+    regexp: ^check_interval =.*
+    line: check_interval = {{ gitlab_runner_check_interval }}
+    insertafter: \s*concurrent.*
+    state: present
+  no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
+  become: "{{ gitlab_runner_system_mode }}"
+  notify:
+    - restart_gitlab_runner
+    - restart_gitlab_runner_windows
+
 - name: (Windows) Add listen_address to config
   win_lineinfile:
     dest: "{{ gitlab_runner_config_file }}"

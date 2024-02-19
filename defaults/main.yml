@@ -19,6 +19,10 @@ gitlab_runner_executable: "{{ gitlab_runner_package_name }}"
 # Maximum number of global jobs to run concurrently
 gitlab_runner_concurrent: "{{ ansible_processor_vcpus }}"
 
+# Defines the interval length, in seconds, between the runner checking for new jobs.
+# The default value is 0. If set to 0 or lower, the default value of GitLab runner is used, which is 3.
+gitlab_runner_check_interval: 0
+
 # GitLab coordinator URL
 gitlab_runner_coordinator_url: https://gitlab.com
 # GitLab registration token
