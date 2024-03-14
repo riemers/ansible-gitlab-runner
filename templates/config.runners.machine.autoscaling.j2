@@ -1,0 +1,6 @@
+{% for machine in gitlab_runner.machine_autoscaling %}
+    [[runners.machine.autoscaling]]
+{% for attr in machine %}
+      {{ attr }} = {{ machine[attr] | to_json }}
+{% endfor %}
+{% endfor %}

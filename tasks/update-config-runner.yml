@@ -871,6 +871,162 @@
     - restart_gitlab_runner
     - restart_gitlab_runner_macos
 
+#### [runners.machine] section ####
+- name:  "{{ runn_name_prefix }} Set machine section"
+  lineinfile:
+    dest: "{{ temp_runner_config.path }}"
+    regexp: '^\s*\[runners\.machine\]'
+    line: '  [runners.machine]'
+    state: present
+    insertafter: EOF
+    backrefs: no
+  check_mode: no
+  no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
+  notify:
+  - restart_gitlab_runner
+  - restart_gitlab_runner_macos
+
+- name:  "{{ runn_name_prefix }} Set machine MaxGrowthRate"
+  lineinfile:
+    dest: "{{ temp_runner_config.path }}"
+    regexp: '^    MaxGrowthRate ='
+    line: '    MaxGrowthRate = {{ gitlab_runner.machine_MaxGrowthRate|default("") | to_json }}'
+    state: "{{ 'present' if gitlab_runner.machine_MaxGrowthRate is defined else 'absent' }}"
+    insertafter: '^\s*\[runners\.machine\]'
+    backrefs: no
+  check_mode: no
+  no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
+  notify:
+  - restart_gitlab_runner
+  - restart_gitlab_runner_macos
+
+- name:  "{{ runn_name_prefix }} Set machine IdleCount"
+  lineinfile:
+    dest: "{{ temp_runner_config.path }}"
+    regexp: '^    IdleCount ='
+    line: '    IdleCount = {{ gitlab_runner.machine_IdleCount|default("") | to_json }}'
+    state: "{{ 'present' if gitlab_runner.machine_IdleCount is defined else 'absent' }}"
+    insertafter: '^\s*\[runners\.machine\]'
+    backrefs: no
+  check_mode: no
+  no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
+  notify:
+  - restart_gitlab_runner
+  - restart_gitlab_runner_macos
+
+- name: "{{ runn_name_prefix }} Set machine IdleScaleFactor"
+  lineinfile:
+    dest: "{{ temp_runner_config.path }}"
+    regexp: '^    IdleScaleFactor ='
+    line: '    IdleScaleFactor = {{ gitlab_runner.machine_IdleScaleFactor|default("") | to_json }}'
+    state: "{{ 'present' if gitlab_runner.machine_IdleScaleFactor is defined else 'absent' }}"
+    insertafter: '^\s*\[runners\.machine\]'
+    backrefs: no
+  check_mode: no
+  no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
+  notify:
+    - restart_gitlab_runner
+    - restart_gitlab_runner_macos
+
+- name: "{{ runn_name_prefix }} Set machine IdleCountMin"
+  lineinfile:
+    dest: "{{ temp_runner_config.path }}"
+    regexp: '^    IdleCountMin ='
+    line: '    IdleCountMin = {{ gitlab_runner.machine_IdleCountMin|default("") | to_json }}'
+    state: "{{ 'present' if gitlab_runner.machine_IdleCountMin is defined else 'absent' }}"
+    insertafter: '^\s*\[runners\.machine\]'
+    backrefs: no
+  check_mode: no
+  no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
+  notify:
+    - restart_gitlab_runner
+    - restart_gitlab_runner_macos
+
+- name: "{{ runn_name_prefix }} Set machine IdleTime"
+  lineinfile:
+    dest: "{{ temp_runner_config.path }}"
+    regexp: '^    IdleTime ='
+    line: '    IdleTime = {{ gitlab_runner.machine_IdleTime|default("") | to_json }}'
+    state: "{{ 'present' if gitlab_runner.machine_IdleTime is defined else 'absent' }}"
+    insertafter: '^\s*\[runners\.machine\]'
+    backrefs: no
+  check_mode: no
+  no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
+  notify:
+    - restart_gitlab_runner
+    - restart_gitlab_runner_macos
+
+- name: "{{ runn_name_prefix }} Set machine MaxBuilds"
+  lineinfile:
+    dest: "{{ temp_runner_config.path }}"
+    regexp: '^    MaxBuilds ='
+    line: '    MaxBuilds = {{ gitlab_runner.machine_MaxBuilds|default("") | to_json }}'
+    state: "{{ 'present' if gitlab_runner.machine_MaxBuilds is defined else 'absent' }}"
+    insertafter: '^\s*\[runners\.machine\]'
+    backrefs: no
+  check_mode: no
+  no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
+  notify:
+    - restart_gitlab_runner
+    - restart_gitlab_runner_macos
+
+- name: "{{ runn_name_prefix }} Set machine MachineName"
+  lineinfile:
+    dest: "{{ temp_runner_config.path }}"
+    regexp: '^    MachineName ='
+    line: '    MachineName = {{ gitlab_runner.machine_MachineName|default("") | to_json }}'
+    state: "{{ 'present' if gitlab_runner.machine_MachineName is defined else 'absent' }}"
+    insertafter: '^\s*\[runners\.machine\]'
+    backrefs: no
+  check_mode: no
+  no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
+  notify:
+    - restart_gitlab_runner
+    - restart_gitlab_runner_macos
+
+- name: "{{ runn_name_prefix }} Set machine MachineDriver"
+  lineinfile:
+    dest: "{{ temp_runner_config.path }}"
+    regexp: '^    MachineDriver ='
+    line: '    MachineDriver = {{ gitlab_runner.machine_MachineDriver|default("") | to_json }}'
+    state: "{{ 'present' if gitlab_runner.machine_MachineDriver is defined else 'absent' }}"
+    insertafter: '^\s*\[runners\.machine\]'
+    backrefs: no
+  check_mode: no
+  no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
+  notify:
+    - restart_gitlab_runner
+    - restart_gitlab_runner_macos
+
+- name: "{{ runn_name_prefix }} Set machine MachineOptions"
+  lineinfile:
+    dest: "{{ temp_runner_config.path }}"
+    regexp: '^    MachineOptions ='
+    line: '    MachineOptions = {{ gitlab_runner.machine_MachineOptions|default("") | to_json }}'
+    state: "{{ 'present' if gitlab_runner.machine_MachineOptions is defined else 'absent' }}"
+    insertafter: '^\s*\[runners\.machine\]'
+    backrefs: no
+  check_mode: no
+  no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
+  notify:
+    - restart_gitlab_runner
+    - restart_gitlab_runner_macos
+
+#### [[runners.machine.autoscaling]] section ####
+
+- name:  "{{ runn_name_prefix }} Set additional autoscaling"
+  blockinfile:
+    dest: "{{ temp_runner_config.path }}"
+    content: "{{ lookup('template', 'config.runners.machine.autoscaling.j2') if gitlab_runner.machine_autoscaling is defined }}"
+    state: "{{ 'present' if gitlab_runner.machine_autoscaling is defined else 'absent' }}"
+    marker: "# {mark} runners.machine.autoscaling"
+    insertafter: EOF
+  check_mode: no
+  no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
+  notify:
+  - restart_gitlab_runner
+  - restart_gitlab_runner_macos
+
 - name: "{{ runn_name_prefix }} Set builds dir file option"
   lineinfile:
     dest: "{{ temp_runner_config.path }}"
