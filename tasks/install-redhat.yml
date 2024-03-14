@@ -1,13 +1,13 @@
 ---
 - name: (RedHat) Get Gitlab repository installation script
-  get_url:
+  ansible.builtin.get_url:
     url: https://packages.gitlab.com/install/repositories/runner/{{ gitlab_runner_package_name }}/script.rpm.sh
     dest: /tmp/gitlab-runner.script.rpm.sh
     mode: "0744"
   when: gitlab_runner_skip_package_repo_install is not defined or not gitlab_runner_skip_package_repo_install
 
 - name: (RedHat) Install Gitlab repository
-  command: >
+  ansible.builtin.command: >
     {% if ansible_distribution == "Rocky" %}
     env os=el dist={{ ansible_distribution_major_version }}
     {% endif %}
@@ -18,22 +18,22 @@
   when: gitlab_runner_skip_package_repo_install is not defined or not gitlab_runner_skip_package_repo_install
 
 - name: (RedHat) Update gitlab_runner_package_name
-  set_fact:
+  ansible.builtin.set_fact:
     gitlab_runner_package: "{{ gitlab_runner_package_name }}-{{ gitlab_runner_package_version }}"
     gitlab_runner_package_state: present
   when: gitlab_runner_package_version is defined
 
 - name: (RedHat) Set gitlab_runner_package_name
-  set_fact:
+  ansible.builtin.set_fact:
     gitlab_runner_package: "{{ gitlab_runner_package_name }}"
     gitlab_runner_package_state: latest
   when: gitlab_runner_package_version is not defined
 
 - name: (RedHat) Install GitLab Runner
-  package:
+  ansible.builtin.package:
     name: "{{ gitlab_runner_package }}"
     state: "{{ gitlab_runner_package_state }}"
   become: true
 
 - name: Set systemd reload options
-  import_tasks: systemd-reload.yml
+  ansible.builtin.import_tasks: systemd-reload.yml

@@ -1,18 +1,18 @@
 ---
 - name: (Windows) Create .gitlab-runner dir
-  win_file:
+  ansible.windows.win_file:
     path: "{{ gitlab_runner_config_file_location }}"
     state: directory
 
 - name: (Windows) Ensure config.toml exists
-  win_file:
+  ansible.windows.win_file:
     path: "{{ gitlab_runner_config_file }}"
     state: touch
     modification_time: preserve
     access_time: preserve
 
 - name: (Windows) Set concurrent option
-  win_lineinfile:
+  community.windows.win_lineinfile:
     dest: "{{ gitlab_runner_config_file }}"
     regexp: ^(\s*)concurrent =.*
     line: $1concurrent = {{ gitlab_runner_concurrent }}
@@ -37,7 +37,7 @@
     - restart_gitlab_runner_windows
 
 - name: (Windows) Add listen_address to config
-  win_lineinfile:
+  community.windows.win_lineinfile:
     dest: "{{ gitlab_runner_config_file }}"
     regexp: ^listen_address =.*
     line: listen_address = "{{ gitlab_runner_listen_address }}"
@@ -49,7 +49,7 @@
     - restart_gitlab_runner_windows
 
 - name: (Windows) Add sentry dsn to config
-  win_lineinfile:
+  community.windows.win_lineinfile:
     dest: "{{ gitlab_runner_config_file }}"
     regexp: ^sentry_dsn =.*
     line: sentry_dsn = "{{ gitlab_runner_sentry_dsn }}"
@@ -62,7 +62,7 @@
     - restart_gitlab_runner_windows
 
 - name: (Windows) Add session server listen_address to config
-  win_lineinfile:
+  community.windows.win_lineinfile:
     dest: "{{ gitlab_runner_config_file }}"
     regexp: ^(\s+)listen_address =
     line: '  listen_address = "{{ gitlab_runner_session_server_listen_address }}"'
@@ -74,7 +74,7 @@
     - restart_gitlab_runner_windows
 
 - name: (Windows) Add session server advertise_address to config
-  win_lineinfile:
+  community.windows.win_lineinfile:
     dest: "{{ gitlab_runner_config_file }}"
     regexp: ^\s*advertise_address =
     line: '  advertise_address = "{{ gitlab_runner_session_server_advertise_address }}"'
@@ -86,7 +86,7 @@
     - restart_gitlab_runner_windows
 
 - name: (Windows) Add session server session_timeout to config
-  win_lineinfile:
+  community.windows.win_lineinfile:
     dest: "{{ gitlab_runner_config_file }}"
     regexp: ^\s*session_timeout =
     line: "  session_timeout = {{ gitlab_runner_session_server_session_timeout }}"
