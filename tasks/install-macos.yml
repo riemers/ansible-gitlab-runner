@@ -65,6 +65,7 @@
       command: "{{ gitlab_runner_executable }} stop"
 
     - name: (MacOS) Download GitLab Runner
+      become: true
       get_url:
         url: "{{ gitlab_runner_download_url }}"
         dest: "{{ gitlab_runner_executable }}"
