@@ -915,7 +915,7 @@
   when: item|length
 
 - name: "{{ runn_name_prefix }} Ensure directory access test"
-  command: /usr/bin/test -r {{ item }}
+  command: test -r {{ item }}
   loop:
     - '{{ gitlab_runner.builds_dir | default("") }}'
     - '{{ gitlab_runner.cache_dir | default("") }}'
