@@ -82,6 +82,9 @@ gitlab_runner_container_network: default
 # default state to restart
 gitlab_runner_restart_state: restarted
 
+# systemd service kill timeout (time to wait for running jobs on stop)
+gitlab_runner_timeout_stop_seconds: 7200
+
 # default value for log_format
 # gitlab_runner_log_format: runner
 
