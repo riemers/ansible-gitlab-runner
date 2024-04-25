@@ -24,7 +24,7 @@
     - restart_gitlab_runner_windows
 
 - name: (Windows) Set check_interval option
-  win_lineinfile:
+  community.windows.win_lineinfile:
     dest: "{{ gitlab_runner_config_file }}"
     regexp: ^check_interval =.*
     line: check_interval = {{ gitlab_runner_check_interval }}
@@ -43,7 +43,7 @@
     line: listen_address = "{{ gitlab_runner_listen_address }}"
     insertafter: \s*concurrent.*
     state: present
-  when: gitlab_runner_listen_address | length > 0 # Ensure value is set
+  when: gitlab_runner_listen_address | length > 0  # Ensure value is set
   notify:
     - restart_gitlab_runner
     - restart_gitlab_runner_windows
@@ -55,7 +55,7 @@
     line: sentry_dsn = "{{ gitlab_runner_sentry_dsn }}"
     insertafter: \s*concurrent.*
     state: present
-  when: gitlab_runner_sentry_dsn | length > 0 # Ensure value is set
+  when: gitlab_runner_sentry_dsn | length > 0  # Ensure value is set
   notify:
     - restart_gitlab_runner
     - restart_gitlab_runner_macos
