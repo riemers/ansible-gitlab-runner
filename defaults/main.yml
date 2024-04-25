@@ -19,6 +19,10 @@ gitlab_runner_executable: "{{ gitlab_runner_package_name }}"
 # Maximum number of global jobs to run concurrently
 gitlab_runner_concurrent: "{{ ansible_processor_vcpus }}"
 
+# Defines the interval length, in seconds, between the runner checking for new jobs.
+# The default value is 0. If set to 0 or lower, the default value of GitLab runner is used, which is 3.
+gitlab_runner_check_interval: 0
+
 # GitLab coordinator URL
 gitlab_runner_coordinator_url: https://gitlab.com
 # GitLab registration token
@@ -78,8 +82,16 @@ gitlab_runner_container_network: default
 # default state to restart
 gitlab_runner_restart_state: restarted
 
+# systemd service kill timeout (time to wait for running jobs on stop)
+gitlab_runner_timeout_stop_seconds: 7200
+
 # default value for log_format
 # gitlab_runner_log_format: runner
+
+# defines value for log_level
+# Defines the log level. Options are debug, info, warn, error, fatal, and panic. 
+# This setting has lower priority than the level set by the command-line arguments --debug, -l, or --log-level.
+# gitlab_runner_log_level: "warning"
 
 # default value for force accept self signed certificates
 force_accept_gitlab_server_self_signed: false

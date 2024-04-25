@@ -46,7 +46,7 @@ gitlab_runner:
 
 ## Autoscale Runner Machine vars for AWS (optional)
 
-- `gitlab_runner_machine_options: []` - Foremost you need to pass an array of dedicated vars in the machine_options to configure your scaling runner:
+- `MachineOptions: []` - Foremost you need to pass an array of dedicated vars in the machine_options to configure your scaling runner:
 
   + `amazonec2-access-key` and `amazonec2-secret-key` the keys of the dedicated IAM user with permission for EC2
   + `amazonec2-zone`
@@ -62,12 +62,10 @@ gitlab_runner:
 - `MachineName` - Name of the machine. It **must** contain `%s`, which will be replaced with a unique machine identifier.
 - `IdleCount` - Number of machines, that need to be created and waiting in Idle state.
 - `IdleTime` - Time (in seconds) for machine to be in Idle state before it is removed.
-
-In addition you could set *off peak* settings. This lets you select a regular time periods when no work is done. For example most of commercial companies are working from Monday to Friday in a fixed hours, eg. from 10am to 6pm. In the rest of the week - from Monday to Friday at 12am-9am and 6pm-11pm and whole Saturday and Sunday - no one is working. These time periods we’re naming here as Off Peak.
-
-- `gitlab_runner_machine_off_peak_periods`
-- `gitlab_runner_machine_off_peak_idle_time`
-- `gitlab_runner_machine_off_peak_idle_count`
+- `MaxGrowthRate` - The maximum number of machines that can be added to the runner in parallel. Default is 0 (no limit).
+- `MaxBuilds` - Maximum job (build) count before machine is removed.
+- `IdleScaleFactor` - (Experimental) The number of Idle machines as a factor of the number of machines currently in use. Must be in float number format. See the autoscale documentation for more details. Defaults to 0.0.
+- `IdleCountMin` - 	Minimal number of machines that need to be created and waiting in Idle state when the IdleScaleFactor is in use. Default is 1.
 
 ### Read Sources
 For details follow these links:
@@ -134,15 +132,21 @@ gitlab_runner_runners:
     docker_image: 'alpine'
     # Indicates whether this runner can pick jobs without tags.
     run_untagged: true
-    extra_configs:
-      runners.machine:
-        IdleCount: 1
-        IdleTime: 1800
-        MaxBuilds: 10
-        MachineDriver: 'amazonec2'
-        MachineName: 'git-runner-%s'
-        MachineOptions: ["amazonec2-access-key={{ lookup('env','AWS_IAM_ACCESS_KEY') }}", "amazonec2-secret-key={{ lookup('env','AWS_IAM_SECRET_KEY') }}", "amazonec2-zone={{ lookup('env','AWS_EC2_ZONE') }}", "amazonec2-region={{ lookup('env','AWS_EC2_REGION') }}", "amazonec2-vpc-id={{ lookup('env','AWS_VPC_ID') }}", "amazonec2-subnet-id={{ lookup('env','AWS_SUBNET_ID') }}", "amazonec2-use-private-address=true", "amazonec2-tags=gitlab-runner", "amazonec2-security-group={{ lookup('env','AWS_EC2_SECURITY_GROUP') }}", "amazonec2-instance-type={{ lookup('env','AWS_EC2_INSTANCE_TYPE') }}"]
-
+    machine_IdleCount: 1
+    machine_IdleTime: 1800
+    machine_MaxBuilds: 10
+    machine_MachineDriver: 'amazonec2'
+    machine_MachineName: 'git-runner-%s'
+    machine_MachineOptions: ["amazonec2-access-key={{ lookup('env','AWS_IAM_ACCESS_KEY') }}", "amazonec2-secret-key={{ lookup('env','AWS_IAM_SECRET_KEY') }}", "amazonec2-zone={{ lookup('env','AWS_EC2_ZONE') }}", "amazonec2-region={{ lookup('env','AWS_EC2_REGION') }}", "amazonec2-vpc-id={{ lookup('env','AWS_VPC_ID') }}", "amazonec2-subnet-id={{ lookup('env','AWS_SUBNET_ID') }}", "amazonec2-use-private-address=true", "amazonec2-tags=gitlab-runner", "amazonec2-security-group={{ lookup('env','AWS_EC2_SECURITY_GROUP') }}", "amazonec2-instance-type={{ lookup('env','AWS_EC2_INSTANCE_TYPE') }}"]
+    machine_autoscaling:
+      - Periods: ["* * 7-18 * * mon-fri *"]
+        Timezone: "UTC"
+        IdleCount: 3
+        IdleTime: 900
+      - Periods: ["* * * * * sat,sun *"]
+        Timezone: "UTC"
+        IdleCount: 0
+        IdleTime: 300
 ```
 
 ### NOTE
