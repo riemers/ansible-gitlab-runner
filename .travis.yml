@@ -17,7 +17,7 @@ jobs:
         # Check ansible version
         - ansible --version
         # Create ansible.cfg with correct roles_path
-        #- printf '[defaults]\nroles_path=../' > ansible.cfg
+        # - printf '[defaults]\nroles_path=../' > ansible.cfg
         - "{ echo '[defaults]'; echo 'roles_path = ../'; } > ansible.cfg"
       script:
         # Basic role syntax check
@@ -30,7 +30,7 @@ jobs:
     - os: osx
       osx_image: xcode10.3
       # See https://github.com/travis-ci/travis-ci/issues/2312#issuecomment-422830059
-      #language: python
+      # language: python
       language: generic
       install:
         # Install ansible
@@ -59,7 +59,7 @@ jobs:
         - cd ../../
         - wsl ansible-playbook test.yml -i inventory --syntax-check
         # Running tests
-        - wsl ansible-playbook test.yml -i inventory --extra-vars 'ansible_user=ansible ansible_password=Ans1ble_User! ansible_connection=winrm ansible_winrm_server_cert_validation=ignore
-          ansible_ssh_port=5986'
+        - wsl ansible-playbook test.yml -i inventory --extra-vars 'ansible_user=ansible ansible_password=Ans1ble_User!
+          ansible_connection=winrm ansible_winrm_server_cert_validation=ignore ansible_ssh_port=5986'
 notifications:
   webhooks: https://galaxy.ansible.com/api/v1/notifications/

@@ -1,6 +1,6 @@
 ---
 - name: List configured runners as json
-  docker_container:
+  community.docker.docker_container:
     name: "{{ gitlab_runner_container_name }}-list"
     image: "{{ gitlab_runner_container_image }}:{{ gitlab_runner_container_tag }}"
     command: --log-format json list
@@ -17,11 +17,11 @@
   check_mode: false
 
 - name: Initialze runner list
-  set_fact:
+  ansible.builtin.set_fact:
     registered_gitlab_runner_names: []
 
 - name: Create list of configured runners
-  set_fact:
+  ansible.builtin.set_fact:
     registered_gitlab_runner_names: "{{ registered_gitlab_runner_names + [json_item['msg']] }}"
   vars:
     json_item: "{{ item | from_json }}"
@@ -29,4 +29,5 @@
   when: "'Executor' in json_item"
 
 - name: Print configured runners
-  debug: var=registered_gitlab_runner_names
+  ansible.builtin.debug:
+    var: registered_gitlab_runner_names
