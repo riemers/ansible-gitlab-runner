@@ -24,7 +24,7 @@
     - restart_gitlab_runner_windows
 
 - name: (Windows) Set check_interval option
-  lineinfile:
+  win_lineinfile:
     dest: "{{ gitlab_runner_config_file }}"
     regexp: ^check_interval =.*
     line: check_interval = {{ gitlab_runner_check_interval }}
