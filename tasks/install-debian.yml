@@ -46,6 +46,7 @@
   apt:
     name: "{{ gitlab_runner_package }}"
     state: "{{ gitlab_runner_package_state }}"
+    allow_change_held_packages: true
     allow_downgrade: true
   become: true
   environment:
@@ -56,6 +57,7 @@
   apt:
     name: "{{ gitlab_runner_package }}"
     state: "{{ gitlab_runner_package_state }}"
+    allow_change_held_packages: true
     allow_downgrade: true
   become: true
   when: ansible_distribution_release not in ["buster", "focal", "jammy"]

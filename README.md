@@ -7,7 +7,7 @@ This role will install the [official GitLab Runner](https://gitlab.com/gitlab-or
 Requirements
 ------------
 
-This role requires Ansible 2.7 or higher.
+This role requires Ansible 2.13 or higher.
 
 Role Variables
 --------------
@@ -174,3 +174,4 @@ Feel free to add your name to the readme if you make a PR. A full list of people
 - Matthias Schmieder for adding Windows Support
 - dniwdeus & rosenstrauch for adding AWS autoscale option
 - oscillate123 for fixing Windows config.toml idempotency
+- [cchaudier](https://github.com/cchaudier) for fixing changing the version of a package which is on the apt hold list
