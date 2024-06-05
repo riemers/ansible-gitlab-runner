@@ -327,6 +327,20 @@
     - restart_gitlab_runner
     - restart_gitlab_runner_macos
 
+- name: "{{ runn_name_prefix }} Set docker allowed_pull_policies option"
+  lineinfile:
+    dest: "{{ temp_runner_config.path }}"
+    regexp: ^\s*allowed_pull_policies =
+    line: "    allowed_pull_policies = {{ gitlab_runner.docker_allowed_pull_policies|default([])|to_json }}"
+    state: "{{ 'present' if gitlab_runner.docker_allowed_pull_policies is defined else 'absent' }}"
+    insertafter: ^\s*\[runners\.docker\]
+    backrefs: false
+  check_mode: false
+  no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
+  notify:
+    - restart_gitlab_runner
+    - restart_gitlab_runner_macos
+
 - name: "{{ runn_name_prefix }} Set docker volumes option"
   lineinfile:
     dest: "{{ temp_runner_config.path }}"
