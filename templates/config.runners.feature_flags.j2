@@ -1,0 +1,4 @@
+  [runners.feature_flags]
+{% for flag in gitlab_runner.feature_flags %}
+    {{ flag }} = true
+{% endfor %}
