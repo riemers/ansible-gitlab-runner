@@ -248,6 +248,13 @@ gitlab_runner_runners:
     # Cache directory
     # cache_dir: '/cache'
     #
+    # Feature Flags
+    # See https://docs.gitlab.com/runner/configuration/feature-flags.html#available-feature-flags
+    #
+    # Sets feature flags. The default is not set.
+    # feature_flags:
+    #   - FF_TIMESTAMPS
+    #
     # Extra registration option
     # extra_registration_option: '--maximum-timeout=3600'
     #
