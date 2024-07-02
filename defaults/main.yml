@@ -28,6 +28,13 @@ gitlab_runner_coordinator_url: https://gitlab.com
 # GitLab registration token
 gitlab_runner_registration_token: ""
 
+# Gitlab runner registration token type:
+# "runner-token" - Register runner with --token option (new workflow https://docs.gitlab.com/ee/ci/runners/new_creation_workflow.html)
+# "registration-token" - Register runner with --registration-token option (deprecating in gitlab 16.0 but still usable and deleted in 18.0)
+# For gitlab version >= 16.0 it is advisable to specify token for each runner in 'gitlab_runner_runners' section
+# and set this variable to "runner-token"
+gitlab_runner_registration_token_type: "registration-token"
+
 gitlab_runner_sentry_dsn: ""
 
 # GitLab server IP
@@ -89,7 +96,7 @@ gitlab_runner_timeout_stop_seconds: 7200
 # gitlab_runner_log_format: runner
 
 # defines value for log_level
-# Defines the log level. Options are debug, info, warn, error, fatal, and panic. 
+# Defines the log level. Options are debug, info, warn, error, fatal, and panic.
 # This setting has lower priority than the level set by the command-line arguments --debug, -l, or --log-level.
 # gitlab_runner_log_level: "warning"
 
