@@ -113,7 +113,13 @@
       ansible.builtin.copy:
         content: >
           {{ register_runner_cmd }}
+          {% set is_version_lt_16 = gitlab_runner_wanted_version|version_compare('16.0', '<') %}
+          {% set is_auth_token_empty = gitlab_runner_authentication_token|string|length == 0 %}
+          {% if is_version_lt_16 or (is_auth_token_empty and gitlab_runner_wanted_version|version_compare('18.0', '<')) %}
           --registration-token '{{ gitlab_runner.token|default(gitlab_runner_registration_token)|hash("sha1") }}'
+          {% else %}
+          --token '{{ gitlab_runner.token|default(gitlab_runner_authentication_token)|hash("sha1") }}'
+          {% endif %}
           {% if gitlab_runner.cache_s3_secret_key is defined %}
           --cache-s3-secret-key '{{ gitlab_runner.cache_s3_secret_key|hash("sha1") }}'
           {% endif %}
@@ -143,7 +149,13 @@
     image: "{{ gitlab_runner_container_image }}:{{ gitlab_runner_container_tag }}"
     command: >
       {{ register_runner_cmd }}
-      --registration-token '{{ gitlab_runner.token|default(gitlab_runner_registration_token) }}'
+      {% set is_version_lt_16 = gitlab_runner_wanted_version|version_compare('16.0', '<') %}
+      {% set is_auth_token_empty = gitlab_runner_authentication_token|string|length == 0 %}
+      {% if is_version_lt_16 or (is_auth_token_empty and gitlab_runner_wanted_version|version_compare('18.0', '<')) %}
+      --registration-token '{{ gitlab_runner.token|default(gitlab_runner_registration_token)|hash("sha1") }}'
+      {% else %}
+      --token '{{ gitlab_runner.token|default(gitlab_runner_authentication_token)|hash("sha1") }}'
+      {% endif %}
       {% if gitlab_runner.cache_s3_secret_key is defined %}
       --cache-s3-secret-key '{{ gitlab_runner.cache_s3_secret_key }}'
       {% endif %}

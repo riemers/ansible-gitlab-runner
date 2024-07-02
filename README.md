@@ -17,7 +17,7 @@ Role Variables
 On Mac OSX and Windows, use e.g. `gitlab_runner_wanted_version: 12.4.1`.
 On Linux, use `gitlab_runner_package_version` instead.
 - `gitlab_runner_concurrent` - The maximum number of global jobs to run concurrently. Defaults to the number of processor cores.
-- `gitlab_runner_registration_token` - The GitLab registration token. If this is specified, a runner will be registered to a GitLab server.
+- `gitlab_runner_registration_token` - The GitLab registration token. If this is specified, each runner will be registered to a GitLab server. Deprecated in gitlab version 16.0 and removed in 18.0. It is advised to use runner auth token for each runner in gitlab_runner_runners (new workflow https://docs.gitlab.com/ee/ci/runners/new_creation_workflow.html)
 - `gitlab_runner_coordinator_url` - The GitLab coordinator URL. Defaults to `https://gitlab.com`.
 - `gitlab_runner_sentry_dsn` - Enable tracking of all system level errors to Sentry
 - `gitlab_runner_listen_address` - Enable `/metrics` endpoint for Prometheus scraping.
@@ -93,7 +93,7 @@ gitlab_runner_coordinator_url: https://gitlab.com
 gitlab_runner_registration_token: '12341234'
 gitlab_runner_runners:
   - name: 'Example Docker GitLab Runner'
-    # token is an optional override to the global gitlab_runner_registration_token
+    # token is an optional override to the global gitlab_runner_registration_token and gitlab_runner_authentication_token
     token: 'abcd'
     # url is an optional override to the global gitlab_runner_coordinator_url
     url: 'https://my-own-gitlab.mydomain.com'
@@ -123,7 +123,7 @@ gitlab_runner_coordinator_url: 'https://gitlab.com'
 gitlab_runner_runners:
   - name: 'Example autoscaling GitLab Runner'
     state: present
-    # token is an optional override to the global gitlab_runner_registration_token
+    # token is an optional override to the global gitlab_runner_registration_token and gitlab_runner_authentication_token
     token: 'HUzTMgnxk17YV8Rj8ucQ'
     executor: 'docker+machine'
     # Maximum number of jobs to run concurrently on this specific runner.
