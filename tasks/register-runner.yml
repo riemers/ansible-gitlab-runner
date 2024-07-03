@@ -48,7 +48,7 @@
       --docker-wait-for-services-timeout '{{ gitlab_runner.docker_wait_for_services_timeout|default(30) }}'
       {% endif %}
       {% if gitlab_runner.docker_tlsverify|default(false) %}
-      --docker-tlsverify '{{ gitlab_runner.docker_tlsverify|default("true") }}'
+      --docker-tlsverify='{{ gitlab_runner.docker_tlsverify|default("true") }}'
       {% endif %}
       {% if gitlab_runner.docker_disable_cache|default(false) %}
       --docker-disable-cache '{{ gitlab_runner.docker_disable_cache|default("false") }}'
