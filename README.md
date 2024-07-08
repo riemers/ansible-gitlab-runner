@@ -19,9 +19,9 @@ On Linux, use `gitlab_runner_package_version` instead.
 - `gitlab_runner_concurrent` - The maximum number of global jobs to run concurrently. Defaults to the number of processor cores.
 - `gitlab_runner_registration_token` - The GitLab registration token. If this is specified, each runner will be registered to a GitLab server. Deprecating in gitlab version 16.0 and removed in 18.0.
 - `gitlab_runner_registration_token_type` - Gitlab runner registration token type
-Set "runner-token" to register runner with --token option (new workflow https://docs.gitlab.com/ee/ci/runners/new_creation_workflow.html)
+Set "authentication-token" to register runner with --token option (new workflow https://docs.gitlab.com/ee/ci/runners/new_creation_workflow.html)
 Set "registration-token" to register runner with --registration-token option (deprecating in gitlab 16.0 but still usable and deleted in 18.0)
-For gitlab version >= 16.0 it is advisable to specify token for each runner in 'gitlab_runner_runners' section and set this variable to "runner-token".
+For gitlab version >= 16.0 it is advisable to specify token for each runner in 'gitlab_runner_runners' section and set this variable to "authentication-token".
 - `gitlab_runner_coordinator_url` - The GitLab coordinator URL. Defaults to `https://gitlab.com`.
 - `gitlab_runner_sentry_dsn` - Enable tracking of all system level errors to Sentry
 - `gitlab_runner_listen_address` - Enable `/metrics` endpoint for Prometheus scraping.

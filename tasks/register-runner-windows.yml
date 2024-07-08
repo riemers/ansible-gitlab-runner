@@ -3,7 +3,7 @@
   set_fact:
     register_runner_cmd: >-
       {{ gitlab_runner_executable }} register
-      {% if gitlab_runner_registration_token_type != "runner-token" %}
+      {% if gitlab_runner_registration_token_type != "authentication-token" %}
       --locked='{{ gitlab_runner.locked|default(false) }}'
       --tag-list '{{ gitlab_runner.tags|default([]) | join(",") }}'
       {% if gitlab_runner.run_untagged|default(true) %}
@@ -114,7 +114,7 @@
       ansible.builtin.copy:
         content: >-
           {{ register_runner_cmd }}
-          {% if gitlab_runner_registration_token_type == "runner-token" %}
+          {% if gitlab_runner_registration_token_type == "authentication-token" %}
           --token '{{ gitlab_runner.token|hash("sha1") }}'
           {% else %}
           --registration-token '{{ gitlab_runner.token|default(gitlab_runner_registration_token)|hash("sha1") }}'
@@ -145,7 +145,7 @@
 - name: (Windows) Register runner to GitLab
   win_shell: >-
     {{ register_runner_cmd }}
-    {% if gitlab_runner_registration_token_type == "runner-token" %}
+    {% if gitlab_runner_registration_token_type == "authentication-token" %}
     --token '{{ gitlab_runner.token }}'
     {% else %}
     --registration-token '{{ gitlab_runner.token|default(gitlab_runner_registration_token) }}'
