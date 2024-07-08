@@ -3,23 +3,25 @@
   set_fact:
     register_runner_cmd: >-
       register
-      --non-interactive
-      --url '{{ gitlab_runner.url | default(gitlab_runner_coordinator_url) }}'
-      --description '{{ actual_gitlab_runner_name }}'
+      {% if gitlab_runner_registration_token_type != "authentication-token" %}
+      --locked='{{ gitlab_runner.locked|default(false) }}'
       --tag-list '{{ gitlab_runner.tags|default([]) | join(",") }}'
-      {% if gitlab_runner.clone_url|default(false) %}
-      --clone-url "{{ gitlab_runner.clone_url }}"
-      {% endif %}
       {% if gitlab_runner.run_untagged|default(true) %}
       --run-untagged
       {% endif %}
       {% if gitlab_runner.protected|default(false) %}
       --access-level="ref_protected"
       {% endif %}
+      {% endif %}
+      --non-interactive
+      --url '{{ gitlab_runner.url | default(gitlab_runner_coordinator_url) }}'
+      --description '{{ actual_gitlab_runner_name }}'
+      {% if gitlab_runner.clone_url|default(false) %}
+      --clone-url "{{ gitlab_runner.clone_url }}"
+      {% endif %}
       --executor '{{ gitlab_runner.executor|default("shell") }}'
       --limit '{{ gitlab_runner.concurrent_specific|default(0) }}'
       --output-limit '{{ gitlab_runner.output_limit|default(4096) }}'
-      --locked='{{ gitlab_runner.locked|default(false) }}'
       {% for env_var in gitlab_runner.env_vars|default([]) %}
       --env '{{ env_var }}'
       {% endfor %}
@@ -113,7 +115,11 @@
       ansible.builtin.copy:
         content: >
           {{ register_runner_cmd }}
+          {% if gitlab_runner_registration_token_type == "authentication-token" %}
+          --token '{{ gitlab_runner.token|hash("sha1") }}'
+          {% else %}
           --registration-token '{{ gitlab_runner.token|default(gitlab_runner_registration_token)|hash("sha1") }}'
+          {% endif %}
           {% if gitlab_runner.cache_s3_secret_key is defined %}
           --cache-s3-secret-key '{{ gitlab_runner.cache_s3_secret_key|hash("sha1") }}'
           {% endif %}
@@ -143,7 +149,11 @@
     image: "{{ gitlab_runner_container_image }}:{{ gitlab_runner_container_tag }}"
     command: >
       {{ register_runner_cmd }}
+      {% if gitlab_runner_registration_token_type == "authentication-token" %}
+      --token '{{ gitlab_runner.token }}'
+      {% else %}
       --registration-token '{{ gitlab_runner.token|default(gitlab_runner_registration_token) }}'
+      {% endif %}
       {% if gitlab_runner.cache_s3_secret_key is defined %}
       --cache-s3-secret-key '{{ gitlab_runner.cache_s3_secret_key }}'
       {% endif %}
