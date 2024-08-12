@@ -12,28 +12,23 @@
             - default.yml
           paths:
             - vars
-
     - name: Copy the mock gitlab CI server
       ansible.builtin.copy:
         src: mock_gitlab_runner_ci.py
         dest: ~/mock_gitlab_runner_ci.py
         mode: "0644"
       when: run_mock_server
-
     - name: Ensure mock CI pidfile is absent
       ansible.builtin.file:
         path: ~/mock_ci.pid
         state: absent
       when: run_mock_server
-
     - name: Start the mock CI
       ansible.builtin.shell: python ~/mock_gitlab_runner_ci.py ~/mock_ci.pid 6060  >~/mock_ci.log 2>&1
       async: 3600
       poll: 0
       register: mock_server
-      changed_when: true
       when: run_mock_server
-
     - name: Wait for pidfile to be created
       ansible.builtin.wait_for:
         host: 127.0.0.1
@@ -55,8 +50,6 @@
         src: ~/mock_ci.pid
       register: pidfile_b64
       when: run_mock_server
-
     - name: Kill the mock CI
       ansible.builtin.command: kill {{ pidfile_b64.content | b64decode }}
-      changed_when: true
       when: run_mock_server

@@ -29,6 +29,7 @@
 
 - name: (Windows) Set global options
   ansible.builtin.import_tasks: global-setup-windows.yml
+
 - name: (Windows) Configure GitLab Runner
   ansible.builtin.include_tasks: config-runners-windows.yml
   when: gitlab_runner_config_update_mode == 'by_config_toml'

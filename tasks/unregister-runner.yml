@@ -26,6 +26,5 @@
 
 - name: Unregister runner
   ansible.builtin.command: "{{ gitlab_runner_executable }} unregister --name {{ actual_gitlab_runner_name }}"
-  changed_when: true
   when:
     - gitlab_install_target_platform == 'unix'

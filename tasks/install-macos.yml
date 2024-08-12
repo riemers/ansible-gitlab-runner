@@ -24,9 +24,9 @@
 
 - name: (MacOS) Precreate necessary directories for arm64 architecture
   when: gitlab_runner_arch == 'arm64'
-  become: true
   block:
     - name: (MacOS) Precreate gitlab-runner log directory
+      become: true
       ansible.builtin.file:
         path: /usr/local/var/log
         state: directory
@@ -34,6 +34,7 @@
         owner: "{{ ansible_user_id | string }}"
 
     - name: (MacOS) Precreate directory {{ gitlab_runner_directory }}
+      become: true
       ansible.builtin.file:
         mode: "0755"
         owner: root
@@ -53,11 +54,9 @@
 
     - name: (MacOS) Install GitLab Runner
       ansible.builtin.command: "{{ gitlab_runner_executable }} install"
-      changed_when: true
 
     - name: (MacOS) Start GitLab Runner
       ansible.builtin.command: "{{ gitlab_runner_executable }} start"
-      changed_when: true
       when: gitlab_runner_macos_start_runner
 
 - name: (MacOS) UPGRADE GitLab Runner for macOS
@@ -67,14 +66,14 @@
   block:
     - name: (MacOS) Stop GitLab Runner
       ansible.builtin.command: "{{ gitlab_runner_executable }} stop"
-      changed_when: true
 
     - name: (MacOS) Download GitLab Runner
+      become: true
       ansible.builtin.get_url:
         url: "{{ gitlab_runner_download_url }}"
         dest: "{{ gitlab_runner_executable }}"
         force: true
-      become: true
+        mode: "0744"
 
     - name: (MacOS) Setting Permissions for gitlab-runner executable
       ansible.builtin.file:
@@ -86,4 +85,3 @@
 
     - name: (MacOS) Start GitLab Runner
       ansible.builtin.command: "{{ gitlab_runner_executable }} start"
-      changed_when: true

@@ -327,6 +327,20 @@
     - restart_gitlab_runner
     - restart_gitlab_runner_macos
 
+- name: "Set docker allowed_pull_policies option {{ runn_name_prefix }}"
+  ansible.builtin.lineinfile:
+    dest: "{{ temp_runner_config.path }}"
+    regexp: ^\s*allowed_pull_policies =
+    line: "    allowed_pull_policies = {{ gitlab_runner.docker_allowed_pull_policies | default([]) | to_json }}"
+    state: "{{ 'present' if gitlab_runner.docker_allowed_pull_policies is defined else 'absent' }}"
+    insertafter: ^\s*\[runners\.docker\]
+    backrefs: false
+  check_mode: false
+  no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
+  notify:
+    - restart_gitlab_runner
+    - restart_gitlab_runner_macos
+
 - name: "Set docker volumes option {{ runn_name_prefix }}"
   ansible.builtin.lineinfile:
     dest: "{{ temp_runner_config.path }}"
@@ -871,12 +885,27 @@
     - restart_gitlab_runner
     - restart_gitlab_runner_macos
 
-- name: "Set builds dir file option {{ runn_name_prefix }}"
+#### [runners.feature_flags] section #####
+- name: "Set feature flag options {{ runn_name_prefix }}"
+  ansible.builtin.blockinfile:
+    path: "{{ temp_runner_config.path }}"
+    content: "{{ lookup('template', 'config.runners.feature_flags.j2') if gitlab_runner.feature_flags is defined }}"
+    state: "{{ 'present' if gitlab_runner.feature_flags is defined else 'absent' }}"
+    marker: "# {mark} runners.feature_flags"
+    insertafter: EOF
+  check_mode: false
+  no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
+  notify:
+    - restart_gitlab_runner
+    - restart_gitlab_runner_macos
+
+#### [runners.machine] section ####
+- name: "Set machine section {{ runn_name_prefix }}"
   ansible.builtin.lineinfile:
     dest: "{{ temp_runner_config.path }}"
     regexp: '^\s*\[runners\.machine\]'
     line: '  [runners.machine]'
-    state: present
+    state: "{{ 'present' if gitlab_runner.machine_MachineOptions is defined else 'absent' }}"
     insertafter: EOF
     backrefs: false
   check_mode: false
@@ -1026,7 +1055,7 @@
     - restart_gitlab_runner
     - restart_gitlab_runner_macos
 
-- name: "Set builds dir file option option {{ runn_name_prefix }} "
+- name: "Set builds dir file option {{ runn_name_prefix }} "
   ansible.builtin.lineinfile:
     dest: "{{ temp_runner_config.path }}"
     regexp: ^\s*builds_dir =
@@ -1070,7 +1099,7 @@
   when: item|length
 
 - name: "Ensure directory access test {{ runn_name_prefix }}"
-  ansible.builtin.command: /usr/bin/test -r {{ item }}
+  ansible.builtin.command: test -r {{ item }}
   loop:
     - '{{ gitlab_runner.builds_dir | default("") }}'
     - '{{ gitlab_runner.cache_dir | default("") }}'
