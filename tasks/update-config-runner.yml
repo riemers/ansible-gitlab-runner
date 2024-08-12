@@ -885,7 +885,7 @@
     - restart_gitlab_runner
     - restart_gitlab_runner_macos
 
-- name:  "Set machine MaxGrowthRate option {{ runn_name_prefix }}"
+- name: "Set machine MaxGrowthRate option {{ runn_name_prefix }}"
   ansible.builtin.lineinfile:
     dest: "{{ temp_runner_config.path }}"
     regexp: '^    MaxGrowthRate ='
@@ -899,7 +899,7 @@
     - restart_gitlab_runner
     - restart_gitlab_runner_macos
 
-- name:  "Set machine IdleCount option {{ runn_name_prefix }}"
+- name: "Set machine IdleCount option {{ runn_name_prefix }}"
   ansible.builtin.lineinfile:
     dest: "{{ temp_runner_config.path }}"
     regexp: '^    IdleCount ='
@@ -1013,7 +1013,7 @@
 
 #### [[runners.machine.autoscaling]] section ####
 
-- name:  "Set additional autoscaling option {{ runn_name_prefix }}"
+- name: "Set additional autoscaling option {{ runn_name_prefix }}"
   ansible.builtin.blockinfile:
     dest: "{{ temp_runner_config.path }}"
     content: "{{ lookup('template', 'config.runners.machine.autoscaling.j2') if gitlab_runner.machine_autoscaling is defined }}"
