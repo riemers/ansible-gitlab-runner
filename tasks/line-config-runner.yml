@@ -1,9 +1,9 @@
 ---
-- name: "Ensure section exists {{ line_name_prefix }}"  # noqa jinja[spacing]
+- name: "Ensure section exists {{ line_name_prefix }}"
   ansible.builtin.lineinfile:
     path: "{{ temp_runner_config.path }}"
     regexp: ^(\s*)\[{{ section | regex_escape }}\]$
-    line: '{{ "  " * (section.split(".") | length -1) }}[{{ section }}]'
+    line: '{{ "  " * (section.split(".") | length - 1) }}[{{ section }}]'
 
 - name: "Modify existing line {{ line_name_prefix }}"
   ansible.builtin.lineinfile:

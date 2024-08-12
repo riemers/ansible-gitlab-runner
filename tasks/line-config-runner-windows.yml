@@ -1,9 +1,9 @@
 ---
-- name: "Ensure section exists {{ line_name_prefix }}"  # noqa jinja[spacing]
+- name: "Ensure section exists {{ line_name_prefix }}"
   community.windows.win_lineinfile:
     path: "{{ temp_runner_config.path }}"
     regexp: ^(\s*)\[{{ section | regex_escape }}\]$
-    line: '{{ "  " * (section.split(".") | length -1) }}[{{ section }}]'
+    line: '{{ "  " * (section.split(".") | length - 1) }}[{{ section }}]'
 
 - name: "Modify existing line {{ line_name_prefix }}"
   community.windows.win_lineinfile:
@@ -14,11 +14,11 @@
   register: modified_config_line
   when: not '.' in line
 
-- name: "Modify existing line to_json {{ line_name_prefix }}"  # noqa jinja[spacing]
+- name: "Modify existing line to_json {{ line_name_prefix }}"
   community.windows.win_lineinfile:
     path: "{{ temp_runner_config.path }}"
     insertafter: \s+\[{{ section | regex_escape }}\]
     regexp: ^(\s*)({{ line | to_json | regex_escape }}|{{ line | regex_escape }}) =.*
-    line: '{{ "  " * (section.split(".")|length) }}{{ line | to_json }} = {{ gitlab_runner.extra_configs[section][line] | to_json }}'
+    line: '{{ "  " * (section.split(".") | length) }}{{ line | to_json }} = {{ gitlab_runner.extra_configs[section][line] | to_json }}'
   register: modified_config_line
   when: "'.' in line"
