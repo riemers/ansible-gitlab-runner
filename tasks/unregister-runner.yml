@@ -3,7 +3,7 @@
   docker_container:
     name: "{{ gitlab_runner_container_name }}-list"
     image: "{{ gitlab_runner_container_image }}:{{ gitlab_runner_container_tag }}"
-    command: unregister --name {{ actual_gitlab_runner_name }}'
+    command: unregister --name '{{ actual_gitlab_runner_name }}'
     mounts:
       - type: bind
         source: "{{ gitlab_runner_container_mount_path }}"
