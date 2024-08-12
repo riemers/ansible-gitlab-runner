@@ -40,7 +40,7 @@
 - name: Run role
   hosts: localhost
   roles:
-    - ansible-gitlab-runner
+    - riemers.gitlab-runner
 
 - name: Cleanup
   hosts: localhost
