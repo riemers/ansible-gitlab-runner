@@ -1,6 +1,6 @@
 ---
 - name: Install ca package on rhel systems
-  ansible.builtin.yum:
+  ansible.builtin.dnf:
     name: ca-certificates
     state: present
   when: ansible_os_family == "RedHat"
