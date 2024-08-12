@@ -2,7 +2,6 @@
 galaxy_info:
   author: Erik-jan Riemers
   namespace: riemers
-  role_name: gitlab-runner
   description: GitLab Runner
   license: MIT
   min_ansible_version: 2.13

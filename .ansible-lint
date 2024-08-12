@@ -1,2 +1,4 @@
+---
+profile: production
 warn_list:
-  - 'role-name'
+  - role-name  # until role name is fixed on galaxy https://github.com/riemers/ansible-gitlab-runner/pull/312
