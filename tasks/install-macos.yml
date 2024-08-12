@@ -70,7 +70,6 @@
         url: "{{ gitlab_runner_download_url }}"
         dest: "{{ gitlab_runner_executable }}"
         force: true
-      become: true
 
     - name: (MacOS) Setting Permissions for gitlab-runner executable
       file:
