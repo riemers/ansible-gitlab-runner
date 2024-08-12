@@ -82,6 +82,7 @@ See the [config for more options](https://github.com/riemers/ansible-gitlab-runn
 
 Example Playbook
 ----------------
+
 ```yaml
 - hosts: all
   become: true
@@ -92,6 +93,7 @@ Example Playbook
 ```
 
 Inside `vars/main.yml`
+
 ```yaml
 gitlab_runner_coordinator_url: https://gitlab.com
 gitlab_runner_registration_token: '12341234'
@@ -101,6 +103,7 @@ gitlab_runner_runners:
     token: 'abcd'
     # url is an optional override to the global gitlab_runner_coordinator_url
     url: 'https://my-own-gitlab.mydomain.com'
+    # each executor can have optional dependencies e.g: "docker" -> "community.docker"
     executor: docker
     docker_image: 'alpine'
     tags:

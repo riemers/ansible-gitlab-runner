@@ -27,3 +27,7 @@ galaxy_info:
     - ci
 
 dependencies: []
+  # optional dependency: docker-executor
+  # - community.docker
+  # optional dependency: windows host
+  # - ansible.windows
