@@ -13,7 +13,6 @@
   ansible.builtin.command: "{{ gitlab_runner_executable }} restart"
   listen: restart_gitlab_runner_macos
   become: "{{ gitlab_runner_system_mode }}"
-  changed_when: true
   when: ansible_os_family == 'Darwin' and gitlab_runner_macos_start_runner
 
 - name: Restart_gitlab_runner_windows
