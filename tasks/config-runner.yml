@@ -1,6 +1,6 @@
 ---
-- name: "{{ conf_name_prefix }} Create temporary file"
-  tempfile:
+- name: "Create temporary file {{ conf_name_prefix }}"
+  ansible.builtin.tempfile:
     state: file
     path: "{{ temp_runner_config_dir.path }}"
     prefix: gitlab-runner.{{ runner_config_index }}.
@@ -8,17 +8,19 @@
   check_mode: false
   changed_when: false
 
-- name: "{{ conf_name_prefix }} Isolate runner configuration"
-  copy:
+- name: "Isolate runner configuration {{ conf_name_prefix }}"
+  ansible.builtin.copy:
     dest: "{{ temp_runner_config.path }}"
     content: "{{ runner_config }}"
+    mode: "0644"
   check_mode: false
   changed_when: false
   no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
 
-- include_tasks: update-config-runner.yml
+- name: Update config
+  ansible.builtin.include_tasks: update-config-runner.yml
   vars:
-    runn_name_prefix: "{{ conf_name_prefix }} runner[{{ (gitlab_runner_index|int) + 1 }}/{{ gitlab_runner_runners|length }}]:"
+    runn_name_prefix: "{{ conf_name_prefix }} runner[{{ (gitlab_runner_index | int) + 1 }}/{{ gitlab_runner_runners | length }}]:"
   when:
     - ('name = "'+gitlab_runner.name|default(ansible_hostname+'-'+gitlab_runner_index|string)+'"') in runner_config
     - gitlab_runner.state|default('present') == 'present'
@@ -28,8 +30,8 @@
     loop_var: gitlab_runner
   no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
 
-- name: "{{ conf_name_prefix }} Remove runner config"
-  file:
+- name: "Remove runner config {{ conf_name_prefix }}"
+  ansible.builtin.file:
     path: "{{ temp_runner_config.path }}"
     state: absent
   when:

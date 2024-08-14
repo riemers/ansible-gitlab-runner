@@ -1,38 +1,38 @@
 ---
 - name: Construct the runner command without secrets
-  set_fact:
+  ansible.builtin.set_fact:
     register_runner_cmd: >-
       {{ gitlab_runner_executable }} register
       {% if gitlab_runner_registration_token_type != "authentication-token" %}
-      --locked='{{ gitlab_runner.locked|default(false) }}'
-      --tag-list '{{ gitlab_runner.tags|default([]) | join(",") }}'
-      {% if gitlab_runner.run_untagged|default(true) %}
+      --locked='{{ gitlab_runner.locked | default(false) }}'
+      --tag-list '{{ gitlab_runner.tags | default([]) | join(",") }}'
+      {% if gitlab_runner.run_untagged | default(true) %}
       --run-untagged
       {% endif %}
-      {% if gitlab_runner.protected|default(false) %}
+      {% if gitlab_runner.protected | default(false) %}
       --access-level="ref_protected"
       {% endif %}
       {% endif %}
       --non-interactive
-      --url '{{ gitlab_runner.url|default(gitlab_runner_coordinator_url) }}'
+      --url '{{ gitlab_runner.url | default(gitlab_runner_coordinator_url) }}'
       --description '{{ actual_gitlab_runner_name }}'
-      {% if gitlab_runner.clone_url|default(false) %}
+      {% if gitlab_runner.clone_url | default(false) %}
       --clone-url "{{ gitlab_runner.clone_url }}"
       {% endif %}
-      --executor '{{ gitlab_runner.executor|default("shell") }}'
+      --executor '{{ gitlab_runner.executor | default("shell") }}'
       {% if gitlab_runner.shell is defined %}
       --shell '{{ gitlab_runner.shell }}'
       {% endif %}
-      --limit '{{ gitlab_runner.concurrent_specific|default(0) }}'
-      --output-limit '{{ gitlab_runner.output_limit|default(4096) }}'
-      {% for env_var in gitlab_runner.env_vars|default([]) %}
+      --limit '{{ gitlab_runner.concurrent_specific | default(0) }}'
+      --output-limit '{{ gitlab_runner.output_limit | default(4096) }}'
+      {% for env_var in gitlab_runner.env_vars | default([]) %}
       --env '{{ env_var }}'
       {% endfor %}
-      {% if gitlab_runner.tls_ca_file|default(false) %}
+      {% if gitlab_runner.tls_ca_file | default(false) %}
       --tls-ca-file "{{ gitlab_runner.tls_ca_file }}"
       {% endif %}
-      --docker-image '{{ gitlab_runner.docker_image|default("alpine") }}'
-      {% if gitlab_runner.docker_privileged|default(false) %}
+      --docker-image '{{ gitlab_runner.docker_image | default("alpine") }}'
+      {% if gitlab_runner.docker_privileged | default(false) %}
       --docker-privileged
       {% endif %}
       {% for volume in gitlab_runner.docker_volumes | default([]) %}
@@ -59,7 +59,7 @@
       {% if gitlab_runner.cache_type is defined %}
       --cache-type '{{ gitlab_runner.cache_type }}'
       {% endif %}
-      {% if gitlab_runner.cache_shared|default(false) %}
+      {% if gitlab_runner.cache_shared | default(false) %}
       --cache-shared
       {% endif %}
       {% if gitlab_runner.cache_path is defined %}
@@ -95,13 +95,13 @@
       {% if gitlab_runner.cache_azure_storage_domain is defined %}
       --cache-azure-storage-domain '{{ gitlab_runner.cache_azure_storage_domain }}'
       {% endif %}
-      {% if gitlab_runner.builds_dir|default(false) %}
+      {% if gitlab_runner.builds_dir | default(false) %}
       --builds-dir '{{ gitlab_runner.builds_dir }}'
       {% endif %}
-      {% if gitlab_runner.cache_dir|default(false) %}
+      {% if gitlab_runner.cache_dir | default(false) %}
       --cache-dir '{{ gitlab_runner.cache_dir }}'
       {% endif %}
-      {% if gitlab_runner.cache_s3_insecure|default(false) %}
+      {% if gitlab_runner.cache_s3_insecure | default(false) %}
       --cache-s3-insecure
       {% endif %}
       {% if gitlab_runner.extra_registration_option is defined %}
@@ -109,18 +109,19 @@
       {% endif %}
 
 - name: Apply updates (if any) by unregister the runner and let it then register later on
+  when: gitlab_runner_config_update_mode == 'by_registering'
   block:
     - name: Check if the configuration has changed since the last run
       ansible.builtin.copy:
         content: >-
           {{ register_runner_cmd }}
           {% if gitlab_runner_registration_token_type == "authentication-token" %}
-          --token '{{ gitlab_runner.token|hash("sha1") }}'
+          --token '{{ gitlab_runner.token | hash("sha1") }}'
           {% else %}
-          --registration-token '{{ gitlab_runner.token|default(gitlab_runner_registration_token)|hash("sha1") }}'
+          --registration-token '{{ gitlab_runner.token | default(gitlab_runner_registration_token) | hash("sha1") }}'
           {% endif %}
           {% if gitlab_runner.cache_s3_secret_key is defined %}
-          --cache-s3-secret-key '{{ gitlab_runner.cache_s3_secret_key|hash("sha1") }}'
+          --cache-s3-secret-key '{{ gitlab_runner.cache_s3_secret_key | hash("sha1") }}'
           {% endif %}
           {% if gitlab_runner.cache_gcs_private_key is defined %}
           --cache-gcs-private-key '{{ gitlab_runner.cache_gcs_private_key }}'
@@ -129,26 +130,28 @@
           --cache-azure-account-key '{{ gitlab_runner.cache_azure_account_key }}'
           {% endif %}
           {% if gitlab_runner.ssh_password is defined %}
-          --ssh-password '{{ gitlab_runner.ssh_password|hash("sha1") }}'
+          --ssh-password '{{ gitlab_runner.ssh_password | hash("sha1") }}'
           {% endif %}
         dest: "{{ gitlab_runner_config_file_location }}/last-runner-config-{{ actual_gitlab_runner_name }}"
+        mode: "0644"
       register: runner_config_state
 
-    - import_tasks: unregister-runner.yml
+    - name: Unregister runner
+      ansible.builtin.import_tasks: unregister-runner.yml
       when:
         - actual_gitlab_runner_name in registered_gitlab_runner_names
         - runner_config_state.changed
-  when: gitlab_runner_config_update_mode == 'by_registering'
 
-- import_tasks: list-configured-runners-windows.yml
+- name: List configured runners
+  ansible.builtin.import_tasks: list-configured-runners-windows.yml
 
 - name: (Windows) Register runner to GitLab
-  win_shell: >-
+  ansible.windows.win_shell: >-
     {{ register_runner_cmd }}
     {% if gitlab_runner_registration_token_type == "authentication-token" %}
     --token '{{ gitlab_runner.token }}'
     {% else %}
-    --registration-token '{{ gitlab_runner.token|default(gitlab_runner_registration_token) }}'
+    --registration-token '{{ gitlab_runner.token | default(gitlab_runner_registration_token) }}'
     {% endif %}
     {% if gitlab_runner.cache_s3_secret_key is defined %}
     --cache-s3-secret-key '{{ gitlab_runner.cache_s3_secret_key }}'
@@ -164,6 +167,6 @@
     {% endif %}
   when:
     - actual_gitlab_runner_name not in registered_gitlab_runner_names
-    - gitlab_runner.state|default('present') == 'present'
+    - gitlab_runner.state | default('present') == 'present'
   args:
     chdir: "{{ gitlab_runner_config_file_location }}"
