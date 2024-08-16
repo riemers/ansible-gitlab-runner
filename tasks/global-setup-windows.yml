@@ -31,7 +31,6 @@
     insertafter: \s*concurrent.*
     state: present
   no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
-  become: "{{ gitlab_runner_system_mode }}"
   notify:
     - restart_gitlab_runner
     - restart_gitlab_runner_windows
