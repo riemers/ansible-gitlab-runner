@@ -1,5 +1,6 @@
 ---
 galaxy_info:
+  role_name: gitlab-runner
   author: Erik-jan Riemers
   namespace: riemers
   description: GitLab Runner
