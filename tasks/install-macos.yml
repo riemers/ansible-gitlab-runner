@@ -53,7 +53,11 @@
         mode: +x
 
     - name: (MacOS) Install GitLab Runner
-      ansible.builtin.command: "{{ gitlab_runner_executable }} install"
+      ansible.builtin.command: |
+        "{{ gitlab_runner_executable }}" install
+        {% if gitlab_runner_working_directory | default(false) %}
+        --working-directory "{{ gitlab_runner_working_directory }}"
+        {% endif %}
 
     - name: (MacOS) Start GitLab Runner
       ansible.builtin.command: "{{ gitlab_runner_executable }} start"
