@@ -3,7 +3,7 @@
   ansible.builtin.shell: >
     set -o pipefail
 
-    openssl s_client -connect {{ gitlab_server_ip }}:443 -showcerts </dev/null 2>/dev/null |
+    openssl s_client -connect {{ gitlab_runner_coordinator_url | regex_replace('https?://([^/]+)/?.*', '\\1') }}:443 -showcerts </dev/null 2>/dev/null |
     sed -e '/-----BEGIN/,/-----END/!d' | tee {{ tls_ca_file }} >/dev/null
   args:
     executable: /usr/bin/bash
