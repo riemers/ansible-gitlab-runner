@@ -1,13 +1,28 @@
 ---
-- name: Accept gitlab server self signed cert as valid CA
-  ansible.builtin.shell: >
-    set -o pipefail
+# - name: Accept gitlab server self signed cert as valid CA
+#   ansible.builtin.shell: >
+#     set -o pipefail
 
-    openssl s_client -connect {{ gitlab_runner_coordinator_url | regex_replace('https?:\/\/([^\/]+)\/?.*', '\\1') }}:443 -showcerts </dev/null 2>/dev/null |
-    sed -e '/-----BEGIN/,/-----END/!d' | tee {{ tls_ca_file }} >/dev/null
-  args:
-    executable: /usr/bin/bash
+#     openssl s_client -connect {{ gitlab_runner_coordinator_url | regex_replace('https?:\/\/([^\/]+)\/?.*', '\\1') }}:443 -showcerts </dev/null 2>/dev/null |
+#     sed -e '/-----BEGIN/,/-----END/!d' | tee {{ tls_ca_file }} >/dev/null
+#   args:
+#     executable: /usr/bin/bash
+#   when: force_accept_gitlab_server_self_signed
+
+- name: Accept gitlab server self signed cert as valid CA
   when: force_accept_gitlab_server_self_signed
+  block:
+    - community.crypto.get_certificate:
+        host: "{{ gitlab_runner_coordinator_url | regex_replace('https?:\/\/([^\/]+)\/?.*', '\\1') }}"
+        port: 443
+        asn1_base64: true # need to hard code to prevent depreciation warning
+      register: gitlab_server_cert
+    - name: Save the GitLab server self signed cert to the default CA path
+      ansible.builtin.copy:
+        content: "{{ gitlab_server_cert.cert }}"
+        dest: "{{ tls_ca_file }}"
+    - name: Update CA bundle with self signe cert of the gitlab server
+      ansible.builtin.import_tasks: update-ca-bundle.yml
 
 - name: Update CA bundle with self signe cert of the gitlab server
   ansible.builtin.import_tasks: update-ca-bundle.yml
