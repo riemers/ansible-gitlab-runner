@@ -25,7 +25,8 @@ gitlab_runner_check_interval: 0
 
 # GitLab coordinator URL
 gitlab_runner_coordinator_url: https://gitlab.com
-# GitLab registration token
+
+# GitLab registration token.
 gitlab_runner_registration_token: ""
 
 # Gitlab runner registration token type:
@@ -36,9 +37,6 @@ gitlab_runner_registration_token: ""
 gitlab_runner_registration_token_type: "registration-token"
 
 gitlab_runner_sentry_dsn: ""
-
-# GitLab server IP
-gitlab_server_ip: ""
 
 # GitLab TLS CA file
 tls_ca_file: ""
@@ -117,6 +115,8 @@ gitlab_runner_runners:
     state: present
     # The executor used by the runner.
     executor: shell
+    # Set maximum build log size in kilobytes.
+    # token:
     # Set maximum build log size in kilobytes.
     output_limit: 4096
     # Maximum number of jobs to run concurrently on this specific runner.
