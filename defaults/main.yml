@@ -11,8 +11,9 @@ gitlab_runner_wanted_version: latest
 # This variable should not be modified usually as it depends on the gitlab_runner_wanted_version variable
 gitlab_runner_wanted_tag: "{{ 'latest' if gitlab_runner_wanted_version == 'latest' else ('v' + gitlab_runner_wanted_version) }}"
 
-# If a different partition or disk is used under Windows
-gitlab_runner_install_directory: c:/gitlab-runner/
+# Override the install directory under Windows via host variables etc. (Default: c:/gitlab-runner)
+gitlab_runner_custom_install_directory: ""
+gitlab_runner_install_directory: "{{ gitlab_runner_default_install_directory if (gitlab_runner_custom_install_directory == '') else gitlab_runner_custom_install_directory }}"
 
 # Overridden based on platform
 gitlab_runner_config_file: "{{ __gitlab_runner_config_file_system_mode if gitlab_runner_system_mode else __gitlab_runner_config_file_user_mode }}"
