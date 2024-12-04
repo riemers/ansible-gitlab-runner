@@ -4,7 +4,7 @@ galaxy_info:
   namespace: riemers
   description: GitLab Runner
   license: MIT
-  min_ansible_version: 2.13
+  min_ansible_version: "2.13"
   platforms:
     - name: EL
       versions:
@@ -25,5 +25,3 @@ galaxy_info:
     - gitlab
     - runner
     - ci
-
-dependencies: []

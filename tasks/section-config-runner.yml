@@ -1,7 +1,8 @@
 ---
-- include_tasks: line-config-runner.yml
+- name: Config runner
+  ansible.builtin.include_tasks: line-config-runner.yml
   vars:
-    line_name_prefix: "{{ sect_name_prefix }} line:[{{ (line_index|int) + 1 }}/{{ gitlab_runner.extra_configs[section]|list|length }}]: "
+    line_name_prefix: "{{ sect_name_prefix }} line:[{{ (line_index | int) + 1 }}/{{ gitlab_runner.extra_configs[section] | list | length }}]: "
   loop: "{{ gitlab_runner.extra_configs[section] | list }}"
   loop_control:
     loop_var: line

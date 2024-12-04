@@ -1,8 +1,9 @@
 ---
-- hosts: localhost
+- name: Prepare
+  hosts: localhost
   tasks:
     - name: Load platform-specific variables
-      include_vars: "{{ lookup('first_found', possible_files) }}"
+      ansible.builtin.include_vars: "{{ lookup('first_found', possible_files) }}"
       vars:
         possible_files:
           files:
@@ -12,40 +13,43 @@
           paths:
             - vars
     - name: Copy the mock gitlab CI server
-      copy:
+      ansible.builtin.copy:
         src: mock_gitlab_runner_ci.py
         dest: ~/mock_gitlab_runner_ci.py
+        mode: "0644"
       when: run_mock_server
     - name: Ensure mock CI pidfile is absent
-      file:
+      ansible.builtin.file:
         path: ~/mock_ci.pid
         state: absent
       when: run_mock_server
     - name: Start the mock CI
-      shell: python ~/mock_gitlab_runner_ci.py ~/mock_ci.pid 6060  >~/mock_ci.log 2>&1
+      ansible.builtin.shell: python ~/mock_gitlab_runner_ci.py ~/mock_ci.pid 6060  >~/mock_ci.log 2>&1
       async: 3600
       poll: 0
       register: mock_server
       when: run_mock_server
     - name: Wait for pidfile to be created
-      wait_for:
+      ansible.builtin.wait_for:
         host: 127.0.0.1
         port: 6060
         delay: 1
         timeout: 30
       when: run_mock_server
 
-- hosts: localhost
+- name: Run role
+  hosts: localhost
   roles:
-    - ansible-gitlab-runner
+    - riemers.gitlab-runner
 
-- hosts: localhost
+- name: Cleanup
+  hosts: localhost
   tasks:
     - name: Get pid mock gitlab CI server
-      slurp:
+      ansible.builtin.slurp:
         src: ~/mock_ci.pid
       register: pidfile_b64
       when: run_mock_server
-    - name: kill the mock CI
-      command: kill {{ pidfile_b64.content | b64decode }}
+    - name: Kill the mock CI
+      ansible.builtin.command: kill {{ pidfile_b64.content | b64decode }}
       when: run_mock_server
