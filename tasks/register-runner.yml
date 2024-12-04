@@ -23,7 +23,6 @@
         content: "{{ gitlab_server_cert.cert }}"
         dest: "{{ tls_ca_file }}"
         mode: '0644'
-        
     - name: Update CA bundle with self signe cert of the gitlab server
       ansible.builtin.import_tasks: update-ca-bundle.yml
 
