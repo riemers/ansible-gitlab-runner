@@ -13,7 +13,7 @@ gitlab_runner_wanted_tag: "{{ 'latest' if gitlab_runner_wanted_version == 'lates
 
 # Override the install directory under Windows via host variables etc. (Default: c:/gitlab-runner)
 gitlab_runner_custom_install_directory: ""
-gitlab_runner_install_directory: >- 
+gitlab_runner_install_directory: >-
   {{ gitlab_runner_default_install_directory
   if (gitlab_runner_custom_install_directory == '')
   else gitlab_runner_custom_install_directory }}
