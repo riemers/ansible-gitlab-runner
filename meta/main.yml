@@ -25,5 +25,3 @@ galaxy_info:
     - gitlab
     - runner
     - ci
-  collections:
-    - community.crypto
