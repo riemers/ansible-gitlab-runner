@@ -3,4 +3,3 @@ profile: production
 warn_list:
   - role-name  # until role name is fixed on galaxy https://github.com/riemers/ansible-gitlab-runner/pull/312
   - no-changed-when  # TODO in future
-  - yaml[line-length]
