@@ -14,7 +14,7 @@
   block:
     - name: Grab the server cert for "{{ gitlab_runner_coordinator_url }}"
       community.crypto.get_certificate:
-        host: "{{ gitlab_runner_coordinator_url | regex_replace('https?:\/\/([^\/]+)\/?.*', '\\1') }}"
+        host: "{{ gitlab_runner.url | default(gitlab_runner_coordinator_url) | regex_replace('https?:\/\/([^\/]+)\/?.*', '\\1') }}"
         port: 443
         asn1_base64: true # need to hard code to prevent depreciation warning
       register: gitlab_server_cert
