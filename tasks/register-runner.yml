@@ -1,14 +1,4 @@
 ---
-# - name: Accept gitlab server self signed cert as valid CA
-#   ansible.builtin.shell: >
-#     set -o pipefail
-
-#     openssl s_client -connect {{ gitlab_runner_coordinator_url | regex_replace('https?:\/\/([^\/]+)\/?.*', '\\1') }}:443 -showcerts </dev/null 2>/dev/null |
-#     sed -e '/-----BEGIN/,/-----END/!d' | tee {{ tls_ca_file }} >/dev/null
-#   args:
-#     executable: /usr/bin/bash
-#   when: force_accept_gitlab_server_self_signed
-
 - name: Accept gitlab server self signed cert as valid CA
   when: force_accept_gitlab_server_self_signed
   block:
