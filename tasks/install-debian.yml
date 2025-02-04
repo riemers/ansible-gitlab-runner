@@ -49,18 +49,6 @@
     allow_change_held_packages: true
     allow_downgrade: true
   become: true
-  environment:
-    GITLAB_RUNNER_DISABLE_SKEL: "true"
-  when: ansible_distribution_release in ["buster", "focal", "jammy"]
-
-- name: (Debian) Install GitLab Runner
-  ansible.builtin.apt:
-    name: "{{ gitlab_runner_package }}"
-    state: "{{ gitlab_runner_package_state }}"
-    allow_change_held_packages: true
-    allow_downgrade: true
-  become: true
-  when: ansible_distribution_release not in ["buster", "focal", "jammy"]
 
 - name: (Debian) Hold GitLab Runner version
   ansible.builtin.dpkg_selections:
