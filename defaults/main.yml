@@ -1,6 +1,7 @@
 ---
 # for versions >= 10.x
 gitlab_runner_package_name: gitlab-runner
+gitlab_runner_helper_package_name: gitlab-runner-helper-images
 
 gitlab_runner_system_mode: true
 
