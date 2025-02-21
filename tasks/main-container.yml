@@ -57,3 +57,4 @@
         source: /var/run/docker.sock
         target: /var/run/docker.sock
     network_mode: "{{ gitlab_runner_container_network }}"
+    published_ports: "{{ gitlab_runner_container_published_ports }}"

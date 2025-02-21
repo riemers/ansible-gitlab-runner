@@ -92,6 +92,9 @@ gitlab_runner_container_latest_update: false
 # this option uses network_mode, thus 'default' will use the first network found in docker network list
 gitlab_runner_container_network: default
 
+# List of ports to publish from the container to the host.
+gitlab_runner_container_published_ports: ""
+
 # default state to restart
 gitlab_runner_restart_state: restarted
 
