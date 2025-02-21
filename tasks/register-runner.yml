@@ -96,6 +96,7 @@
       --ssh-host '{{ gitlab_runner.ssh_host | default("") }}'
       --ssh-port '{{ gitlab_runner.ssh_port | default("") }}'
       --ssh-identity-file '{{ gitlab_runner.ssh_identity_file | default("") }}'
+      --ssh-disable-strict-host-key-checking '{{ gitlab_runner.ssh_disable_strict_host_key_checking | default("false") }}'
       {% if gitlab_runner.executor == "virtualbox" and gitlab_runner.virtualbox_base_name %}
           --virtualbox-base-name '{{ gitlab_runner.virtualbox_base_name }}'
           --virtualbox-base-snapshot '{{ gitlab_runner.virtualbox_base_snapshot | default("") }}'
