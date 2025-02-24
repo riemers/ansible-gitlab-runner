@@ -1096,14 +1096,14 @@
   loop:
     - '{{ gitlab_runner.builds_dir | default("") }}'
     - '{{ gitlab_runner.cache_dir | default("") }}'
-  when: item|length
+  when: item|length and gitlab_runner_verify_directories
 
 - name: "Ensure directory access test {{ runn_name_prefix }}"
   ansible.builtin.command: test -r {{ item }}
   loop:
     - '{{ gitlab_runner.builds_dir | default("") }}'
     - '{{ gitlab_runner.cache_dir | default("") }}'
-  when: item|length
+  when: item|length and gitlab_runner_verify_directories
   changed_when: false
   become: true
   become_user: "{{ gitlab_runner_runtime_owner | default(omit) }}"

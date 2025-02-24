@@ -112,6 +112,9 @@ force_accept_gitlab_server_self_signed: false
 # controls diffs for assemble config file
 gitlab_runner_show_config_diff: false
 
+# controls whether the role verifies permissions and access on the builds_dir and cache_dir (Unix support only)
+gitlab_runner_verify_directories: true
+
 # controls logs on ansible configuration tasks, uncomment to prevent secret leaks (Unix support only).
 # gitlab_runner_no_log_secrets: yes
 
