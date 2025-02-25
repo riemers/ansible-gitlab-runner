@@ -62,8 +62,8 @@
       {% if gitlab_runner.docker_wait_for_services_timeout | default(false) %}
       --docker-wait-for-services-timeout '{{ gitlab_runner.docker_wait_for_services_timeout | default(30) }}'
       {% endif %}
-      {% if gitlab_runner.docker_tlsverify | default(false) %}
-      --docker-tlsverify '{{ gitlab_runner.docker_tlsverify | default("true") }}'
+      {% if gitlab_runner.docker_tlsverify is defined and gitlab_runner.docker_tlsverify %}
+      --docker-tlsverify
       {% endif %}
       {% if gitlab_runner.docker_dns | default(false) %}
       --docker-dns '{{ gitlab_runner.docker_dns | default("1.1.1.1") }}'
