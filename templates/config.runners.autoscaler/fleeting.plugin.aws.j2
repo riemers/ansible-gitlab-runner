@@ -1,0 +1,13 @@
+[runners.autoscaler.plugin_config]
+{% if gitlab_runner.autoscaler.plugin_config.name is defined %}
+  name = "{{ gitlab_runner.autoscaler.plugin_config.name }}"
+{% endif %}
+{% if gitlab_runner.autoscaler.plugin_config.profile is defined %}
+  profile = "{{ gitlab_runner.autoscaler.plugin_config.profile }}"
+{% endif %}
+{% if gitlab_runner.autoscaler.plugin_config.config_file is defined %}
+  config_file = "{{ gitlab_runner.autoscaler.plugin_config.config_file }}"
+{% endif %}
+{% if gitlab_runner.autoscaler.plugin_config.credentials_file is defined %}
+  credentials_file = "{{ gitlab_runner.autoscaler.plugin_config.credentials_file }}"
+{% endif %}

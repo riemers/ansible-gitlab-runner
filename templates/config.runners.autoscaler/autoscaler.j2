@@ -1,0 +1,19 @@
+  [runners.autoscaler]
+    plugin = "{{ gitlab_runner.autoscaler.plugin }}" # for >= 16.11, ensure you run `gitlab-runner fleeting install` to automatically install the plugin
+    capacity_per_instance = {{ gitlab_runner.autoscaler.capacity_per_instance }}
+    max_use_count = {{ gitlab_runner.autoscaler.max_use_count }}
+    max_instances = {{ gitlab_runner.autoscaler.max_instances }}
+
+    {{ lookup('template', 'config.runners.autoscaler/fleeting.plugin.' ~ gitlab_runner.autoscaler.plugin ~ '.j2') }}
+
+    [runners.autoscaler.connector_config]
+    {% for key, value in gitlab_runner.autoscaler.connector_config.items() %}
+      {{ key }} = {{ '"' ~ value ~ '"' if value is string else value | lower if value is boolean else value }}
+    {% endfor %}
+
+{% for policy in gitlab_runner.autoscaler.policies %}
+    [[runners.autoscaler.policy]]
+    {% for key, value in policy.items() %}
+      {{ key }} = {{ '"' ~ value ~ '"' if value is string else value | lower if value is boolean else value }}
+    {% endfor %}
+{% endfor %}
