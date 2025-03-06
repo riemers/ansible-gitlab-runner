@@ -48,7 +48,9 @@
   ansible.builtin.dpkg_selections:
     name: "{{ gitlab_runner_helper_package_name }}"
     selection: install
-  when: ('gitlab-runner-helper-images' in ansible_facts.packages) and gitlab_runner_package_version is version('17.7.0', '>=')
+  when: 
+    - ('gitlab-runner-helper-images' in ansible_facts.packages)
+    - (gitlab_runner_package_version is undefined or gitlab_runner_package_version is version('17.7.0', '>='))
 
 - name: (Debian) Install GitLab Runner Helpers
   ansible.builtin.apt:
@@ -57,7 +59,7 @@
     allow_change_held_packages: true
     allow_downgrade: true
   become: true
-  when: gitlab_runner_package_version is defined and gitlab_runner_package_version is version('17.7.0', '>=')
+  when: gitlab_runner_package_version is undefined or gitlab_runner_package_version is version('17.7.0', '>=')
 
 - name: (Debian) Install GitLab Runner
   ansible.builtin.apt:
@@ -78,7 +80,7 @@
   ansible.builtin.dpkg_selections:
     name: "{{ gitlab_runner_helper_package_name }}"
     selection: hold
-  when: gitlab_runner_package_version is defined and gitlab_runner_package_version is version('17.7.0', '>=')
+  when: gitlab_runner_package_version is undefined or gitlab_runner_package_version is version('17.7.0', '>=')
   changed_when: false
 
 - name: (Debian) Remove ~/gitlab-runner/.bash_logout on debian buster and ubuntu focal
