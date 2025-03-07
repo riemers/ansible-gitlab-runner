@@ -29,6 +29,7 @@
 - name: (Debian) Set gitlab_runner_package_name
   ansible.builtin.set_fact:
     gitlab_runner_package: "{{ gitlab_runner_package_name }}"
+    gitlab_runner_helper_package: "{{ gitlab_runner_helper_package_name }}"
     gitlab_runner_package_state: latest
   when: gitlab_runner_package_version is not defined
 
@@ -48,7 +49,7 @@
   ansible.builtin.dpkg_selections:
     name: "{{ gitlab_runner_helper_package_name }}"
     selection: install
-  when: 
+  when:
     - ('gitlab-runner-helper-images' in ansible_facts.packages)
     - (gitlab_runner_package_version is undefined or gitlab_runner_package_version is version('17.7.0', '>='))
 
