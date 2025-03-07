@@ -29,6 +29,7 @@
 - name: (Debian) Set gitlab_runner_package_name
   ansible.builtin.set_fact:
     gitlab_runner_package: "{{ gitlab_runner_package_name }}"
+    gitlab_runner_helper_package: "{{ gitlab_runner_helper_package_name }}"
     gitlab_runner_package_state: latest
   when: gitlab_runner_package_version is not defined
 
