@@ -1040,6 +1040,21 @@
     - restart_gitlab_runner
     - restart_gitlab_runner_macos
 
+#### [runners.autoscaler] section ####
+
+- name: "Set autoscaler section {{ runn_name_prefix }}"
+  ansible.builtin.blockinfile:
+    dest: "{{ temp_runner_config.path }}"
+    content: "{{ lookup('template', 'config.runners.autoscaler/autoscaler.j2') if gitlab_runner.autoscaler is defined }}"
+    state: "{{ 'present' if gitlab_runner.autoscaler is defined else 'absent' }}"
+    marker: "# {mark} runners.autoscaler"
+    insertafter: EOF
+  check_mode: false
+  no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
+  notify:
+    - restart_gitlab_runner
+    - restart_gitlab_runner_macos
+
 #### [[runners.machine.autoscaling]] section ####
 
 - name: "Set additional autoscaling option {{ runn_name_prefix }}"
