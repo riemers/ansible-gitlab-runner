@@ -84,11 +84,11 @@
   when: gitlab_runner_package_version is undefined or gitlab_runner_package_version is version('17.7.0', '>=')
   changed_when: false
 
-- name: (Debian) Remove ~/gitlab-runner/.bash_logout on debian buster and ubuntu focal
+- name: (Debian) Remove ~/gitlab-runner/.bash_logout on debian buster and ubuntu focal, jammy and noble
   ansible.builtin.file:
     path: /home/gitlab-runner/.bash_logout
     state: absent
-  when: ansible_distribution_release in ["buster", "focal", "jammy"]
+  when: ansible_distribution_release in ["buster", "focal", "jammy", "noble"]
 
 - name: Set systemd reload options
   ansible.builtin.import_tasks: systemd-reload.yml
