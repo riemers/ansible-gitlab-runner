@@ -36,3 +36,8 @@
       {{ gitlab_runner_container_image }}:{{ gitlab_runner_container_tag }}
       verify -c /gitlab-runner.conf
     mode: "0600"
+
+- name: Remove temporary directory
+  ansible.builtin.file:
+    path: "{{ temp_runner_config_dir.path }}"
+    state: "absent"
