@@ -11,6 +11,9 @@
     {% if ansible_distribution == "Rocky" %}
     env os=el dist={{ ansible_distribution_major_version }}
     {% endif %}
+    {% if ansible_distribution == "CentOS" and ansible_distribution_major_version == "10" %}
+    env os=centos dist=9
+    {% endif %}
     bash /tmp/gitlab-runner.script.rpm.sh
   args:
     creates: /etc/yum.repos.d/runner_{{ gitlab_runner_package_name }}.repo
