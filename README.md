@@ -7,7 +7,10 @@ This role will install the [official GitLab Runner](https://gitlab.com/gitlab-or
 Requirements
 ------------
 
-This role requires Ansible 2.13 or higher.
+This role requires:
+
+* Ansible 2.13 or higher
+* Installed Ansible Galaxy collections listed in file [requirements.yml](requirements.yml)
 
 Role Variables
 --------------
