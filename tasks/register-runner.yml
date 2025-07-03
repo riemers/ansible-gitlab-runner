@@ -27,9 +27,7 @@
       {% if gitlab_runner_registration_token_type != "authentication-token" %}
       --locked='{{ gitlab_runner.locked | default(false) }}'
       --tag-list '{{ gitlab_runner.tags | default([]) | join(",") }}'
-      {% if gitlab_runner.run_untagged | default(true) %}
-      --run-untagged
-      {% endif %}
+      --run-untagged='{{ gitlab_runner.run_untagged | default(true) }}'
       {% if gitlab_runner.protected | default(false) %}
       --access-level="ref_protected"
       {% endif %}
