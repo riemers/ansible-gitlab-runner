@@ -164,7 +164,7 @@
     regexp: ^\s*\[runners\.{{ gitlab_runner.executor | default("shell") }}\]
     line: '  [runners.{{ gitlab_runner.executor | replace("docker+machine", "machine") | default("shell") }}]'
     state: "{{ 'absent' if (gitlab_runner.executor | default('shell')) == 'shell' else 'present' }}"
-    insertafter: ^\s*executor =
+    insertafter: ^\s*(shell|executor) =
     backrefs: false
   check_mode: false
   no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
