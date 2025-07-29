@@ -415,7 +415,7 @@
 - name: "Set additional services {{ runn_name_prefix }}"
   ansible.builtin.blockinfile:
     dest: "{{ temp_runner_config.path }}"
-    content: "{{ lookup('template', 'config.runners.docker.services.j2') if gitlab_runner.docker_services is defined }}"
+    content: "{{ lookup('template', 'config.runners.docker.services.j2') if gitlab_runner.docker_services is defined else omit }}"
     state: "{{ 'present' if gitlab_runner.docker_services is defined else 'absent' }}"
     marker: "# {mark} runners.docker.services"
     insertafter: EOF
@@ -889,7 +889,7 @@
 - name: "Set feature flag options {{ runn_name_prefix }}"
   ansible.builtin.blockinfile:
     path: "{{ temp_runner_config.path }}"
-    content: "{{ lookup('template', 'config.runners.feature_flags.j2') if gitlab_runner.feature_flags is defined }}"
+    content: "{{ lookup('template', 'config.runners.feature_flags.j2') if gitlab_runner.feature_flags is defined else omit }}"
     state: "{{ 'present' if gitlab_runner.feature_flags is defined else 'absent' }}"
     marker: "# {mark} runners.feature_flags"
     insertafter: EOF
@@ -1045,7 +1045,7 @@
 - name: "Set autoscaler section {{ runn_name_prefix }}"
   ansible.builtin.blockinfile:
     dest: "{{ temp_runner_config.path }}"
-    content: "{{ lookup('template', 'config.runners.autoscaler/autoscaler.j2') if gitlab_runner.autoscaler is defined }}"
+    content: "{{ lookup('template', 'config.runners.autoscaler/autoscaler.j2') if gitlab_runner.autoscaler is defined else omit }}"
     state: "{{ 'present' if gitlab_runner.autoscaler is defined else 'absent' }}"
     marker: "# {mark} runners.autoscaler"
     insertafter: EOF
@@ -1060,7 +1060,7 @@
 - name: "Set additional autoscaling option {{ runn_name_prefix }}"
   ansible.builtin.blockinfile:
     dest: "{{ temp_runner_config.path }}"
-    content: "{{ lookup('template', 'config.runners.machine.autoscaling.j2') if gitlab_runner.machine_autoscaling is defined }}"
+    content: "{{ lookup('template', 'config.runners.machine.autoscaling.j2') if gitlab_runner.machine_autoscaling is defined else omit }}"
     state: "{{ 'present' if gitlab_runner.machine_autoscaling is defined else 'absent' }}"
     marker: "# {mark} runners.machine.autoscaling"
     insertafter: EOF
@@ -1111,14 +1111,14 @@
   loop:
     - '{{ gitlab_runner.builds_dir | default("") }}'
     - '{{ gitlab_runner.cache_dir | default("") }}'
-  when: item|length and gitlab_runner_verify_directories
+  when: (item | length > 0) and gitlab_runner_verify_directories
 
 - name: "Ensure directory access test {{ runn_name_prefix }}"
   ansible.builtin.command: test -r {{ item }}
   loop:
     - '{{ gitlab_runner.builds_dir | default("") }}'
     - '{{ gitlab_runner.cache_dir | default("") }}'
-  when: item|length and gitlab_runner_verify_directories
+  when: (item | length > 0) and gitlab_runner_verify_directories
   changed_when: false
   become: true
   become_user: "{{ gitlab_runner_runtime_owner | default(omit) }}"

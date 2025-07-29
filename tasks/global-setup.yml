@@ -131,7 +131,9 @@
     insertafter: ^\s*\[session_server\]
     state: present
   no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
-  when: gitlab_runner_session_server_session_timeout
+  when:
+    - gitlab_runner_session_server_session_timeout is defined
+    - gitlab_runner_session_server_session_timeout > 0
   become: "{{ gitlab_runner_system_mode }}"
   notify:
     - restart_gitlab_runner
