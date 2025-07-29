@@ -415,13 +415,12 @@
 - name: "Set additional services {{ runn_name_prefix }}"
   ansible.builtin.blockinfile:
     dest: "{{ temp_runner_config.path }}"
-    content: "{{ lookup('template', 'config.runners.docker.services.j2') }}"
+    content: "{{ lookup('template', 'config.runners.docker.services.j2') if gitlab_runner.docker_services is defined else omit }}"
     state: "{{ 'present' if gitlab_runner.docker_services is defined else 'absent' }}"
     marker: "# {mark} runners.docker.services"
     insertafter: EOF
   check_mode: false
   no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
-  when: gitlab_runner.docker_services is defined
   notify:
     - restart_gitlab_runner
     - restart_gitlab_runner_macos
@@ -890,13 +889,12 @@
 - name: "Set feature flag options {{ runn_name_prefix }}"
   ansible.builtin.blockinfile:
     path: "{{ temp_runner_config.path }}"
-    content: "{{ lookup('template', 'config.runners.feature_flags.j2') }}"
+    content: "{{ lookup('template', 'config.runners.feature_flags.j2') if gitlab_runner.feature_flags is defined else omit }}"
     state: "{{ 'present' if gitlab_runner.feature_flags is defined else 'absent' }}"
     marker: "# {mark} runners.feature_flags"
     insertafter: EOF
   check_mode: false
   no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
-  when: gitlab_runner.feature_flags is defined
   notify:
     - restart_gitlab_runner
     - restart_gitlab_runner_macos
@@ -1047,7 +1045,7 @@
 - name: "Set autoscaler section {{ runn_name_prefix }}"
   ansible.builtin.blockinfile:
     dest: "{{ temp_runner_config.path }}"
-    content: "{{ lookup('template', 'config.runners.autoscaler/autoscaler.j2') if gitlab_runner.autoscaler is defined }}"
+    content: "{{ lookup('template', 'config.runners.autoscaler/autoscaler.j2') if gitlab_runner.autoscaler is defined else omit }}"
     state: "{{ 'present' if gitlab_runner.autoscaler is defined else 'absent' }}"
     marker: "# {mark} runners.autoscaler"
     insertafter: EOF
@@ -1062,13 +1060,12 @@
 - name: "Set additional autoscaling option {{ runn_name_prefix }}"
   ansible.builtin.blockinfile:
     dest: "{{ temp_runner_config.path }}"
-    content: "{{ lookup('template', 'config.runners.machine.autoscaling.j2') }}"
+    content: "{{ lookup('template', 'config.runners.machine.autoscaling.j2') if gitlab_runner.machine_autoscaling is defined else omit }}"
     state: "{{ 'present' if gitlab_runner.machine_autoscaling is defined else 'absent' }}"
     marker: "# {mark} runners.machine.autoscaling"
     insertafter: EOF
   check_mode: false
   no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
-  when: gitlab_runner.machine_autoscaling is defined
   notify:
     - restart_gitlab_runner
     - restart_gitlab_runner_macos
