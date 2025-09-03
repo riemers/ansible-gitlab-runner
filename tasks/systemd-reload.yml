@@ -35,4 +35,7 @@
   become: true
   ansible.builtin.systemd:
     daemon_reload: true
-  when: gitlab_runner_exec_reload.changed or gitlab_runner_kill_timeout is defined
+  when: >-
+    gitlab_runner_exec_reload.changed or (
+      gitlab_runner_timeout_stop_seconds > 0 and gitlab_runner_kill_timeout.changed
+    )
