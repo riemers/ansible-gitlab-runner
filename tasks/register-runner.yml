@@ -183,6 +183,7 @@
         dest: "{{ gitlab_runner_config_file_location }}/last-runner-config-{{ actual_gitlab_runner_name }}"
         mode: "0644"
       register: runner_config_state
+      become: "{{ gitlab_runner_system_mode }}"
 
     - name: Unregister runner
       ansible.builtin.import_tasks: unregister-runner.yml
