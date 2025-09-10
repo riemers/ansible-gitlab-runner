@@ -18,14 +18,14 @@
     - gitlab_install_target_platform == 'container'
 
 - name: (Windows) Unregister runner
-  ansible.windows.win_command: "{{ gitlab_runner_executable }} unregister --name {{ actual_gitlab_runner_name }}"
+  ansible.windows.win_command: "{{ gitlab_runner_executable }} unregister --name '{{ actual_gitlab_runner_name }}'"
   args:
     chdir: "{{ gitlab_runner_config_file_location }}"
   when:
     - gitlab_install_target_platform == 'windows'
 
 - name: Unregister runner
-  ansible.builtin.command: "{{ gitlab_runner_executable }} unregister --name {{ actual_gitlab_runner_name }}"
+  ansible.builtin.command: "{{ gitlab_runner_executable }} unregister --name '{{ actual_gitlab_runner_name }}'"
   when:
     - gitlab_install_target_platform == 'unix'
   become: "{{ gitlab_runner_system_mode }}"
