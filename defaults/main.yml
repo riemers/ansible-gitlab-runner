@@ -121,6 +121,10 @@ gitlab_runner_verify_directories: true
 # controls logs on ansible configuration tasks, uncomment to prevent secret leaks (Unix support only).
 # gitlab_runner_no_log_secrets: yes
 
+# controls whether remove ~/.bash_logout from runner home directory
+# See https://docs.gitlab.com/runner/shells/#shell-profile-loading
+gitlab_runner_remove_bash_logout: false
+
 # A list of runners to register and configure
 gitlab_runner_runners:
   # The identifier of the runner.
