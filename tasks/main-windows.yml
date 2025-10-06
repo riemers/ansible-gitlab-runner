@@ -29,6 +29,8 @@
 
 - name: (Windows) Set global options
   ansible.builtin.import_tasks: global-setup-windows.yml
+  when: gitlab_runner_config_update_mode == 'by_config_toml' or
+    gitlab_runner_config_update_mode == 'by_registering'
 
 - name: (Windows) Configure GitLab Runner
   ansible.builtin.include_tasks: config-runners-windows.yml
@@ -39,3 +41,10 @@
   args:
     chdir: "{{ gitlab_runner_config_file_location }}"
   when: gitlab_runner_windows_start_runner
+
+- name: (Windows) Configure Gitlab Runner via template
+  ansible.builtin.template:
+    src: config.toml.j2
+    dest: "{{ gitlab_runner_config_file }}"
+    mode: "0600"
+  when: gitlab_runner_config_update_mode == 'by_template'

@@ -39,10 +39,19 @@
 
 - name: (Container) Set global options
   ansible.builtin.import_tasks: global-setup.yml
+  when: gitlab_runner_config_update_mode == 'by_config_toml' or
+    gitlab_runner_config_update_mode == 'by_registering'
 
 - name: (Container) Configure GitLab Runner
   ansible.builtin.include_tasks: config-runners-container.yml
   when: gitlab_runner_config_update_mode == 'by_config_toml'
+
+- name: (Container) Configure Gitlab Runner via template
+  ansible.builtin.template:
+    src: config.toml.j2
+    dest: "{{ gitlab_runner_config_file }}"
+    mode: "0600"
+  when: gitlab_runner_config_update_mode == 'by_template'
 
 - name: (Container) Start the container
   community.docker.docker_container:
