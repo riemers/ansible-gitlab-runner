@@ -33,6 +33,7 @@ Role Variables
 - `gitlab_runner_config_update_mode` - Defines how configuration updates are applied:
   - Set to `by_config_toml` (default) to apply configuration changes directly by updating the `config.toml` file.
   - Set to `by_registering` if changes should be applied by unregistering and re-registering the runner when configuration changes.
+  - Set to `by_template` if changes for all runners should directly be written in the `config.toml` file. The difference with `by_config_toml` is that this method is faster, but does not take into account the existing configuration of the runners.
 - `gitlab_unregister_runner_executors_which_are_not_longer_configured` - Set to `true` if executors should be unregistered from a runner when they are no longer configured in Ansible. Default: `false`.
 
 See the [defaults/main.yml](https://github.com/riemers/ansible-gitlab-runner/blob/master/defaults/main.yml) file for a list of all possible options that can be passed to a runner registration command.
