@@ -168,7 +168,7 @@ sentry_dsn = "{{ gitlab_runner_sentry_dsn }}"
 {% if gitlab_runner.virtualbox_disable_snapshots is defined %}
     disable_snapshots = {{ gitlab_runner.virtualbox_disable_snapshots | default(false) | lower }}
 {% endif %}
-#### [runners.custom_build_dir] section #####
+{#### [runners.custom_build_dir] section #####}
 {% if gitlab_runner.custom_build_dir_enabled is defined %}
   [runners.custom_build_dir]
     enabled = {{ gitlab_runner.custom_build_dir_enabled | default(false) | lower }}
