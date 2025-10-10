@@ -130,6 +130,13 @@ sentry_dsn = "{{ gitlab_runner_sentry_dsn }}"
     {{ key }} = {{ value | tojson }}
 {% endfor %}
 {% endif %}
+{#### [[runners.docker.sysctls]] section ####}
+{% if 'runners.docker.sysctls' in gitlab_runner.extra_configs %}
+    [runners.docker.sysctls]
+{% for key, value in gitlab_runner.extra_configs['runners.docker.sysctls'].items() %}
+      {{ key }} = {{ value | tojson }}
+{% endfor %}
+{% endif %}
 {% endif %}
 {#### [[runners.docker.services]] section ####}
 {% if gitlab_runner.docker_services is defined %}
