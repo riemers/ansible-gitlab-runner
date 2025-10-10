@@ -124,6 +124,13 @@ sentry_dsn = "{{ gitlab_runner_sentry_dsn }}"
 {% if gitlab_runner.docker_security_opt is defined %}
     security_opt = {{ gitlab_runner.docker_security_opt | tojson }}
 {% endif %}
+{% if gitlab_runner.extra_configs %}
+{% if 'runners.docker' in gitlab_runner.extra_configs %}
+{% for key, value in gitlab_runner.extra_configs['runners.docker'].items() %}
+    {{ key }} = {{ value | tojson }}
+{% endfor %}
+{% endif %}
+{% endif %}
 {#### [[runners.docker.services]] section ####}
 {% if gitlab_runner.docker_services is defined %}
 {% for service in gitlab_runner.docker_services %}
