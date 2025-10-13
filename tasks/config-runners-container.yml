@@ -41,3 +41,5 @@
   ansible.builtin.file:
     path: "{{ temp_runner_config_dir.path }}"
     state: "absent"
+  check_mode: false
+  changed_when: false
