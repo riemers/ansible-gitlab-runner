@@ -20,7 +20,13 @@ gitlab_runner_install_directory: >-
   else gitlab_runner_custom_install_directory }}
 
 # Overridden based on platform
-gitlab_runner_config_file: "{{ __gitlab_runner_config_file_system_mode if gitlab_runner_system_mode else __gitlab_runner_config_file_user_mode }}"
+gitlab_runner_config_file: >-
+  {{ gitlab_runner_container_mount_path + '/config.toml'
+  if gitlab_runner_container_install
+  else (
+    __gitlab_runner_config_file_system_mode if gitlab_runner_system_mode
+    else __gitlab_runner_config_file_user_mode
+  ) }}"
 gitlab_runner_config_file_location: "{{ gitlab_runner_config_file | dirname }}"
 gitlab_runner_executable: "{{ gitlab_runner_package_name }}"
 
