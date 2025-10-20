@@ -5,6 +5,7 @@
     state: directory
     mode: "0700"
   become: "{{ gitlab_runner_system_mode }}"
+  when: not gitlab_runner_container_install
 
 - name: Ensure config.toml exists
   ansible.builtin.file:
