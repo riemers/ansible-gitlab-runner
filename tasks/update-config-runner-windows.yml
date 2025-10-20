@@ -191,6 +191,17 @@
   check_mode: false
   notify: restart_gitlab_runner_windows
 
+- name: "Set docker hostname option {{ runn_name_prefix }}"
+  community.windows.win_lineinfile:
+    dest: "{{ temp_runner_config.path }}"
+    regexp: ^\s*hostname =.*
+    line: '  hostname = {{ gitlab_runner.docker_hostname | default("") | to_json }}'
+    state: "{{ 'present' if gitlab_runner.docker_hostname is defined else 'absent' }}"
+    insertafter: ^\s*executor =
+    backrefs: false
+  check_mode: false
+  notify: restart_gitlab_runner_windows
+
 - name: "Set cache type option {{ runn_name_prefix }}"
   community.windows.win_lineinfile:
     dest: "{{ temp_runner_config.path }}"
