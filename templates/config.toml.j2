@@ -115,6 +115,9 @@ sentry_dsn = "{{ gitlab_runner_sentry_dsn }}"
 {% if gitlab_runner.docker_network_mode is defined %}
     network_mode = {{ gitlab_runner.docker_network_mode | default("bridge") | tojson }}
 {% endif %}
+{% if gitlab_runner.docker_hostname is defined %}
+    hostname = {{ gitlab_runner.docker_hostname | default("") | tojson }}
+{% endif %}
 {% if gitlab_runner.docker_disable_entrypoint_overwrite is defined %}
     disable_entrypoint_overwrite = {{ gitlab_runner.docker_disable_entrypoint_overwrite | default(false) | tojson }}
 {% endif %}

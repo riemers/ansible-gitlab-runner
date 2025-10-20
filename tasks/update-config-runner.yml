@@ -383,6 +383,20 @@
     - restart_gitlab_runner
     - restart_gitlab_runner_macos
 
+- name: "Set runner docker hostname {{ runn_name_prefix }}"
+  ansible.builtin.lineinfile:
+    dest: "{{ temp_runner_config.path }}"
+    regexp: ^\s*hostname =
+    line: '    hostname = {{ gitlab_runner.docker_hostname | default("") | to_json }}'
+    state: "{{ 'present' if gitlab_runner.docker_hostname is defined else 'absent' }}"
+    insertafter: ^\s*\[runners\.docker\]
+    backrefs: false
+  check_mode: false
+  no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
+  notify:
+    - restart_gitlab_runner
+    - restart_gitlab_runner_macos
+
 - name: "Set tls-cert-file option {{ runn_name_prefix }}"
   ansible.builtin.lineinfile:
     dest: "{{ temp_runner_config.path }}"
