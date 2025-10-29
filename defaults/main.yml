@@ -26,7 +26,7 @@ gitlab_runner_config_file: >-
   else (
     __gitlab_runner_config_file_system_mode if gitlab_runner_system_mode
     else __gitlab_runner_config_file_user_mode
-  ) }}"
+  ) }}
 gitlab_runner_config_file_location: "{{ gitlab_runner_config_file | dirname }}"
 gitlab_runner_executable: "{{ gitlab_runner_package_name }}"
 
