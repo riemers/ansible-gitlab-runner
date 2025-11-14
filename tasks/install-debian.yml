@@ -19,9 +19,9 @@
   become: true
   when: gitlab_runner_skip_package_repo_install is not defined or not gitlab_runner_skip_package_repo_install
 
-- name: Ensure Gitlab runner repository GPG key is readable by everyone
+- name: (Debian) Ensure Gitlab runner repository GPG key is readable by everyone
   ansible.builtin.file:
-    path: /usr/share/keyrings/runner_gitlab-runner-archive-keyring.gpg
+    path: /etc/apt/keyrings/runner_gitlab-runner-archive-keyring.gpg
     owner: root
     group: root
     mode: "0644"
