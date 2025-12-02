@@ -147,7 +147,7 @@ gitlab_runner_runners:
     # The executor used by the runner.
     executor: shell
     # The authentication token.
-    # Needs to be provided when gitlab_runner_registration_token_type is set to 'authentication-token' 
+    # Needs to be provided when gitlab_runner_registration_token_type is set to 'authentication-token'
     # token:
     # Set maximum build log size in kilobytes.
     output_limit: 4096
