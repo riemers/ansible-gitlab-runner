@@ -1,31 +1,32 @@
 ---
 - name: Install GitLab Runner (Debian)
-  include_tasks: install-debian.yml
+  ansible.builtin.include_tasks: install-debian.yml
   when: ansible_os_family == 'Debian'
 
 - name: Install GitLab Runner (RedHat)
-  include_tasks: install-redhat.yml
+  ansible.builtin.include_tasks: install-redhat.yml
   when: ansible_os_family == 'RedHat'
 
 - name: Install GitLab Runner (macOS)
-  include_tasks: install-macos.yml
+  ansible.builtin.include_tasks: install-macos.yml
   when: ansible_os_family == 'Darwin'
 
 - name: Install GitLab Runner (Arch)
-  include_tasks: install-arch.yml
+  ansible.builtin.include_tasks: install-arch.yml
   when: ansible_os_family == 'Archlinux'
 
 - name: (Unix) Delete runners which were removed in GitLab
-  command: "{{ gitlab_runner_executable }} verify --delete"
+  ansible.builtin.command: "{{ gitlab_runner_executable }} verify --delete"
   register: verified_runners
   changed_when: '"Updated " in verified_runners.stderr'
   check_mode: false
   become: "{{ gitlab_runner_system_mode }}"
 
-- import_tasks: list-configured-runners-unix.yml
+- name: List configured runners
+  ansible.builtin.import_tasks: list-configured-runners-unix.yml
 
 - name: (Unix) Register GitLab Runner
-  include_tasks: register-runner.yml
+  ansible.builtin.include_tasks: register-runner.yml
   vars:
     actual_gitlab_runner_name: "{{ gitlab_runner.name | default(ansible_hostname + '-' + gitlab_runner_index | string) }}"
   when: gitlab_runner.token is defined or gitlab_runner_registration_token | string | length > 0
@@ -36,12 +37,21 @@
   no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
 
 - name: Unregister runners which are not longer configured
-  include_tasks: unregister-runner-if-not-longer-configured.yml
+  ansible.builtin.include_tasks: unregister-runner-if-not-longer-configured.yml
   when: gitlab_unregister_runner_executors_which_are_not_longer_configured
 
 - name: Set global options (macOS/Debian/RedHat)
-  import_tasks: global-setup.yml
+  ansible.builtin.import_tasks: global-setup.yml
+  when: gitlab_runner_config_update_mode == 'by_config_toml' or
+        gitlab_runner_config_update_mode == 'by_registering'
 
 - name: (Unix) Configure GitLab Runner
-  include_tasks: config-runners.yml
+  ansible.builtin.include_tasks: config-runners.yml
   when: gitlab_runner_config_update_mode == 'by_config_toml'
+
+- name: (Unix) Configure Gitlab Runner via template
+  ansible.builtin.template:
+    src: config.toml.j2
+    dest: "{{ gitlab_runner_config_file }}"
+    mode: "0600"
+  when: gitlab_runner_config_update_mode == 'by_template'

@@ -1,6 +1,7 @@
 ---
 # for versions >= 10.x
 gitlab_runner_package_name: gitlab-runner
+gitlab_runner_helper_package_name: gitlab-runner-helper-images
 
 gitlab_runner_system_mode: true
 
@@ -11,8 +12,21 @@ gitlab_runner_wanted_version: latest
 # This variable should not be modified usually as it depends on the gitlab_runner_wanted_version variable
 gitlab_runner_wanted_tag: "{{ 'latest' if gitlab_runner_wanted_version == 'latest' else ('v' + gitlab_runner_wanted_version) }}"
 
+# Override the install directory under Windows via host variables etc. (Default: c:/gitlab-runner)
+gitlab_runner_custom_install_directory: ""
+gitlab_runner_install_directory: >-
+  {{ gitlab_runner_default_install_directory
+  if (gitlab_runner_custom_install_directory == '')
+  else gitlab_runner_custom_install_directory }}
+
 # Overridden based on platform
-gitlab_runner_config_file: "{{ __gitlab_runner_config_file_system_mode if gitlab_runner_system_mode else __gitlab_runner_config_file_user_mode }}"
+gitlab_runner_config_file: >-
+  {{ gitlab_runner_container_mount_path + '/config.toml'
+  if gitlab_runner_container_install
+  else (
+    __gitlab_runner_config_file_system_mode if gitlab_runner_system_mode
+    else __gitlab_runner_config_file_user_mode
+  ) }}
 gitlab_runner_config_file_location: "{{ gitlab_runner_config_file | dirname }}"
 gitlab_runner_executable: "{{ gitlab_runner_package_name }}"
 
@@ -25,13 +39,18 @@ gitlab_runner_check_interval: 0
 
 # GitLab coordinator URL
 gitlab_runner_coordinator_url: https://gitlab.com
-# GitLab registration token
+
+# GitLab registration token.
 gitlab_runner_registration_token: ""
 
-gitlab_runner_sentry_dsn: ""
+# Gitlab runner registration token type:
+# "authentication-token" - Register runner with --token option (new workflow https://docs.gitlab.com/ee/ci/runners/new_creation_workflow.html)
+# "registration-token" - Register runner with --registration-token option (deprecating in gitlab 16.0 but still usable and deleted in 18.0)
+# For gitlab version >= 16.0 it is advisable to specify token for each runner in 'gitlab_runner_runners' section
+# and set this variable to "authentication-token"
+gitlab_runner_registration_token_type: "registration-token"
 
-# GitLab server IP
-gitlab_server_ip: ""
+gitlab_runner_sentry_dsn: ""
 
 # GitLab TLS CA file
 tls_ca_file: ""
@@ -79,6 +98,9 @@ gitlab_runner_container_latest_update: false
 # this option uses network_mode, thus 'default' will use the first network found in docker network list
 gitlab_runner_container_network: default
 
+# List of ports to publish from the container to the host.
+gitlab_runner_container_published_ports: []
+
 # default state to restart
 gitlab_runner_restart_state: restarted
 
@@ -89,7 +111,7 @@ gitlab_runner_timeout_stop_seconds: 7200
 # gitlab_runner_log_format: runner
 
 # defines value for log_level
-# Defines the log level. Options are debug, info, warn, error, fatal, and panic. 
+# Defines the log level. Options are debug, info, warn, error, fatal, and panic.
 # This setting has lower priority than the level set by the command-line arguments --debug, -l, or --log-level.
 # gitlab_runner_log_level: "warning"
 
@@ -99,8 +121,15 @@ force_accept_gitlab_server_self_signed: false
 # controls diffs for assemble config file
 gitlab_runner_show_config_diff: false
 
+# controls whether the role verifies permissions and access on the builds_dir and cache_dir (Unix support only)
+gitlab_runner_verify_directories: true
+
 # controls logs on ansible configuration tasks, uncomment to prevent secret leaks (Unix support only).
 # gitlab_runner_no_log_secrets: yes
+
+# controls whether remove ~/.bash_logout from runner home directory
+# See https://docs.gitlab.com/runner/shells/#shell-profile-loading
+gitlab_runner_remove_bash_logout: false
 
 # A list of runners to register and configure
 gitlab_runner_runners:
@@ -110,6 +139,9 @@ gitlab_runner_runners:
     state: present
     # The executor used by the runner.
     executor: shell
+    # The authentication token.
+    # Needs to be provided when gitlab_runner_registration_token_type is set to 'authentication-token' 
+    # token:
     # Set maximum build log size in kilobytes.
     output_limit: 4096
     # Maximum number of jobs to run concurrently on this specific runner.
@@ -247,6 +279,13 @@ gitlab_runner_runners:
     #
     # Cache directory
     # cache_dir: '/cache'
+    #
+    # Feature Flags
+    # See https://docs.gitlab.com/runner/configuration/feature-flags.html#available-feature-flags
+    #
+    # Sets feature flags. The default is not set.
+    # feature_flags:
+    #   - FF_TIMESTAMPS
     #
     # Extra registration option
     # extra_registration_option: '--maximum-timeout=3600'

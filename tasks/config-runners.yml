@@ -1,17 +1,17 @@
 ---
 - name: Get existing config.toml
-  slurp:
+  ansible.builtin.slurp:
     src: "{{ gitlab_runner_config_file }}"
   register: runner_config_file
   become: "{{ gitlab_runner_system_mode }}"
 
 - name: Get pre-existing runner configs
-  set_fact:
+  ansible.builtin.set_fact:
     runner_configs: "{{ (runner_config_file['content'] | b64decode).split('[[runners]]\n') }}"
   no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
 
 - name: Create temporary directory
-  tempfile:
+  ansible.builtin.tempfile:
     state: directory
     suffix: gitlab-runner-config
   register: temp_runner_config_dir
@@ -20,8 +20,8 @@
 
 - name: Write config section for each runner
   vars:
-    conf_name_prefix: "conf[{{ (runner_config_index|int) + 1 }}/{{ runner_configs|length }}]:"
-  include_tasks: config-runner.yml
+    conf_name_prefix: "conf[{{ (runner_config_index | int) + 1 }}/{{ runner_configs | length }}]:"
+  ansible.builtin.include_tasks: config-runner.yml
   loop: "{{ runner_configs }}"
   loop_control:
     index_var: runner_config_index
@@ -29,7 +29,7 @@
   no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
 
 - name: Assemble new config.toml
-  assemble:
+  ansible.builtin.assemble:
     src: "{{ temp_runner_config_dir.path }}"
     dest: "{{ gitlab_runner_config_file }}"
     delimiter: "[[runners]]\\n"
@@ -37,4 +37,4 @@
     validate: "{{ gitlab_runner_executable }} verify -c %s"
     mode: "0600"
   become: "{{ gitlab_runner_system_mode }}"
-  diff: "{{ gitlab_runner_show_config_diff|bool }}"
+  diff: "{{ gitlab_runner_show_config_diff | bool }}"

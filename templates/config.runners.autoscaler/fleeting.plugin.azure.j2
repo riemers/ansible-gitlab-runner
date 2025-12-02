@@ -1,0 +1,10 @@
+[runners.autoscaler.plugin_config]
+{% if gitlab_runner.autoscaler.plugin_config.name is defined %}
+  name = "{{ gitlab_runner.autoscaler.plugin_config.name }}"
+{% endif %}
+{% if gitlab_runner.autoscaler.plugin_config.subscription_id is defined %}
+  subscription_id = "{{ gitlab_runner.autoscaler.plugin_config.subscription_id }}"
+{% endif %}
+{% if gitlab_runner.autoscaler.plugin_config.resource_group_name is defined %}
+  resource_group_name = "{{ gitlab_runner.autoscaler.plugin_config.resource_group_name }}"
+{% endif %}

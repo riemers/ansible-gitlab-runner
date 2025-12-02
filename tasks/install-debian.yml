@@ -6,74 +6,102 @@
   when: gitlab_runner_skip_package_repo_install is not defined or not gitlab_runner_skip_package_repo_install
 
 - name: (Debian) Get Gitlab repository installation script
-  get_url:
+  ansible.builtin.get_url:
     url: https://packages.gitlab.com/install/repositories/runner/{{ gitlab_runner_package_name }}/script.deb.sh
     dest: /tmp/gitlab-runner.script.deb.sh
     mode: "0744"
   when: gitlab_runner_skip_package_repo_install is not defined or not gitlab_runner_skip_package_repo_install
 
 - name: (Debian) Install Gitlab repository
-  command: bash /tmp/gitlab-runner.script.deb.sh
+  ansible.builtin.command: bash /tmp/gitlab-runner.script.deb.sh
   args:
     creates: /etc/apt/sources.list.d/runner_{{ gitlab_runner_package_name }}.list
   become: true
   when: gitlab_runner_skip_package_repo_install is not defined or not gitlab_runner_skip_package_repo_install
 
-- name: (Debian) Update gitlab_runner_package_name
-  set_fact:
+- name: (Debian) Ensure Gitlab runner repository GPG key is readable by everyone
+  ansible.builtin.file:
+    path: /etc/apt/keyrings/runner_gitlab-runner-archive-keyring.gpg
+    owner: root
+    group: root
+    mode: "0644"
+    state: file
+  when: gitlab_runner_skip_package_repo_install is not defined or not gitlab_runner_skip_package_repo_install
+
+- name: (Debian) Update gitlab_runner_package_name and gitlab_runner_helper_package_name
+  ansible.builtin.set_fact:
     gitlab_runner_package: "{{ gitlab_runner_package_name }}={{ gitlab_runner_package_version }}"
+    gitlab_runner_helper_package: "{{ gitlab_runner_helper_package_name }}={{ gitlab_runner_package_version }}"
     gitlab_runner_package_state: present
   when: gitlab_runner_package_version is defined
 
 - name: (Debian) Set gitlab_runner_package_name
-  set_fact:
+  ansible.builtin.set_fact:
     gitlab_runner_package: "{{ gitlab_runner_package_name }}"
+    gitlab_runner_helper_package: "{{ gitlab_runner_helper_package_name }}"
     gitlab_runner_package_state: latest
   when: gitlab_runner_package_version is not defined
 
 - name: Gather the package facts
-  package_facts:
+  ansible.builtin.package_facts:
     manager: apt
 
 - name: (Debian) Unhold GitLab Runner version
   changed_when: false
-  dpkg_selections:
+  ansible.builtin.dpkg_selections:
     name: "{{ gitlab_runner_package_name }}"
     selection: install
+  become: true
   when: "'gitlab-runner' in ansible_facts.packages"
 
-- name: (Debian) Install GitLab Runner
-  apt:
-    name: "{{ gitlab_runner_package }}"
+- name: (Debian) Unhold GitLab Runner Helper version
+  changed_when: false
+  ansible.builtin.dpkg_selections:
+    name: "{{ gitlab_runner_helper_package_name }}"
+    selection: install
+  become: true
+  when:
+    - ('gitlab-runner-helper-images' in ansible_facts.packages)
+    - (gitlab_runner_package_version is undefined or gitlab_runner_package_version is version('17.7.0', '>='))
+
+- name: (Debian) Install GitLab Runner Helpers
+  ansible.builtin.apt:
+    name: "{{ gitlab_runner_helper_package }}"
     state: "{{ gitlab_runner_package_state }}"
     allow_change_held_packages: true
     allow_downgrade: true
   become: true
-  environment:
-    GITLAB_RUNNER_DISABLE_SKEL: "true"
-  when: ansible_distribution_release in ["buster", "focal", "jammy"]
+  when: gitlab_runner_package_version is undefined or gitlab_runner_package_version is version('17.7.0', '>=')
 
 - name: (Debian) Install GitLab Runner
-  apt:
+  ansible.builtin.apt:
     name: "{{ gitlab_runner_package }}"
     state: "{{ gitlab_runner_package_state }}"
     allow_change_held_packages: true
     allow_downgrade: true
   become: true
-  when: ansible_distribution_release not in ["buster", "focal", "jammy"]
 
 - name: (Debian) Hold GitLab Runner version
-  dpkg_selections:
+  ansible.builtin.dpkg_selections:
     name: "{{ gitlab_runner_package_name }}"
     selection: hold
+  become: true
   when: gitlab_runner_package_version is defined
   changed_when: false
 
-- name: (Debian) Remove ~/gitlab-runner/.bash_logout on debian buster and ubuntu focal
-  file:
+- name: (Debian) Hold GitLab Runner Helpers version
+  ansible.builtin.dpkg_selections:
+    name: "{{ gitlab_runner_helper_package_name }}"
+    selection: hold
+  become: true
+  when: gitlab_runner_package_version is undefined or gitlab_runner_package_version is version('17.7.0', '>=')
+  changed_when: false
+
+- name: (Debian) Remove ~/gitlab-runner/.bash_logout
+  ansible.builtin.file:
     path: /home/gitlab-runner/.bash_logout
     state: absent
-  when: ansible_distribution_release in ["buster", "focal", "jammy"]
+  when: gitlab_runner_remove_bash_logout
 
 - name: Set systemd reload options
-  import_tasks: systemd-reload.yml
+  ansible.builtin.import_tasks: systemd-reload.yml

@@ -7,26 +7,36 @@ This role will install the [official GitLab Runner](https://gitlab.com/gitlab-or
 Requirements
 ------------
 
-This role requires Ansible 2.13 or higher.
+This role requires:
+
+* Ansible 2.13 or higher
+* Installed Ansible Galaxy collections listed in file [requirements.yml](requirements.yml)
 
 Role Variables
 --------------
 
-- `gitlab_runner_package_name` - **Since Gitlab 10.x** The package name of `gitlab-ci-multi-runner` has been renamed to `gitlab-runner`. In order to install a version < 10.x you will need to define this variable `gitlab_runner_package_name: gitlab-ci-multi-runner`.
-- `gitlab_runner_wanted_version` or `gitlab_runner_package_version` - To install a specific version of the gitlab runner (by default it installs the latest).
-On Mac OSX and Windows, use e.g. `gitlab_runner_wanted_version: 12.4.1`.
-On Linux, use `gitlab_runner_package_version` instead.
-- `gitlab_runner_concurrent` - The maximum number of global jobs to run concurrently. Defaults to the number of processor cores.
-- `gitlab_runner_registration_token` - The GitLab registration token. If this is specified, a runner will be registered to a GitLab server.
+- `gitlab_runner_package_name` - **As of GitLab 10.x**, the package name `gitlab-ci-multi-runner` has been renamed to `gitlab-runner`. To install a version earlier than 10.x, define the variable `gitlab_runner_package_name: gitlab-ci-multi-runner`.
+- `gitlab_runner_wanted_version` or `gitlab_runner_package_version` - Use these to install a specific version of the GitLab Runner (by default, the latest version is installed). 
+  - On macOS and Windows, use `gitlab_runner_wanted_version: 12.4.1` (example).
+  - On Linux, use `gitlab_runner_package_version` instead.
+- `gitlab_runner_concurrent` - Defines the maximum number of jobs that can run concurrently. Defaults to the number of processor cores.
+- `gitlab_runner_registration_token` - The GitLab registration token. If specified, this will register each runner with a GitLab server. **Note**: This token can only be used globally if `gitlab_runner_registration_token_type` is set to the deprecated `registration-token`. Otherwise, you must specify a `token` for each item in `gitlab_runner_runners`, as shown in the example playbook below. This token is deprecated in GitLab version 16.0 and will be removed in version 18.0.
+- `gitlab_runner_registration_token_type` - Specifies the type of registration token to use for GitLab Runner registration:
+  - Set to "authentication-token" to register the runner with the `--token` option (following the new workflow: https://docs.gitlab.com/ee/ci/runners/new_creation_workflow.html).
+  - Set to "registration-token" to register the runner with the `--registration-token` option. This is deprecated in GitLab 16.0 but remains usable until it is removed in version 18.0.
+  - For GitLab version 16.0 and above, it is recommended to specify a token for each runner in the `gitlab_runner_runners` section and set this variable to "authentication-token".
 - `gitlab_runner_coordinator_url` - The GitLab coordinator URL. Defaults to `https://gitlab.com`.
-- `gitlab_runner_sentry_dsn` - Enable tracking of all system level errors to Sentry
-- `gitlab_runner_listen_address` - Enable `/metrics` endpoint for Prometheus scraping.
-- `gitlab_runner_runners` - A list of gitlab runners to register & configure. Defaults to a single shell executor.
-- `gitlab_runner_skip_package_repo_install`- Skip the APT or YUM repository installation (by default, false). You should provide a repository containing the needed packages before running this role.
-- `gitlab_runner_config_update_mode`- Set to `by_config_toml` (default) if this role should apply config changes by updating the `config.toml` itself or set it to `by_registering` if config changes should be applied by unregistering and regeistering the runner in case the config has changed.
-- `gitlab_unregister_runner_executors_which_are_not_longer_configured` - Set to `true` if executors should be unregistered from a runner in case it is are not longer configured in ansible. Default: `false`
+- `gitlab_runner_sentry_dsn` - Enables tracking of system-level errors to Sentry.
+- `gitlab_runner_listen_address` - Enables the `/metrics` endpoint for Prometheus scraping.
+- `gitlab_runner_runners` - A list of GitLab runners to register and configure. By default, this is set to a single shell executor.
+- `gitlab_runner_skip_package_repo_install` - Skips the installation of the APT or YUM repository (default: false). You should ensure that the necessary packages are available in your repository before running this role.
+- `gitlab_runner_config_update_mode` - Defines how configuration updates are applied:
+  - Set to `by_config_toml` (default) to apply configuration changes directly by updating the `config.toml` file.
+  - Set to `by_registering` if changes should be applied by unregistering and re-registering the runner when configuration changes.
+  - Set to `by_template` if changes for all runners should directly be written in the `config.toml` file. The difference with `by_config_toml` is that this method is faster, but does not take into account the existing configuration of the runners. You may also have to provide additional configuration options for each runner, such as `id` and `token_obtained_at`.
+- `gitlab_unregister_runner_executors_which_are_not_longer_configured` - Set to `true` if executors should be unregistered from a runner when they are no longer configured in Ansible. Default: `false`.
 
-See the [`defaults/main.yml`](https://github.com/riemers/ansible-gitlab-runner/blob/master/defaults/main.yml) file listing all possible options which you can be passed to a runner registration command.
+See the [defaults/main.yml](https://github.com/riemers/ansible-gitlab-runner/blob/master/defaults/main.yml) file for a list of all possible options that can be passed to a runner registration command.
 
 ### Gitlab Runners cache
 For each gitlab runner in gitlab_runner_runners you can set cache options. At the moment role support s3, azure and gcs types.
