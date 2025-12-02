@@ -19,14 +19,21 @@
   become: true
   when: gitlab_runner_skip_package_repo_install is not defined or not gitlab_runner_skip_package_repo_install
 
-- name: (Debian) Ensure Gitlab runner repository GPG key is readable by everyone
+- name: (Debian) Find GitLab runner repository GPG keyring
+  ansible.builtin.stat:
+    path: "{{ gitlab_runner_keyring_path }}"
+  register: gitlab_runner_keyring_stat
+  when: gitlab_runner_skip_package_repo_install is not defined or not gitlab_runner_skip_package_repo_install
+
+- name: (Debian) Ensure GitLab runner repository GPG key is readable by everyone
   ansible.builtin.file:
-    path: /etc/apt/keyrings/runner_gitlab-runner-archive-keyring.gpg
+    path: "{{ gitlab_runner_keyring_path }}"
     owner: root
     group: root
     mode: "0644"
-    state: file
-  when: gitlab_runner_skip_package_repo_install is not defined or not gitlab_runner_skip_package_repo_install
+  when:
+    - gitlab_runner_skip_package_repo_install is not defined or not gitlab_runner_skip_package_repo_install
+    - gitlab_runner_keyring_stat.stat.exists
 
 - name: (Debian) Update gitlab_runner_package_name and gitlab_runner_helper_package_name
   ansible.builtin.set_fact:

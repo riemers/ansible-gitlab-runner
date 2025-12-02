@@ -30,6 +30,10 @@ Role Variables
 - `gitlab_runner_listen_address` - Enables the `/metrics` endpoint for Prometheus scraping.
 - `gitlab_runner_runners` - A list of GitLab runners to register and configure. By default, this is set to a single shell executor.
 - `gitlab_runner_skip_package_repo_install` - Skips the installation of the APT or YUM repository (default: false). You should ensure that the necessary packages are available in your repository before running this role.
+- `gitlab_runner_keyring_path` - Path to the GitLab Runner repository GPG keyring file (default: `/etc/apt/keyrings/runner_gitlab-runner-archive-keyring.gpg`).
+  - Set to `/etc/apt/keyrings/runner_gitlab-runner-archive-keyring.gpg` (default) if using APT > 1.1
+  - Set to `/etc/apt/trusted.gpg.d/runner_gitlab-runner.gpg` if using legacy APT < 1.1)
+  - Set to custom path if you expect a different location for the keyring
 - `gitlab_runner_config_update_mode` - Defines how configuration updates are applied:
   - Set to `by_config_toml` (default) to apply configuration changes directly by updating the `config.toml` file.
   - Set to `by_registering` if changes should be applied by unregistering and re-registering the runner when configuration changes.
