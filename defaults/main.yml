@@ -68,6 +68,13 @@ gitlab_runner_session_server_session_timeout: 1800
 # Use this if you use a mirror repository
 # gitlab_runner_skip_package_repo_install: true
 
+# Path for the GitLab runner repository GPG keyring.
+# The GitLab installation script places the keyring in different locations depending on APT version:
+# - Modern APT (>= 1.1): /etc/apt/keyrings/runner_gitlab-runner-archive-keyring.gpg
+# - Legacy APT (< 1.1): /etc/apt/trusted.gpg.d/runner_gitlab-runner.gpg
+# Change this if you expect the keyring to be somewhere else.
+gitlab_runner_keyring_path: /etc/apt/keyrings/runner_gitlab-runner-archive-keyring.gpg
+
 gitlab_runner_config_update_mode: by_config_toml
 gitlab_unregister_runner_executors_which_are_not_longer_configured: false
 
