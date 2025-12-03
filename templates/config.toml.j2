@@ -33,20 +33,20 @@ sentry_dsn = "{{ gitlab_runner_sentry_dsn }}"
   limit = {{ gitlab_runner.concurrent_specific | default(0) }}
   url = {{ gitlab_runner.url | default(gitlab_runner_coordinator_url) | tojson }}
 {% if gitlab_runner.clone_url is defined %}
-  clone_url = {{ gitlab_runner.clone_url | tojson }} 
+  clone_url = {{ gitlab_runner.clone_url | tojson }}
 {% endif %}
   environment = {{ gitlab_runner.env_vars | default([]) | tojson }}
 {% if gitlab_runner.pre_get_sources_script is defined %}
-  pre_get_sources_script = {{ gitlab_runner.pre_get_sources_script | tojson }} 
+  pre_get_sources_script = {{ gitlab_runner.pre_get_sources_script | tojson }}
 {% endif %}
 {% if gitlab_runner.post_get_sources_script is defined %}
-  post_get_sources_script = {{ gitlab_runner.post_get_sources_script | tojson }} 
+  post_get_sources_script = {{ gitlab_runner.post_get_sources_script | tojson }}
 {% endif %}
 {% if gitlab_runner.pre_build_script is defined %}
-  pre_build_script  = {{ gitlab_runner.pre_build_script | tojson }} 
+  pre_build_script  = {{ gitlab_runner.pre_build_script | tojson }}
 {% endif %}
 {% if gitlab_runner.tls_ca_file is defined %}
-  tls-ca-file  = {{ gitlab_runner.tls_ca_file | tojson }} 
+  tls-ca-file  = {{ gitlab_runner.tls_ca_file | tojson }}
 {% endif %}
 {% if gitlab_runner.tls_cert_file is defined %}
     tls-cert-file = {{ gitlab_runner.tls_cert_file | default([]) | tojson }}
@@ -55,17 +55,17 @@ sentry_dsn = "{{ gitlab_runner_sentry_dsn }}"
     tls-key-file = {{ gitlab_runner.tls_key_file | default([]) | tojson }}
 {% endif %}
 {% if gitlab_runner.post_build_script is defined %}
-  post_build_script   = {{ gitlab_runner.post_build_script | tojson }} 
+  post_build_script   = {{ gitlab_runner.post_build_script | tojson }}
 {% endif %}
   executor = {{ gitlab_runner.executor | default("shell") | tojson }}
 {% if gitlab_runner.builds_dir is defined %}
-  builds_dir = {{ gitlab_runner.builds_dir | default("") | tojson }} 
+  builds_dir = {{ gitlab_runner.builds_dir | default("") | tojson }}
 {% endif %}
 {% if gitlab_runner.cache_dir is defined %}
-  cache_dir = {{ gitlab_runner.cache_dir | default("") | tojson }} 
+  cache_dir = {{ gitlab_runner.cache_dir | default("") | tojson }}
 {% endif %}
 {% if gitlab_runner.shell is defined %}
-  shell   = {{ gitlab_runner.shell | default("") | tojson }} 
+  shell   = {{ gitlab_runner.shell | default("") | tojson }}
 {% endif %}
   output_limit = {{ gitlab_runner.output_limit | default(4096) }}
   id = {{ gitlab_runner.id }}
@@ -150,6 +150,13 @@ sentry_dsn = "{{ gitlab_runner_sentry_dsn }}"
 {% endfor %}
 {% endfor %}
 {% endif %}
+{% endif %}
+{#### [runners.docker.services_devices] section ####}
+{% if gitlab_runner.docker_services_devices is defined %}
+    [runners.docker.services_devices]
+{% for key, value in gitlab_runner.docker_services_devices.items() %}
+      "{{ key }}" = {{ value | tojson }}
+{% endfor %}
 {% endif %}
 {#### [runners.ssh] section #####}
 {% if gitlab_runner.executor == "ssh" %}

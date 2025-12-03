@@ -439,6 +439,20 @@
     - restart_gitlab_runner
     - restart_gitlab_runner_macos
 
+#### [[runners.docker.services_devices]] section ####
+- name: "Set docker services devices {{ runn_name_prefix }}"
+  ansible.builtin.blockinfile:
+    dest: "{{ temp_runner_config.path }}"
+    content: "{{ lookup('template', 'config.runners.docker.services_devices.j2') if gitlab_runner.docker_services_devices is defined else omit }}"
+    state: "{{ 'present' if gitlab_runner.docker_services_devices is defined else 'absent' }}"
+    marker: "# {mark} runners.docker.services_devices"
+    insertafter: EOF
+  check_mode: false
+  no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
+  notify:
+    - restart_gitlab_runner
+    - restart_gitlab_runner_macos
+
 #### [runners.custom_build_dir] section #####
 - name: "Set custom_build_dir section {{ runn_name_prefix }}"
   ansible.builtin.lineinfile:
