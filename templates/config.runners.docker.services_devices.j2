@@ -1,4 +1,4 @@
     [runners.docker.services_devices]
-{% for key, value in gitlab_runner.docker_services_devices %}
+{% for key, value in gitlab_runner.docker_services_devices.items() %}
       "{{ key }}" = {{ value | tojson }}
 {% endfor %}
