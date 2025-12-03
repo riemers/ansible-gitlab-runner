@@ -39,9 +39,6 @@
       {% for device in gitlab_runner.docker_devices | default([]) %}
       --docker-devices "{{ device }}"
       {% endfor %}
-      {% for key, value in gitlab_runner.docker_services_devices | default({}) %}
-      --docker-services_devices "{{ key }}={{ value | tojson }}"
-      {% endfor %}
       {% if gitlab_runner.docker_network_mode is defined %}
       --docker-network-mode '{{ gitlab_runner.docker_network_mode }}'
       {% endif %}
