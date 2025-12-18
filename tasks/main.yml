@@ -4,8 +4,8 @@
   vars:
     possible_files:
       files:
-        - "{{ ansible_distribution }}.yml"
-        - "{{ ansible_os_family }}.yml"
+        - "{{ ansible_facts['distribution'] }}.yml"
+        - "{{ ansible_facts['os_family'] }}.yml"
         - default.yml
       paths:
         - vars
@@ -13,7 +13,7 @@
 - name: Validate GitLab Runner configurations
   ansible.builtin.include_tasks: validate-runner-config.yml
   vars:
-    actual_gitlab_runner_name: "{{ gitlab_runner.name | default(ansible_hostname + '-' + gitlab_runner_index | string) }}"
+    actual_gitlab_runner_name: "{{ gitlab_runner.name | default(ansible_facts['hostname'] + '-' + gitlab_runner_index | string) }}"
   loop: "{{ gitlab_runner_runners }}"
   loop_control:
     label: "{{ actual_gitlab_runner_name }}"
@@ -30,10 +30,10 @@
   vars:
     gitlab_install_target_platform: unix
   ansible.builtin.include_tasks: main-unix.yml
-  when: ansible_os_family != 'Windows' and not gitlab_runner_container_install
+  when: ansible_facts['os_family'] != 'Windows' and not gitlab_runner_container_install
 
 - name: Install GitLab Runner (Windows)
   vars:
     gitlab_install_target_platform: windows
   ansible.builtin.include_tasks: main-windows.yml
-  when: ansible_os_family == 'Windows' and not gitlab_runner_container_install
+  when: ansible_facts['os_family'] == 'Windows' and not gitlab_runner_container_install

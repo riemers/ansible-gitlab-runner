@@ -1,5 +1,4 @@
 ---
-
 gitlab_runner_executable: /usr/bin/{{ gitlab_runner_package_name }}
 
 gitlab_runner_runtime_owner: gitlab-runner
@@ -17,5 +16,6 @@ gitlab_runner_remove_bash_logout_releases:
   - jammy
   - noble
 
-gitlab_runner_remove_bash_logout:
-  "{{ ansible_distribution_release in gitlab_runner_remove_bash_logout_releases | default(false) }}"
+gitlab_runner_remove_bash_logout: >-
+  {{ ansible_facts['distribution_release']
+    in gitlab_runner_remove_bash_logout_releases | default(false) }}

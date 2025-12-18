@@ -6,21 +6,21 @@
     state: "{{ gitlab_runner_restart_state }}"
   listen: restart_gitlab_runner
   become: true
-  when: ansible_os_family != 'Darwin' and ansible_os_family != 'Windows' and not gitlab_runner_container_install
+  when: ansible_facts['os_family'] != 'Darwin' and ansible_facts['os_family'] != 'Windows' and not gitlab_runner_container_install
 
 # macOS
 - name: Restart_gitlab_runner_macos
   ansible.builtin.command: "{{ gitlab_runner_executable }} restart"
   listen: restart_gitlab_runner_macos
   become: "{{ gitlab_runner_system_mode }}"
-  when: ansible_os_family == 'Darwin' and gitlab_runner_macos_start_runner
+  when: ansible_facts['os_family'] == 'Darwin' and gitlab_runner_macos_start_runner
 
 - name: Restart_gitlab_runner_windows
   ansible.windows.win_command: "{{ gitlab_runner_executable }} restart"
   args:
     chdir: "{{ gitlab_runner_config_file_location }}"
   listen: restart_gitlab_runner_windows
-  when: ansible_os_family == 'Windows' and gitlab_runner_windows_start_runner
+  when: ansible_facts['os_family'] == 'Windows' and gitlab_runner_windows_start_runner
 
 # Container
 - name: Restart_gitlab_runner_container
