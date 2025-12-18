@@ -1,19 +1,19 @@
 ---
 - name: Install GitLab Runner (Debian)
   ansible.builtin.include_tasks: install-debian.yml
-  when: ansible_os_family == 'Debian'
+  when: ansible_facts['os_family'] == 'Debian'
 
 - name: Install GitLab Runner (RedHat)
   ansible.builtin.include_tasks: install-redhat.yml
-  when: ansible_os_family == 'RedHat'
+  when: ansible_facts['os_family'] == 'RedHat'
 
 - name: Install GitLab Runner (macOS)
   ansible.builtin.include_tasks: install-macos.yml
-  when: ansible_os_family == 'Darwin'
+  when: ansible_facts['os_family'] == 'Darwin'
 
 - name: Install GitLab Runner (Arch)
   ansible.builtin.include_tasks: install-arch.yml
-  when: ansible_os_family == 'Archlinux'
+  when: ansible_facts['os_family'] == 'Archlinux'
 
 - name: (Unix) Delete runners which were removed in GitLab
   ansible.builtin.command: "{{ gitlab_runner_executable }} verify --delete"
@@ -28,7 +28,7 @@
 - name: (Unix) Register GitLab Runner
   ansible.builtin.include_tasks: register-runner.yml
   vars:
-    actual_gitlab_runner_name: "{{ gitlab_runner.name | default(ansible_hostname + '-' + gitlab_runner_index | string) }}"
+    actual_gitlab_runner_name: "{{ gitlab_runner.name | default(ansible_facts['hostname'] + '-' + gitlab_runner_index | string) }}"
   when: gitlab_runner.token is defined or gitlab_runner_registration_token | string | length > 0
   loop: "{{ gitlab_runner_runners }}"
   loop_control:
@@ -43,7 +43,7 @@
 - name: Set global options (macOS/Debian/RedHat)
   ansible.builtin.import_tasks: global-setup.yml
   when: gitlab_runner_config_update_mode == 'by_config_toml' or
-        gitlab_runner_config_update_mode == 'by_registering'
+    gitlab_runner_config_update_mode == 'by_registering'
 
 - name: (Unix) Configure GitLab Runner
   ansible.builtin.include_tasks: config-runners.yml
