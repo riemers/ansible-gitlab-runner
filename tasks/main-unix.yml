@@ -55,3 +55,4 @@
     dest: "{{ gitlab_runner_config_file }}"
     mode: "0600"
   when: gitlab_runner_config_update_mode == 'by_template'
+  become: "{{ gitlab_runner_system_mode }}"
