@@ -50,9 +50,8 @@
   when: gitlab_runner_config_update_mode == 'by_config_toml'
 
 - name: (Unix) Configure Gitlab Runner via template
-  ansible.builtin.template:
-    src: config.toml.j2
-    dest: "{{ gitlab_runner_config_file }}"
-    mode: "0600"
+  # become cannot be used with include_task
+  block:
+    - ansible.builtin.include_tasks: template_config/main.yml
   when: gitlab_runner_config_update_mode == 'by_template'
   become: "{{ gitlab_runner_system_mode }}"

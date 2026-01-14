@@ -1,0 +1,17 @@
+- name: "(Update config: template) Extract runner name from config.toml"
+  set_fact:
+    runner_name: "{{ current_runner | regex_search('name = \"([^\"]*)\"', '\\1') | first_or_value | trim }}"
+
+- name: "(Update config: template) Load runner values from config.toml"
+  block:
+    - name: "(Update config: template) Set variables for runner {{ runner_name }}"
+      set_fact:
+        runner_id: "{{ current_runner | regex_search('id = (.*)', '\\1') | first_or_value | int }}"
+        token_obtained_at: "{{ current_runner | regex_search('token_obtained_at = (.*)', '\\1') | first_or_value }}"
+        token_expires_at: "{{ current_runner | regex_search('token_expires_at = (.*)', '\\1') | first_or_value }}"
+    - name: "(Update config: template) Update existing data for runner {{ runner_name }}"
+      set_fact:
+        existing_runners: "{{ existing_runners | default({}) | combine({runner_name: {'id': runner_id, 'token_obtained_at': token_obtained_at, 'token_expires_at': token_expires_at} })  }}"
+  when: 
+    - runner_name | default(False)
+    - runner_name != 'None'

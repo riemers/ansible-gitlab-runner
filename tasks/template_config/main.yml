@@ -1,0 +1,33 @@
+
+- name: '(Update config: template) Prepare configuration update'
+  # Using template needs some data from registration
+  block:
+    - name: '(Update config: template) Read config.toml file'
+      ansible.builtin.slurp:
+        src: "{{ runner_config_file_path }}"
+      register: runner_config_file
+
+    - name: '(Update config: template) Retrieve runners configuration content'
+      ansible.builtin.set_fact:
+        current_runners_configs: "{{ (runner_config_file['content'] | b64decode).split('[[runners]]\n') }}"
+
+    - name: "(Update config: template) Load existing runner fields from config.toml"
+      include_tasks: load_existing_fields.yml
+      loop: "{{ current_runners_configs }}"
+      loop_control:
+        loop_var: current_runner
+        label: "{{ current_runner[:20]  }}" # show only fragment to avoid printing tokens
+
+    - name: "(Update config: template) Merge existing runner fields with current configuration"
+      loop: "{{ gitlab_runner_runners }}"
+      loop_control:
+        loop_var: gitlab_runner
+        label: "{{ gitlab_runner.name }}"
+      set_fact:
+        filled_runners: "{{ filled_runners | default([]) + [existing_runners[gitlab_runner.name] | combine(gitlab_runner)] }}"
+
+- name: '(Update config: template) Apply GitLab Runner configuration template'
+  ansible.builtin.template:
+    src: config.toml.j2
+    dest: "{{ gitlab_runner_config_file }}"
+    mode: "0600"

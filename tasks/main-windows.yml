@@ -43,8 +43,5 @@
   when: gitlab_runner_windows_start_runner
 
 - name: (Windows) Configure Gitlab Runner via template
-  ansible.builtin.template:
-    src: config.toml.j2
-    dest: "{{ gitlab_runner_config_file }}"
-    mode: "0600"
+  ansible.builtin.include_tasks: template_config/main.yml
   when: gitlab_runner_config_update_mode == 'by_template'
