@@ -27,7 +27,7 @@ sentry_dsn = "{{ gitlab_runner_sentry_dsn }}"
 {% endif %}
 {% endif %}
 
-{% for gitlab_runner in gitlab_runner_runners %}
+{% for gitlab_runner in filled_runners %}
 [[runners]]
   name = {{ gitlab_runner.name | tojson }}
   limit = {{ gitlab_runner.concurrent_specific | default(0) }}

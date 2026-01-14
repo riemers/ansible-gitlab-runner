@@ -47,10 +47,7 @@
   when: gitlab_runner_config_update_mode == 'by_config_toml'
 
 - name: (Container) Configure Gitlab Runner via template
-  ansible.builtin.template:
-    src: config.toml.j2
-    dest: "{{ gitlab_runner_config_file }}"
-    mode: "0600"
+  ansible.builtin.include_tasks: template_config/main.yml
   when: gitlab_runner_config_update_mode == 'by_template'
 
 - name: (Container) Start the container
