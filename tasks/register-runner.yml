@@ -78,7 +78,8 @@
       {% for policy in gitlab_runner.docker_allowed_pull_policies | default([]) %}
       --docker-allowed-pull-policies "{{ policy }}"
       {% endfor %}
-      {% for policy in gitlab_runner.docker_pull_policy | default([]) %}
+      {# Iterate over a list. If docker_pull_policy is a string - make one element list  #}
+      {% for policy in ([gitlab_runner.get('docker_pull_policy', [])]) | flatten %}
       --docker-pull-policy "{{ policy }}"
       {% endfor %}
       {% for volume in gitlab_runner.docker_volumes | default([]) %}
