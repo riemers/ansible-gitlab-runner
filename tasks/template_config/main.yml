@@ -4,7 +4,7 @@
   block:
     - name: '(Update config: template) Read config.toml file'
       ansible.builtin.slurp:
-        src: "{{ runner_config_file_path }}"
+        src: "{{ gitlab_runner_config_file }}"
       register: runner_config_file
 
     - name: '(Update config: template) Retrieve runners configuration content'
