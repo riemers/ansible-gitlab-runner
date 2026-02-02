@@ -5,7 +5,7 @@
 
 - name: "(Update config: template) Load runner values from config.toml"
   when:
-    - runner_name | default(False)
+    - runner_name | default('') | length > 0
     - runner_name != 'None'
   block:
     - name: "(Update config: template) Set variables for runner {{ runner_name }}"
