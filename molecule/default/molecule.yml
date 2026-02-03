@@ -1,0 +1,60 @@
+---
+dependency:
+  name: galaxy
+  options:
+    ignore-errors: true
+
+driver:
+  name: docker
+  docker_networks:
+    - name: testnet
+      ipam_config:
+        - subnet: "172.28.0.0/16"
+      dns:
+        - 127.0.0.11
+
+platforms:
+  - name: mock
+    image: python:3.11-slim
+    pre_build_image: true
+    networks:
+      - name: testnet
+    command: >
+      bash -lc "pip install -r /srv/mock/requirements.txt && python /srv/mock/server.py /tmp/mock_ci.pid 8000"
+    volumes:
+      - "${MOLECULE_SCENARIO_DIRECTORY}/mock:/srv/mock:ro"
+    published_ports:
+      - "8000:8000"
+
+  - name: runner
+    image: geerlingguy/docker-ubuntu2204-ansible
+    pre_build_image: true
+    networks:
+      - name: testnet
+    privileged: true
+    cgroupns_mode: host
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:rw
+    tmpfs:
+      - /run
+      - /run/lock
+    command: /sbin/init
+
+provisioner:
+  name: ansible
+  playbooks:
+    converge: ${MOLECULE_PLAYBOOK:-converge.yml}
+  env:
+    TEST_VARS_FILE: "${TEST_VARS_FILE}"
+    EXPECTED_TOML: "${EXPECTED_TOML}"
+  inventory:
+    hosts:
+      all:
+        hosts:
+          mock:
+          runner:
+
+verifier:
+  name: testinfra
+  options:
+    v: true

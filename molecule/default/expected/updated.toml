@@ -1,0 +1,21 @@
+concurrent = 8
+check_interval = 0
+
+[[runners]]
+  name = "Example Docker GitLab Runner"
+  limit = 0
+  url = "http://mock:8000"
+  environment = []
+  output_limit = 32768
+  id = 0
+  token_expires_at = 0001-01-01T00:00:00Z
+  executor = "docker"
+  [runners.cache]
+  [runners.docker]
+    image = "alpine"
+    privileged = true
+    shm_size = 0
+    disable_cache = false
+    pull_policy = "always"
+    volumes = ["/cache"]
+

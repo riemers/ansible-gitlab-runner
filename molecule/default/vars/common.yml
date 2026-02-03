@@ -1,0 +1,4 @@
+gitlab_runner_coordinator_url: http://mock:8000
+gitlab_runner_no_log_secrets: true
+gitlab_runner_config_update_mode: 'by_template'
+gitlab_runner_registration_token_type: "authentication-token"

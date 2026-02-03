@@ -1,0 +1,15 @@
+gitlab_runner_runners:
+  - name: 'Example Docker GitLab Runner'
+    token: ABCD
+    executor: docker
+    docker_pull_policy: always
+    docker_image: "alpine"
+    docker_privileged: true
+    docker_disable_cache: false
+    docker_shm_size: 0
+    output_limit: 32768
+    tags:
+      - docker
+      - privileged
+    docker_volumes:
+      - /cache

@@ -64,6 +64,6 @@ if __name__ == '__main__':
     logging.basicConfig(level=logging.DEBUG)
 
     try:
-        app.run(port=port, debug=False)
+        app.run(port=port, host="0.0.0.0", debug=True)
     finally:
         os.unlink(pidfile)
