@@ -2,3 +2,4 @@ ansible.cfg
 .idea
 .vscode
 *.pyc
+/.venv
