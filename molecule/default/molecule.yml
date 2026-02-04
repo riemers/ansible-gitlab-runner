@@ -20,7 +20,7 @@ platforms:
     networks:
       - name: testnet
     command: >
-      bash -lc "pip install -r /srv/mock/requirements.txt && python /srv/mock/server.py /tmp/mock_ci.pid 8000"
+      bash -lc "pip install -r /srv/mock/requirements.txt && python /srv/mock/server.py 8000"
     volumes:
       - "${MOLECULE_SCENARIO_DIRECTORY}/mock:/srv/mock:ro"
     published_ports:

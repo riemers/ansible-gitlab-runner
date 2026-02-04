@@ -49,21 +49,8 @@ app.register_blueprint(bp)
 
 
 if __name__ == '__main__':
-    pid = str(os.getpid())
-    pidfile = os.path.expanduser(sys.argv[1])
-
-    if os.path.isfile(pidfile):
-        print("{} already exists, exiting".format(pidfile))
-        sys.exit(1)
-
     port = int(sys.argv[2])
-
-    with open(pidfile, 'w') as f:
-        f.write(pid)
 
     logging.basicConfig(level=logging.DEBUG)
 
-    try:
-        app.run(port=port, host="0.0.0.0", debug=True)
-    finally:
-        os.unlink(pidfile)
+    app.run(port=port, host="0.0.0.0", debug=True)
