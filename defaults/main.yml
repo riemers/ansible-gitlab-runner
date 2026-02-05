@@ -308,3 +308,5 @@ gitlab_runner_runners:
     #     allowed_images: ["ruby:*", "python:*", "php:*"]
     #   runners.docker.sysctls:
     #     net.ipv4.ip_forward: "1"
+    #   runners.docker.container_labels:
+    #     com.gitlab.gitlab-runner.job.name: "$CI_JOB_NAME"
