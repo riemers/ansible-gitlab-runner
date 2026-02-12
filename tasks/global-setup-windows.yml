@@ -91,7 +91,9 @@
     line: "  session_timeout = {{ gitlab_runner_session_server_session_timeout }}"
     insertafter: ^\s*\[session_server\]
     state: present
-  when: gitlab_runner_session_server_session_timeout
+  when:
+    - gitlab_runner_session_server_session_timeout is defined
+    - gitlab_runner_session_server_session_timeout > 0
   notify:
     - restart_gitlab_runner
     - restart_gitlab_runner_macos
