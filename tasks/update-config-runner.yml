@@ -8,7 +8,7 @@
     insertafter: ^\s*name =
     backrefs: false
   check_mode: false
-  no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
+  no_log: "{{ gitlab_runner_no_log_secrets | default(false) }}"
   notify:
     - restart_gitlab_runner
     - restart_gitlab_runner_macos
@@ -22,7 +22,7 @@
     insertafter: ^\s*limit =
     backrefs: false
   check_mode: false
-  no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
+  no_log: "{{ gitlab_runner_no_log_secrets | default(false) }}"
   notify:
     - restart_gitlab_runner
     - restart_gitlab_runner_macos
@@ -36,7 +36,7 @@
     insertafter: ^\s*url =
     backrefs: false
   check_mode: false
-  no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
+  no_log: "{{ gitlab_runner_no_log_secrets | default(false) }}"
   notify:
     - restart_gitlab_runner
     - restart_gitlab_runner_macos
@@ -51,7 +51,7 @@
     insertafter: ^\s*url =
     backrefs: false
   check_mode: false
-  no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
+  no_log: "{{ gitlab_runner_no_log_secrets | default(false) }}"
   notify:
     - restart_gitlab_runner
     - restart_gitlab_runner_macos
@@ -65,7 +65,7 @@
     insertafter: ^\s*url =
     backrefs: false
   check_mode: false
-  no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
+  no_log: "{{ gitlab_runner_no_log_secrets | default(false) }}"
   notify:
     - restart_gitlab_runner
     - restart_gitlab_runner_macos
@@ -94,7 +94,7 @@
     insertafter: ^\s*url =
     backrefs: false
   check_mode: false
-  no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
+  no_log: "{{ gitlab_runner_no_log_secrets | default(false) }}"
   notify:
     - restart_gitlab_runner
     - restart_gitlab_runner_macos
@@ -109,7 +109,7 @@
     insertafter: ^\s*url =
     backrefs: false
   check_mode: false
-  no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
+  no_log: "{{ gitlab_runner_no_log_secrets | default(false) }}"
   notify:
     - restart_gitlab_runner
     - restart_gitlab_runner_macos
@@ -124,7 +124,7 @@
     insertafter: ^\s*url =
     backrefs: false
   check_mode: false
-  no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
+  no_log: "{{ gitlab_runner_no_log_secrets | default(false) }}"
   notify:
     - restart_gitlab_runner
     - restart_gitlab_runner_macos
@@ -139,7 +139,7 @@
     insertafter: ^\s*url =
     backrefs: false
   check_mode: false
-  no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
+  no_log: "{{ gitlab_runner_no_log_secrets | default(false) }}"
   notify:
     - restart_gitlab_runner
     - restart_gitlab_runner_macos
@@ -153,7 +153,7 @@
     insertafter: ^\s*executor =
     backrefs: false
   check_mode: false
-  no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
+  no_log: "{{ gitlab_runner_no_log_secrets | default(false) }}"
   notify:
     - restart_gitlab_runner
     - restart_gitlab_runner_macos
@@ -167,7 +167,7 @@
     insertafter: ^\s*(shell|executor) =
     backrefs: false
   check_mode: false
-  no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
+  no_log: "{{ gitlab_runner_no_log_secrets | default(false) }}"
   notify:
     - restart_gitlab_runner
     - restart_gitlab_runner_macos
@@ -181,7 +181,7 @@
     insertafter: ^\s*executor =
     backrefs: false
   check_mode: false
-  no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
+  no_log: "{{ gitlab_runner_no_log_secrets | default(false) }}"
   notify:
     - restart_gitlab_runner
     - restart_gitlab_runner_macos
@@ -196,7 +196,7 @@
     insertafter: ^\s*\[runners\.docker\]
     backrefs: false
   check_mode: false
-  no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
+  no_log: "{{ gitlab_runner_no_log_secrets | default(false) }}"
   notify:
     - restart_gitlab_runner
     - restart_gitlab_runner_macos
@@ -210,7 +210,7 @@
     insertafter: ^\s*\[runners\.docker\]
     backrefs: false
   check_mode: false
-  no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
+  no_log: "{{ gitlab_runner_no_log_secrets | default(false) }}"
   notify:
     - restart_gitlab_runner
     - restart_gitlab_runner_macos
@@ -224,7 +224,7 @@
     insertafter: ^\s*\[runners\.docker\]
     backrefs: false
   check_mode: false
-  no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
+  no_log: "{{ gitlab_runner_no_log_secrets | default(false) }}"
   notify:
     - restart_gitlab_runner
     - restart_gitlab_runner_macos
@@ -238,7 +238,7 @@
     insertafter: ^\s*\[runners\.docker\]
     backrefs: false
   check_mode: false
-  no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
+  no_log: "{{ gitlab_runner_no_log_secrets | default(false) }}"
   notify:
     - restart_gitlab_runner
     - restart_gitlab_runner_macos
@@ -252,7 +252,7 @@
     insertafter: ^\s*\[runners\.docker\]
     backrefs: false
   check_mode: false
-  no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
+  no_log: "{{ gitlab_runner_no_log_secrets | default(false) }}"
   notify:
     - restart_gitlab_runner
     - restart_gitlab_runner_macos
@@ -266,7 +266,7 @@
     insertafter: ^\s*\[runners\.docker\]
     backrefs: false
   check_mode: false
-  no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
+  no_log: "{{ gitlab_runner_no_log_secrets | default(false) }}"
   notify:
     - restart_gitlab_runner
     - restart_gitlab_runner_macos
@@ -280,7 +280,7 @@
     insertafter: ^\s*\[runners\.docker\]
     backrefs: false
   check_mode: false
-  no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
+  no_log: "{{ gitlab_runner_no_log_secrets | default(false) }}"
   notify:
     - restart_gitlab_runner
     - restart_gitlab_runner_macos
@@ -294,7 +294,7 @@
     insertafter: ^\s*\[runners\.docker\]
     backrefs: false
   check_mode: false
-  no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
+  no_log: "{{ gitlab_runner_no_log_secrets | default(false) }}"
   notify:
     - restart_gitlab_runner
     - restart_gitlab_runner_macos
@@ -308,7 +308,7 @@
     insertafter: ^\s*\[runners\.docker\]
     backrefs: false
   check_mode: false
-  no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
+  no_log: "{{ gitlab_runner_no_log_secrets | default(false) }}"
   notify:
     - restart_gitlab_runner
     - restart_gitlab_runner_macos
@@ -322,7 +322,7 @@
     insertafter: ^\s*\[runners\.docker\]
     backrefs: false
   check_mode: false
-  no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
+  no_log: "{{ gitlab_runner_no_log_secrets | default(false) }}"
   notify:
     - restart_gitlab_runner
     - restart_gitlab_runner_macos
@@ -336,7 +336,7 @@
     insertafter: ^\s*\[runners\.docker\]
     backrefs: false
   check_mode: false
-  no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
+  no_log: "{{ gitlab_runner_no_log_secrets | default(false) }}"
   notify:
     - restart_gitlab_runner
     - restart_gitlab_runner_macos
@@ -350,7 +350,7 @@
     insertafter: ^\s*\[runners\.docker\]
     backrefs: false
   check_mode: false
-  no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
+  no_log: "{{ gitlab_runner_no_log_secrets | default(false) }}"
   notify:
     - restart_gitlab_runner
     - restart_gitlab_runner_macos
@@ -364,7 +364,7 @@
     insertafter: ^\s*\[runners\.docker\]
     backrefs: false
   check_mode: false
-  no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
+  no_log: "{{ gitlab_runner_no_log_secrets | default(false) }}"
   notify:
     - restart_gitlab_runner
     - restart_gitlab_runner_macos
@@ -378,7 +378,7 @@
     insertafter: ^\s*\[runners\.docker\]
     backrefs: false
   check_mode: false
-  no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
+  no_log: "{{ gitlab_runner_no_log_secrets | default(false) }}"
   notify:
     - restart_gitlab_runner
     - restart_gitlab_runner_macos
@@ -392,7 +392,7 @@
     insertafter: ^\s*\[runners\.docker\]
     backrefs: false
   check_mode: false
-  no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
+  no_log: "{{ gitlab_runner_no_log_secrets | default(false) }}"
   notify:
     - restart_gitlab_runner
     - restart_gitlab_runner_macos
@@ -406,7 +406,7 @@
     insertafter: ^\s*url =
     backrefs: false
   check_mode: false
-  no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
+  no_log: "{{ gitlab_runner_no_log_secrets | default(false) }}"
   notify:
     - restart_gitlab_runner
     - restart_gitlab_runner_macos
@@ -420,7 +420,7 @@
     insertafter: ^\s*url =
     backrefs: false
   check_mode: false
-  no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
+  no_log: "{{ gitlab_runner_no_log_secrets | default(false) }}"
   notify:
     - restart_gitlab_runner
     - restart_gitlab_runner_macos
@@ -434,7 +434,7 @@
     marker: "# {mark} runners.docker.services"
     insertafter: EOF
   check_mode: false
-  no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
+  no_log: "{{ gitlab_runner_no_log_secrets | default(false) }}"
   notify:
     - restart_gitlab_runner
     - restart_gitlab_runner_macos
@@ -448,7 +448,7 @@
     marker: "# {mark} runners.docker.services_devices"
     insertafter: EOF
   check_mode: false
-  no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
+  no_log: "{{ gitlab_runner_no_log_secrets | default(false) }}"
   notify:
     - restart_gitlab_runner
     - restart_gitlab_runner_macos
@@ -463,7 +463,7 @@
     insertafter: EOF
     backrefs: false
   check_mode: false
-  no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
+  no_log: "{{ gitlab_runner_no_log_secrets | default(false) }}"
   notify:
     - restart_gitlab_runner
     - restart_gitlab_runner_macos
@@ -477,7 +477,7 @@
     insertafter: ^\s*\[runners\.custom_build_dir\]
     backrefs: false
   check_mode: false
-  no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
+  no_log: "{{ gitlab_runner_no_log_secrets | default(false) }}"
   notify:
     - restart_gitlab_runner
     - restart_gitlab_runner_macos
@@ -492,7 +492,7 @@
     insertafter: EOF
     backrefs: false
   check_mode: false
-  no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
+  no_log: "{{ gitlab_runner_no_log_secrets | default(false) }}"
   notify:
     - restart_gitlab_runner
     - restart_gitlab_runner_macos
@@ -506,7 +506,7 @@
     insertafter: ^\s*\[runners\.cache\]
     backrefs: false
   check_mode: false
-  no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
+  no_log: "{{ gitlab_runner_no_log_secrets | default(false) }}"
   notify:
     - restart_gitlab_runner
     - restart_gitlab_runner_macos
@@ -520,7 +520,7 @@
     insertafter: ^\s*\[runners\.cache\]
     backrefs: false
   check_mode: false
-  no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
+  no_log: "{{ gitlab_runner_no_log_secrets | default(false) }}"
   notify:
     - restart_gitlab_runner
     - restart_gitlab_runner_macos
@@ -534,7 +534,7 @@
     insertafter: ^\s*\[runners\.cache\]
     backrefs: false
   check_mode: false
-  no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
+  no_log: "{{ gitlab_runner_no_log_secrets | default(false) }}"
   notify:
     - restart_gitlab_runner
     - restart_gitlab_runner_macos
@@ -548,7 +548,7 @@
     insertafter: ^\s*\[runners\.cache\]
     backrefs: false
   check_mode: false
-  no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
+  no_log: "{{ gitlab_runner_no_log_secrets | default(false) }}"
   notify:
     - restart_gitlab_runner
     - restart_gitlab_runner_macos
@@ -562,7 +562,7 @@
     insertafter: ^\s*\[runners\.cache\]
     backrefs: false
   check_mode: false
-  no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
+  no_log: "{{ gitlab_runner_no_log_secrets | default(false) }}"
   notify:
     - restart_gitlab_runner
     - restart_gitlab_runner_macos
@@ -576,7 +576,7 @@
     insertafter: ^\s*\[runners\.cache\]
     backrefs: false
   check_mode: false
-  no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
+  no_log: "{{ gitlab_runner_no_log_secrets | default(false) }}"
   notify:
     - restart_gitlab_runner
     - restart_gitlab_runner_macos
@@ -591,7 +591,7 @@
     insertafter: ^\s*\[runners\.cache\.s3\]
     backrefs: false
   check_mode: false
-  no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
+  no_log: "{{ gitlab_runner_no_log_secrets | default(false) }}"
   notify:
     - restart_gitlab_runner
     - restart_gitlab_runner_macos
@@ -605,7 +605,7 @@
     insertafter: ^\s*\[runners\.cache\.s3\]
     backrefs: false
   check_mode: false
-  no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
+  no_log: "{{ gitlab_runner_no_log_secrets | default(false) }}"
   notify:
     - restart_gitlab_runner
     - restart_gitlab_runner_macos
@@ -619,7 +619,7 @@
     insertafter: ^\s*\[runners\.cache\.s3\]
     backrefs: false
   check_mode: false
-  no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
+  no_log: "{{ gitlab_runner_no_log_secrets | default(false) }}"
   notify:
     - restart_gitlab_runner
     - restart_gitlab_runner_macos
@@ -633,7 +633,7 @@
     insertafter: ^\s*\[runners\.cache\.s3\]
     backrefs: false
   check_mode: false
-  no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
+  no_log: "{{ gitlab_runner_no_log_secrets | default(false) }}"
   notify:
     - restart_gitlab_runner
     - restart_gitlab_runner_macos
@@ -648,7 +648,7 @@
     insertafter: ^\s*\[runners\.cache\.s3\]
     backrefs: false
   check_mode: false
-  no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
+  no_log: "{{ gitlab_runner_no_log_secrets | default(false) }}"
   notify:
     - restart_gitlab_runner
     - restart_gitlab_runner_macos
@@ -662,7 +662,7 @@
     insertafter: ^\s*\[runners\.cache\.s3\]
     backrefs: false
   check_mode: false
-  no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
+  no_log: "{{ gitlab_runner_no_log_secrets | default(false) }}"
   notify:
     - restart_gitlab_runner
     - restart_gitlab_runner_macos
@@ -691,7 +691,7 @@
     insertafter: ^\s*\[runners\.cache\.gcs\]
     backrefs: false
   check_mode: false
-  no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
+  no_log: "{{ gitlab_runner_no_log_secrets | default(false) }}"
   notify:
     - restart_gitlab_runner
     - restart_gitlab_runner_macos
@@ -705,7 +705,7 @@
     insertafter: ^\s*\[runners\.cache\.gcs\]
     backrefs: false
   check_mode: false
-  no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
+  no_log: "{{ gitlab_runner_no_log_secrets | default(false) }}"
   notify:
     - restart_gitlab_runner
     - restart_gitlab_runner_macos
@@ -719,7 +719,7 @@
     insertafter: ^\s*\[runners\.cache\.gcs\]
     backrefs: false
   check_mode: false
-  no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
+  no_log: "{{ gitlab_runner_no_log_secrets | default(false) }}"
   notify:
     - restart_gitlab_runner
     - restart_gitlab_runner_macos
@@ -734,7 +734,7 @@
     insertafter: ^\s*\[runners\.cache\.azure\]
     backrefs: false
   check_mode: false
-  no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
+  no_log: "{{ gitlab_runner_no_log_secrets | default(false) }}"
   notify:
     - restart_gitlab_runner
     - restart_gitlab_runner_macos
@@ -748,7 +748,7 @@
     insertafter: ^\s*\[runners\.cache\.azure\]
     backrefs: false
   check_mode: false
-  no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
+  no_log: "{{ gitlab_runner_no_log_secrets | default(false) }}"
   notify:
     - restart_gitlab_runner
     - restart_gitlab_runner_macos
@@ -762,7 +762,7 @@
     insertafter: ^\s*\[runners\.cache\.azure\]
     backrefs: false
   check_mode: false
-  no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
+  no_log: "{{ gitlab_runner_no_log_secrets | default(false) }}"
   notify:
     - restart_gitlab_runner
     - restart_gitlab_runner_macos
@@ -776,7 +776,7 @@
     insertafter: ^\s*\[runners\.cache\.azure\]
     backrefs: false
   check_mode: false
-  no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
+  no_log: "{{ gitlab_runner_no_log_secrets | default(false) }}"
   notify:
     - restart_gitlab_runner
     - restart_gitlab_runner_macos
@@ -791,7 +791,7 @@
     insertafter: ^\s*\[runners\.ssh\]
     backrefs: false
   check_mode: false
-  no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
+  no_log: "{{ gitlab_runner_no_log_secrets | default(false) }}"
   notify:
     - restart_gitlab_runner
     - restart_gitlab_runner_macos
@@ -805,7 +805,7 @@
     insertafter: ^\s*\[runners\.ssh\]
     backrefs: false
   check_mode: false
-  no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
+  no_log: "{{ gitlab_runner_no_log_secrets | default(false) }}"
   notify:
     - restart_gitlab_runner
     - restart_gitlab_runner_macos
@@ -819,7 +819,7 @@
     insertafter: ^\s*\[runners\.ssh\]
     backrefs: false
   check_mode: false
-  no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
+  no_log: "{{ gitlab_runner_no_log_secrets | default(false) }}"
   notify:
     - restart_gitlab_runner
     - restart_gitlab_runner_macos
@@ -833,7 +833,7 @@
     insertafter: ^\s*\[runners\.ssh\]
     backrefs: false
   check_mode: false
-  no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
+  no_log: "{{ gitlab_runner_no_log_secrets | default(false) }}"
   notify:
     - restart_gitlab_runner
     - restart_gitlab_runner_macos
@@ -847,7 +847,7 @@
     insertafter: ^\s*\[runners\.ssh\]
     backrefs: false
   check_mode: false
-  no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
+  no_log: "{{ gitlab_runner_no_log_secrets | default(false) }}"
   notify:
     - restart_gitlab_runner
     - restart_gitlab_runner_macos
@@ -862,7 +862,7 @@
     insertafter: ^\s*\[runners\.virtualbox\]
     backrefs: false
   check_mode: false
-  no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
+  no_log: "{{ gitlab_runner_no_log_secrets | default(false) }}"
   when: gitlab_runner.executor == 'virtualbox' and gitlab_runner.virtualbox_base_name is defined
   notify:
     - restart_gitlab_runner
@@ -877,7 +877,7 @@
     insertafter: ^\s*\[runners\.virtualbox\]
     backrefs: false
   check_mode: false
-  no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
+  no_log: "{{ gitlab_runner_no_log_secrets | default(false) }}"
   when: gitlab_runner.executor == 'virtualbox' and gitlab_runner.virtualbox_base_name is defined
   notify:
     - restart_gitlab_runner
@@ -893,7 +893,7 @@
     backrefs: false
   check_mode: false
   when: gitlab_runner.executor == 'virtualbox' and gitlab_runner.virtualbox_base_name is defined
-  no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
+  no_log: "{{ gitlab_runner_no_log_secrets | default(false) }}"
   notify:
     - restart_gitlab_runner
     - restart_gitlab_runner_macos
@@ -907,7 +907,7 @@
     insertafter: ^\s*\[runners\.virtualbox\]
     backrefs: false
   check_mode: false
-  no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
+  no_log: "{{ gitlab_runner_no_log_secrets | default(false) }}"
   when: gitlab_runner.executor == 'virtualbox' and gitlab_runner.virtualbox_base_name is defined
   notify:
     - restart_gitlab_runner
@@ -922,7 +922,7 @@
     marker: "# {mark} runners.feature_flags"
     insertafter: EOF
   check_mode: false
-  no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
+  no_log: "{{ gitlab_runner_no_log_secrets | default(false) }}"
   notify:
     - restart_gitlab_runner
     - restart_gitlab_runner_macos
@@ -937,7 +937,7 @@
     insertafter: EOF
     backrefs: false
   check_mode: false
-  no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
+  no_log: "{{ gitlab_runner_no_log_secrets | default(false) }}"
   notify:
     - restart_gitlab_runner
     - restart_gitlab_runner_macos
@@ -951,7 +951,7 @@
     insertafter: '^\s*\[runners\.machine\]'
     backrefs: false
   check_mode: false
-  no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
+  no_log: "{{ gitlab_runner_no_log_secrets | default(false) }}"
   notify:
     - restart_gitlab_runner
     - restart_gitlab_runner_macos
@@ -965,7 +965,7 @@
     insertafter: '^\s*\[runners\.machine\]'
     backrefs: false
   check_mode: false
-  no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
+  no_log: "{{ gitlab_runner_no_log_secrets | default(false) }}"
   notify:
     - restart_gitlab_runner
     - restart_gitlab_runner_macos
@@ -979,7 +979,7 @@
     insertafter: '^\s*\[runners\.machine\]'
     backrefs: false
   check_mode: false
-  no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
+  no_log: "{{ gitlab_runner_no_log_secrets | default(false) }}"
   notify:
     - restart_gitlab_runner
     - restart_gitlab_runner_macos
@@ -993,7 +993,7 @@
     insertafter: '^\s*\[runners\.machine\]'
     backrefs: false
   check_mode: false
-  no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
+  no_log: "{{ gitlab_runner_no_log_secrets | default(false) }}"
   notify:
     - restart_gitlab_runner
     - restart_gitlab_runner_macos
@@ -1007,7 +1007,7 @@
     insertafter: '^\s*\[runners\.machine\]'
     backrefs: false
   check_mode: false
-  no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
+  no_log: "{{ gitlab_runner_no_log_secrets | default(false) }}"
   notify:
     - restart_gitlab_runner
     - restart_gitlab_runner_macos
@@ -1021,7 +1021,7 @@
     insertafter: '^\s*\[runners\.machine\]'
     backrefs: false
   check_mode: false
-  no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
+  no_log: "{{ gitlab_runner_no_log_secrets | default(false) }}"
   notify:
     - restart_gitlab_runner
     - restart_gitlab_runner_macos
@@ -1035,7 +1035,7 @@
     insertafter: '^\s*\[runners\.machine\]'
     backrefs: false
   check_mode: false
-  no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
+  no_log: "{{ gitlab_runner_no_log_secrets | default(false) }}"
   notify:
     - restart_gitlab_runner
     - restart_gitlab_runner_macos
@@ -1049,7 +1049,7 @@
     insertafter: '^\s*\[runners\.machine\]'
     backrefs: false
   check_mode: false
-  no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
+  no_log: "{{ gitlab_runner_no_log_secrets | default(false) }}"
   notify:
     - restart_gitlab_runner
     - restart_gitlab_runner_macos
@@ -1063,7 +1063,7 @@
     insertafter: '^\s*\[runners\.machine\]'
     backrefs: false
   check_mode: false
-  no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
+  no_log: "{{ gitlab_runner_no_log_secrets | default(false) }}"
   notify:
     - restart_gitlab_runner
     - restart_gitlab_runner_macos
@@ -1078,7 +1078,7 @@
     marker: "# {mark} runners.autoscaler"
     insertafter: EOF
   check_mode: false
-  no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
+  no_log: "{{ gitlab_runner_no_log_secrets | default(false) }}"
   notify:
     - restart_gitlab_runner
     - restart_gitlab_runner_macos
@@ -1093,7 +1093,7 @@
     marker: "# {mark} runners.machine.autoscaling"
     insertafter: EOF
   check_mode: false
-  no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
+  no_log: "{{ gitlab_runner_no_log_secrets | default(false) }}"
   notify:
     - restart_gitlab_runner
     - restart_gitlab_runner_macos
@@ -1107,7 +1107,7 @@
     insertafter: ^\s*executor =
     backrefs: false
   check_mode: false
-  no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
+  no_log: "{{ gitlab_runner_no_log_secrets | default(false) }}"
   notify:
     - restart_gitlab_runner
     - restart_gitlab_runner_macos
@@ -1121,7 +1121,7 @@
     insertafter: ^\s*executor =
     backrefs: false
   check_mode: false
-  no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
+  no_log: "{{ gitlab_runner_no_log_secrets | default(false) }}"
   notify:
     - restart_gitlab_runner
     - restart_gitlab_runner_macos

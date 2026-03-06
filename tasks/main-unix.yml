@@ -34,7 +34,7 @@
   loop_control:
     index_var: gitlab_runner_index
     loop_var: gitlab_runner
-  no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
+  no_log: "{{ gitlab_runner_no_log_secrets | default(false) }}"
 
 - name: Unregister runners which are not longer configured
   ansible.builtin.include_tasks: unregister-runner-if-not-longer-configured.yml
