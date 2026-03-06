@@ -15,7 +15,7 @@
     mode: "0644"
   check_mode: false
   changed_when: false
-  no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
+  no_log: "{{ gitlab_runner_no_log_secrets | default(false) }}"
 
 - name: "Update config"
   ansible.builtin.include_tasks: update-config-runner.yml
@@ -28,7 +28,7 @@
   loop_control:
     index_var: gitlab_runner_index
     loop_var: gitlab_runner
-  no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
+  no_log: "{{ gitlab_runner_no_log_secrets | default(false) }}"
 
 - name: "Remove runner config {{ conf_name_prefix }}"
   ansible.builtin.file:
@@ -41,4 +41,4 @@
   loop_control:
     index_var: gitlab_runner_index
     loop_var: gitlab_runner
-  no_log: "{{ gitlab_runner_no_log_secrets | default(omit) }}"
+  no_log: "{{ gitlab_runner_no_log_secrets | default(false) }}"
