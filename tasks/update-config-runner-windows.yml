@@ -21,6 +21,19 @@
   check_mode: false
   notify: restart_gitlab_runner_windows
 
+- name: "Set request concurrency option {{ runn_name_prefix }}"
+  community.windows.win_lineinfile:
+    dest: "{{ temp_runner_config.path }}"
+    regexp: ^\s*request_concurrency =
+    line: "  request_concurrency = {{ gitlab_runner.request_concurrency }}"
+    state: present
+    insertafter: ^\s*limit =
+    backrefs: false
+  check_mode: false
+  notify:
+    - restart_gitlab_runner_windows
+  when: gitlab_runner.request_concurrency is defined
+
 - name: "Set coordinator URL {{ runn_name_prefix }}"
   community.windows.win_lineinfile:
     dest: "{{ temp_runner_config.path }}"

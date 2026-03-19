@@ -13,6 +13,21 @@
     - restart_gitlab_runner
     - restart_gitlab_runner_macos
 
+- name: "Set request concurrency option {{ runn_name_prefix }}"
+  ansible.builtin.lineinfile:
+    dest: "{{ temp_runner_config.path }}"
+    regexp: ^\s*request_concurrency =
+    line: "  request_concurrency = {{ gitlab_runner.request_concurrency }}"
+    state: present
+    insertafter: ^\s*limit =
+    backrefs: false
+  check_mode: false
+  no_log: "{{ gitlab_runner_no_log_secrets | default(false) }}"
+  notify:
+    - restart_gitlab_runner
+    - restart_gitlab_runner_macos
+  when: gitlab_runner.request_concurrency is defined
+
 - name: "Set coordinator URL {{ runn_name_prefix }}"
   ansible.builtin.lineinfile:
     dest: "{{ temp_runner_config.path }}"
