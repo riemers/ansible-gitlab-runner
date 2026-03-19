@@ -31,6 +31,9 @@ sentry_dsn = "{{ gitlab_runner_sentry_dsn }}"
 [[runners]]
   name = {{ gitlab_runner.name | tojson }}
   limit = {{ gitlab_runner.concurrent_specific | default(0) }}
+{% if gitlab_runner.request_concurrency is defined %}
+  request_concurrency = {{ gitlab_runner.request_concurrency | tojson }}
+{% endif %}
   url = {{ gitlab_runner.url | default(gitlab_runner_coordinator_url) | tojson }}
 {% if gitlab_runner.clone_url is defined %}
   clone_url = {{ gitlab_runner.clone_url | tojson }}

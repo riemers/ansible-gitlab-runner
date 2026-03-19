@@ -154,6 +154,9 @@ gitlab_runner_runners:
     # Maximum number of jobs to run concurrently on this specific runner.
     # Defaults to 0, simply means don't limit.
     concurrent_specific: "0"
+    # Limits concurrent HTTP requests to GitLab API per runner configuration
+    # See at https://support.gitlab.com/hc/en-us/articles/21324350882076-GitLab-Runner-Concurrency-Tuning-Understanding-request-concurrency
+    # request_concurrency:
     # The default Docker image to use. Required when executor is `docker`.
     docker_image: ""
     # Set to override the default helper image that is used.

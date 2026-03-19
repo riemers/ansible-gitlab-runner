@@ -112,6 +112,7 @@ gitlab_runner_runners:
     token: 'abcd'
     # url is an optional override to the global gitlab_runner_coordinator_url
     url: 'https://my-own-gitlab.mydomain.com'
+    request_concurrency: 2
     executor: docker
     docker_image: 'alpine'
     tags:
