@@ -258,6 +258,8 @@ sentry_dsn = "{{ gitlab_runner_sentry_dsn }}"
     {{ flag }} = true
 {% endfor %}
 {% endif %}
+{#### [runners.custom] section ####}
+{{ extras_config(gitlab_runner, "runners.custom", indentation=2) }}
 {#### [runners.machine] section ####}
 {% if gitlab_runner.machine_MachineOptions is defined %}
   [runners.machine]
