@@ -23,7 +23,9 @@
         gitlab_runner_existing_version: "{{ existing_version_shell.stdout if existing_version_shell.rc == 0 else '0' }}"
 
 - name: "(MacOS) Precreate necessary directories for arm64 architecture"
-  when: gitlab_runner_arch == 'arm64'
+  when:
+    - gitlab_runner_arch == 'arm64'
+    - not gitlab_runner_macos_install_from_homebrew
   block:
     - name: "(MacOS) Precreate gitlab-runner log directory"
       become: true
@@ -45,12 +47,19 @@
   when: (not gitlab_runner_exists)
   block:
     - name: "(MacOS) Download GitLab Runner"
+      when: not gitlab_runner_macos_install_from_homebrew
       become: true
       ansible.builtin.get_url:
         url: "{{ gitlab_runner_download_url }}"
         dest: "{{ gitlab_runner_executable }}"
         force: true
         mode: +x
+
+    - name: "(MacOS) Install GitLab Runner via Homebrew"
+      when: gitlab_runner_macos_install_from_homebrew
+      ansible.builtin.package:
+        name: "{{ gitlab_runner_package_name }}"
+        state: present
 
     - name: "(MacOS) Install GitLab Runner"
       ansible.builtin.command: |
@@ -72,6 +81,7 @@
       ansible.builtin.command: "{{ gitlab_runner_executable }} stop"
 
     - name: "(MacOS) Download GitLab Runner"
+      when: not gitlab_runner_macos_install_from_homebrew
       become: true
       ansible.builtin.get_url:
         url: "{{ gitlab_runner_download_url }}"
@@ -79,7 +89,14 @@
         force: true
         mode: "0744"
 
+    - name: "(MacOS) Upgrade GitLab Runner via Homebrew"
+      when: gitlab_runner_macos_install_from_homebrew
+      ansible.builtin.package:
+        name: "{{ gitlab_runner_package_name }}"
+        state: latest
+
     - name: "(MacOS) Setting Permissions for gitlab-runner executable"
+      when: not gitlab_runner_macos_install_from_homebrew
       ansible.builtin.file:
         path: "{{ gitlab_runner_executable }}"
         owner: "{{ ansible_user_id | string }}"

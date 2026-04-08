@@ -89,6 +89,9 @@ gitlab_runner_windows_service_password: ""
 # https://docs.gitlab.com/runner/install/osx.html#limitations-on-macos
 gitlab_runner_macos_start_runner: true
 
+# Whether to install GitLab Runner on macOS via Homebrew instead of download URL.
+gitlab_runner_macos_install_from_homebrew: false
+
 # Whether to try to start the runner on Windows.
 # If set to `false`, it should be started manually.
 gitlab_runner_windows_start_runner: true
