@@ -19,6 +19,8 @@ Role Variables
 - `gitlab_runner_wanted_version` or `gitlab_runner_package_version` - Use these to install a specific version of the GitLab Runner (by default, the latest version is installed). 
   - On macOS and Windows, use `gitlab_runner_wanted_version: 12.4.1` (example).
   - On Linux, use `gitlab_runner_package_version` instead.
+- `gitlab_runner_macos_install_from_homebrew` - macOS-only switch to install/upgrade GitLab Runner via Homebrew instead of downloading from `gitlab_runner_download_url` (default: `false`).
+  - When installing via brew, `gitlab_runner_wanted_version` is currently ignored.
 - `gitlab_runner_concurrent` - Defines the maximum number of jobs that can run concurrently. Defaults to the number of processor cores.
 - `gitlab_runner_registration_token` - The GitLab registration token. If specified, this will register each runner with a GitLab server. **Note**: This token can only be used globally if `gitlab_runner_registration_token_type` is set to the deprecated `registration-token`. Otherwise, you must specify a `token` for each item in `gitlab_runner_runners`, as shown in the example playbook below. This token is deprecated in GitLab version 16.0 and will be removed in version 18.0.
 - `gitlab_runner_registration_token_type` - Specifies the type of registration token to use for GitLab Runner registration:
