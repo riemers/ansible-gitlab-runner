@@ -176,6 +176,7 @@
         source: "{{ gitlab_runner_container_mount_path }}"
         target: /etc/gitlab-runner
     cleanup: true
+    keep_volumes: false
     auto_remove: true
     network_mode: "{{ gitlab_runner_container_network }}"
   when:
