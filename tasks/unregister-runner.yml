@@ -9,6 +9,7 @@
         source: "{{ gitlab_runner_container_mount_path }}"
         target: /etc/gitlab-runner
     cleanup: true
+    keep_volumes: false
     interactive: true
     tty: true
     detach: false
