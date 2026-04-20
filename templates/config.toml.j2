@@ -1,3 +1,4 @@
+{%- from "toml_macros.j2" import extras_config with context -%}
 concurrent = {{ gitlab_runner_concurrent }}
 {% if gitlab_runner_check_interval is defined %}
 check_interval = {{ gitlab_runner_check_interval }}
@@ -130,27 +131,11 @@ sentry_dsn = "{{ gitlab_runner_sentry_dsn }}"
 {% if gitlab_runner.docker_security_opt is defined %}
     security_opt = {{ gitlab_runner.docker_security_opt | tojson }}
 {% endif %}
-{% if gitlab_runner.extra_configs is defined %}
-{% if 'runners.docker' in gitlab_runner.extra_configs %}
-{% for key, value in gitlab_runner.extra_configs['runners.docker'].items() %}
-    {{ key }} = {{ value | tojson }}
-{% endfor %}
-{% endif %}
+{{ extras_config(gitlab_runner, "runners.docker", indentation=2, announce_section=False) }}
 {#### [runners.docker.sysctls] section ####}
-{% if 'runners.docker.sysctls' in gitlab_runner.extra_configs %}
-    [runners.docker.sysctls]
-{% for key, value in gitlab_runner.extra_configs['runners.docker.sysctls'].items() %}
-      "{{ key }}" = {{ value | tojson }}
-{% endfor %}
-{% endif %}
+{{ extras_config(gitlab_runner, "runners.docker.sysctls", indentation=2) }}
 {#### [runners.docker.container_labels] section ####}
-{% if 'runners.docker.container_labels' in gitlab_runner.extra_configs %}
-    [runners.docker.container_labels]
-{% for key, value in gitlab_runner.extra_configs['runners.docker.container_labels'].items() %}
-      "{{ key }}" = {{ value | tojson }}
-{% endfor %}
-{% endif %}
-{% endif %}
+{{ extras_config(gitlab_runner, "runners.docker.container_labels", indentation=2) }}
 {#### [[runners.docker.services]] section ####}
 {% if gitlab_runner.docker_services is defined %}
 {% for service in gitlab_runner.docker_services %}
@@ -273,6 +258,8 @@ sentry_dsn = "{{ gitlab_runner_sentry_dsn }}"
     {{ flag }} = true
 {% endfor %}
 {% endif %}
+{#### [runners.custom] section ####}
+{{ extras_config(gitlab_runner, "runners.custom", indentation=2) }}
 {#### [runners.machine] section ####}
 {% if gitlab_runner.machine_MachineOptions is defined %}
   [runners.machine]

@@ -1,0 +1,10 @@
+{% macro extras_config(gitlab_runner, extra_key, indentation=0, announce_section=True) %}
+{% if gitlab_runner.extra_configs is defined and extra_key in gitlab_runner.extra_configs.keys() %}
+{% if announce_section %}
+{{ " " * indentation }}[{{ extra_key }}]
+{% endif %}
+{% for key, value in gitlab_runner.extra_configs[extra_key].items() %}
+{{ " " * (indentation + 2) }}{{ key }} = {{ value | tojson }}
+{% endfor %}
+{% endif %}
+{% endmacro %}
