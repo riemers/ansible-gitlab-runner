@@ -1,5 +1,4 @@
 import os
-import pytest
 import tomllib
 import testinfra.utils.ansible_runner
 
@@ -19,7 +18,7 @@ def _load_toml_file(path: str):
         return tomllib.loads(f.read().decode("utf-8"))
 
 def _normalize(cfg: dict):
-    cfg = dict(cfg)  # płytka kopia
+    cfg = dict(cfg)
     if "runners" in cfg and isinstance(cfg["runners"], list):
         cleaned = []
         for r in cfg["runners"]:

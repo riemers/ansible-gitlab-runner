@@ -182,23 +182,30 @@ docker-machine rm test
 Testing
 -------
 
-CI runs on GitHub Actions for every pull request and push to `master`:
+CI uses the current Ansible role testing pattern: a fast lint gate, then Molecule integration tests in Docker on Linux.
 
-- **ansible-lint** on Ubuntu
-- **Linux integration** via Molecule and Docker (install, register against a mock GitLab API, verify `config.toml`)
-- **macOS and Windows integration** via a lightweight native playbook against `localhost`
+Every pull request and push to `master` runs:
+
+- **ansible-lint** (static analysis)
+- **Molecule** scenarios in Docker:
+  - `default` — install runner, register against a mock GitLab API, verify `config.toml`
+  - `config-update` — verify configuration updates are applied correctly
+
+A weekly scheduled run catches upstream image and dependency regressions.
+
+Linux package installation is covered thoroughly in CI. macOS and Windows task files are linted and reviewed, but are not installed on native GitHub runners each push — that Travis-era approach is slow, flaky, and no longer common for Ansible roles.
 
 Run the same checks locally before pushing:
 
 ```bash
-# Linux, macOS, or WSL
+# Linux or WSL (recommended)
 bash scripts/local-ci.sh
 
-# Windows PowerShell
+# Windows PowerShell (lint via Docker; Molecule via WSL)
 ./scripts/local-ci.ps1
 ```
 
-Use `--skip-molecule` / `-SkipMolecule` when Docker is unavailable. Molecule is the most thorough Linux test and maps directly to the `molecule-linux` job in CI.
+Use `--skip-molecule` / `-SkipMolecule` when Docker is unavailable.
 
 Run As A Different User
 -----------------------
