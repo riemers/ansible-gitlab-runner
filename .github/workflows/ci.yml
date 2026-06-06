@@ -22,13 +22,20 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Link role for linting
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install lint dependencies
         run: |
+          python -m pip install --upgrade pip
+          pip install ansible-lint ansible
+          ansible-galaxy collection install -r requirements.yml
           mkdir -p ~/.ansible/roles
           ln -sfn "$GITHUB_WORKSPACE" ~/.ansible/roles/riemers.gitlab_runner
 
-      - name: Lint role
-        uses: ansible/ansible-lint@v24
+      - name: Run ansible-lint
+        run: ansible-lint
 
   molecule-linux:
     name: Linux (Molecule)
