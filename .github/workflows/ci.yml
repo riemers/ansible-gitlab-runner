@@ -69,6 +69,14 @@ jobs:
           mkdir -p ~/.ansible/roles
           ln -sfn "$GITHUB_WORKSPACE" ~/.ansible/roles/riemers.gitlab_runner
 
+      - name: Verify prerequisites
+        run: |
+          ansible-galaxy collection list | grep -F ansible.posix
+          docker run --rm hello-world
+
+      - name: Build mock GitLab API image
+        run: docker build -t riemers-gitlab-runner-mock molecule/default/mock
+
       - name: Run Molecule
         run: molecule test -s ${{ matrix.scenario }}
         env:

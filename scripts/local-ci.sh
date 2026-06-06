@@ -81,6 +81,7 @@ if $run_molecule; then
   fi
   link_role
   ansible-galaxy collection install -r requirements.yml
+  docker build -t riemers-gitlab-runner-mock molecule/default/mock
   for scenario in default config-update; do
     molecule test -s "$scenario"
   done

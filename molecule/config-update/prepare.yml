@@ -3,6 +3,13 @@
   hosts: runner
   become: true
   tasks:
+    - name: Wait for mock GitLab API
+      ansible.builtin.wait_for:
+        host: mock
+        port: 8000
+        delay: 2
+        timeout: 120
+
     - name: Install test dependencies
       ansible.builtin.apt:
         name:

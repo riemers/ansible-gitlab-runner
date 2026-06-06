@@ -1,6 +1,9 @@
 import os
 import pytest
-import tomllib
+try:
+    import tomllib
+except ModuleNotFoundError:
+    import tomli as tomllib
 import testinfra.utils.ansible_runner
 
 EXPECTED_ENV = "EXPECTED_TOML"

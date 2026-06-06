@@ -38,7 +38,9 @@ def verify_runner():
     if token.isalnum() and token.isupper():
         status = 200
     elif token.isalnum() and token.islower():
-        status = 403
+        # GitLab Runner 17+ verifies authentication tokens before registering.
+        # 404 means "not registered yet" so the client proceeds to registration.
+        status = 404
     else:
         status = 400
 

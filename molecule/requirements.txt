@@ -3,3 +3,4 @@ molecule
 molecule-plugins[docker]
 pytest
 testinfra
+tomli; python_version < "3.11"

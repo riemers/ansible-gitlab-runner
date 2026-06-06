@@ -7,5 +7,13 @@
     - ../default/vars/common.yml
     - ../default/vars/updated.yml
 
+  pre_tasks:
+    - name: Wait for mock GitLab API
+      ansible.builtin.wait_for:
+        host: mock
+        port: 8000
+        delay: 2
+        timeout: 120
+
   roles:
     - role: riemers.gitlab_runner

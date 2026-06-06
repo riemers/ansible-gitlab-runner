@@ -10,14 +10,11 @@ driver:
 
 platforms:
   - name: mock
-    image: python:3.12-slim
+    image: riemers-gitlab-runner-mock
     pre_build_image: true
+    override_command: false
     networks:
       - name: testnet
-    command: >
-      bash -lc "pip install -r /srv/mock/requirements.txt && python /srv/mock/server.py 8000"
-    volumes:
-      - "${MOLECULE_SCENARIO_DIRECTORY}/mock:/srv/mock:ro"
 
   - name: runner
     image: geerlingguy/docker-ubuntu2204-ansible
