@@ -1,11 +1,15 @@
 ---
-- name: Prepare runner host for docker executor tests
+- name: Prepare runner host for GitLab Runner role tests
   hosts: runner
   become: true
   tasks:
-    - name: Install Docker
+    - name: Install test dependencies
       ansible.builtin.apt:
-        name: docker.io
+        name:
+          - ca-certificates
+          - curl
+          - docker.io
+          - gnupg
         state: present
         update_cache: true
 
