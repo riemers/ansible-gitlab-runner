@@ -65,7 +65,8 @@ jobs:
 
       - name: Run Molecule scenarios
         run: |
-          set -euo pipefail
+          set -eo pipefail
+          docker info >/dev/null
           for scenario in default config-update; do
             echo "==> molecule test -s ${scenario}"
             molecule test -s "${scenario}"

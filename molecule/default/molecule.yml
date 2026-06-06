@@ -18,8 +18,6 @@ platforms:
       bash -lc "pip install -r /srv/mock/requirements.txt && python /srv/mock/server.py 8000"
     volumes:
       - "${MOLECULE_SCENARIO_DIRECTORY}/mock:/srv/mock:ro"
-    published_ports:
-      - "8000:8000"
 
   - name: runner
     image: geerlingguy/docker-ubuntu2204-ansible
