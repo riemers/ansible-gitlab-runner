@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 set -euox pipefail
 
+bash scripts/link-role-for-ci.sh
+
 molecule create
 
 

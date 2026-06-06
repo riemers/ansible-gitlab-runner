@@ -22,6 +22,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Link role for linting
+        run: |
+          mkdir -p ~/.ansible/roles
+          ln -sfn "$GITHUB_WORKSPACE" ~/.ansible/roles/riemers.gitlab_runner
+
       - name: Lint role
         uses: ansible/ansible-lint@v24
 
@@ -41,6 +46,8 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r molecule/requirements.txt
           ansible-galaxy collection install -r requirements.yml
+          mkdir -p ~/.ansible/roles
+          ln -sfn "$GITHUB_WORKSPACE" ~/.ansible/roles/riemers.gitlab_runner
 
       - name: Run Molecule tests
         run: bash run_tests.sh
@@ -70,6 +77,22 @@ jobs:
           python -m pip install --upgrade pip
           pip install ansible
           ansible-galaxy collection install -r requirements.yml
+
+      - name: Link role for testing (Unix)
+        if: runner.os != 'Windows'
+        run: |
+          mkdir -p ~/.ansible/roles
+          ln -sfn "$GITHUB_WORKSPACE" ~/.ansible/roles/riemers.gitlab_runner
+
+      - name: Link role for testing (Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force -Path "$env:USERPROFILE\.ansible\roles" | Out-Null
+          if (Test-Path "$env:USERPROFILE\.ansible\roles\riemers.gitlab_runner") {
+            Remove-Item "$env:USERPROFILE\.ansible\roles\riemers.gitlab_runner" -Force -Recurse
+          }
+          cmd /c mklink /J "$env:USERPROFILE\.ansible\roles\riemers.gitlab_runner" "$env:GITHUB_WORKSPACE"
 
       - name: Install mock server dependencies
         run: pip install -r molecule/default/mock/requirements.txt

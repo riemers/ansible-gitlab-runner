@@ -8,7 +8,7 @@
     - vars/common.yml
 
   roles:
-    - role: "{{ playbook_dir }}/.."
+    - role: riemers.gitlab_runner
 
   tasks:
     - name: Verify config.toml exists
