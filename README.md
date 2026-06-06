@@ -1,4 +1,4 @@
-GitLab Runner [![Build Status](https://app.travis-ci.com/riemers/ansible-gitlab-runner.svg?branch=master)](https://travis-ci.org/riemers/ansible-gitlab-runner) [![Ansible Role](https://img.shields.io/badge/role-riemers.gitlab--runner-blue.svg?maxAge=2592000)](https://galaxy.ansible.com/ui/standalone/roles/riemers/gitlab-runner/)
+GitLab Runner [![CI](https://github.com/riemers/ansible-gitlab-runner/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/riemers/ansible-gitlab-runner/actions/workflows/ci.yml) [![Ansible Role](https://img.shields.io/badge/role-riemers.gitlab--runner-blue.svg?maxAge=2592000)](https://galaxy.ansible.com/ui/standalone/roles/riemers/gitlab-runner/)
 =============
 
 This role will install the [official GitLab Runner](https://gitlab.com/gitlab-org/gitlab-runner)
@@ -178,6 +178,27 @@ Example:
 
 docker-machine rm test
 ```
+
+Testing
+-------
+
+CI runs on GitHub Actions for every pull request and push to `master`:
+
+- **ansible-lint** on Ubuntu
+- **Linux integration** via Molecule and Docker (install, register against a mock GitLab API, verify `config.toml`)
+- **macOS and Windows integration** via a lightweight native playbook against `localhost`
+
+Run the same checks locally before pushing:
+
+```bash
+# Linux, macOS, or WSL
+bash scripts/local-ci.sh
+
+# Windows PowerShell
+./scripts/local-ci.ps1
+```
+
+Use `--skip-molecule` / `-SkipMolecule` when Docker is unavailable. Molecule is the most thorough Linux test and maps directly to the `molecule-linux` job in CI.
 
 Run As A Different User
 -----------------------

@@ -1,6 +1,6 @@
 gitlab_runner_runners:
   - name: 'Example Docker GitLab Runner'
-    token: ABCD
+    token: abcd
     executor: docker
     docker_pull_policy: always
     docker_image: "alpine"
