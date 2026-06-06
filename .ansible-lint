@@ -1,6 +1,7 @@
 ---
 profile: production
+skip_list:
+  - no-changed-when  # TODO: fix command tasks incrementally
+  - package-latest  # homebrew upgrades intentionally use latest
 warn_list:
   - role-name  # until role name is fixed on galaxy https://github.com/riemers/ansible-gitlab-runner/pull/312
-  - no-changed-when  # TODO in future
-  - package-latest  # homebrew upgrades intentionally use latest
