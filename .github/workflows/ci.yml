@@ -42,15 +42,9 @@ jobs:
         run: ansible-lint
 
   molecule:
-    name: Molecule (${{ matrix.scenario }})
+    name: Molecule
     runs-on: ubuntu-latest
     needs: lint
-    strategy:
-      fail-fast: false
-      matrix:
-        scenario:
-          - default
-          - config-update
 
     steps:
       - uses: actions/checkout@v4
@@ -69,18 +63,13 @@ jobs:
           mkdir -p ~/.ansible/roles
           ln -sfn "$GITHUB_WORKSPACE" ~/.ansible/roles/riemers.gitlab_runner
 
-      - name: Run Molecule
-        run: molecule test -s "${{ matrix.scenario }}"
+      - name: Run Molecule scenarios
+        run: |
+          set -euo pipefail
+          for scenario in default config-update; do
+            echo "==> molecule test -s ${scenario}"
+            molecule test -s "${scenario}"
+          done
         env:
           PY_COLORS: "1"
           ANSIBLE_FORCE_COLOR: "1"
-
-      - name: Upload Molecule logs on failure
-        if: failure()
-        uses: actions/upload-artifact@v4
-        with:
-          name: molecule-logs-${{ matrix.scenario }}
-          path: |
-            molecule/${{ matrix.scenario }}/molecule.log
-            ~/.cache/molecule
-          if-no-files-found: ignore

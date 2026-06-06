@@ -1,9 +1,4 @@
 ---
-dependency:
-  name: galaxy
-  options:
-    requirements-file: "${MOLECULE_PROJECT_DIRECTORY}/requirements.yml"
-
 driver:
   name: docker
   docker_networks:
@@ -43,7 +38,6 @@ platforms:
 provisioner:
   name: ansible
   env:
-    TEST_VARS_FILE: ../default/vars/updated.yml
     EXPECTED_TOML: ../default/expected/updated.toml
   inventory:
     hosts:
@@ -59,7 +53,6 @@ verifier:
 
 scenario:
   test_sequence:
-    - dependency
     - destroy
     - syntax
     - create

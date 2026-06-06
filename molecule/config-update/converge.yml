@@ -5,11 +5,7 @@
 
   vars_files:
     - ../default/vars/common.yml
-
-  pre_tasks:
-    - name: Load extra vars
-      ansible.builtin.include_vars: "{{ lookup('env', 'TEST_VARS_FILE') }}"
-      when: lookup('env', 'TEST_VARS_FILE') is defined
+    - ../default/vars/updated.yml
 
   roles:
     - role: riemers.gitlab_runner
