@@ -1,4 +1,4 @@
-GitLab Runner [![Build Status](https://app.travis-ci.com/riemers/ansible-gitlab-runner.svg?branch=master)](https://travis-ci.org/riemers/ansible-gitlab-runner) [![Ansible Role](https://img.shields.io/badge/role-riemers.gitlab--runner-blue.svg?maxAge=2592000)](https://galaxy.ansible.com/ui/standalone/roles/riemers/gitlab-runner/)
+GitLab Runner [![CI](https://github.com/riemers/ansible-gitlab-runner/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/riemers/ansible-gitlab-runner/actions/workflows/ci.yml) [![Ansible Role](https://img.shields.io/badge/role-riemers.gitlab--runner-blue.svg?maxAge=2592000)](https://galaxy.ansible.com/ui/standalone/roles/riemers/gitlab-runner/)
 =============
 
 This role will install the [official GitLab Runner](https://gitlab.com/gitlab-org/gitlab-runner)
@@ -178,6 +178,34 @@ Example:
 
 docker-machine rm test
 ```
+
+Testing
+-------
+
+CI uses the current Ansible role testing pattern: a fast lint gate, then Molecule integration tests in Docker on Linux.
+
+Every pull request and push to `master` runs:
+
+- **ansible-lint** (static analysis)
+- **Molecule** scenarios in Docker:
+  - `default` — install runner, register against a mock GitLab API, verify `config.toml`
+  - `config-update` — verify configuration updates are applied correctly
+
+A weekly scheduled run catches upstream image and dependency regressions.
+
+Linux package installation is covered thoroughly in CI. macOS and Windows task files are linted and reviewed, but are not installed on native GitHub runners each push — that Travis-era approach is slow, flaky, and no longer common for Ansible roles.
+
+Run the same checks locally before pushing:
+
+```bash
+# Linux or WSL (recommended)
+bash scripts/local-ci.sh
+
+# Windows PowerShell (lint via Docker; Molecule via WSL)
+./scripts/local-ci.ps1
+```
+
+Use `--skip-molecule` / `-SkipMolecule` when Docker is unavailable.
 
 Run As A Different User
 -----------------------

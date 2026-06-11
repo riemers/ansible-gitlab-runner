@@ -1,4 +1,5 @@
 ansible.cfg
+.ansible/
 .idea
 .vscode
 *.pyc

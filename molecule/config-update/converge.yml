@@ -4,8 +4,8 @@
   become: true
 
   vars_files:
-    - vars/common.yml
-    - vars/initial.yml
+    - ../default/vars/common.yml
+    - ../default/vars/updated.yml
 
   pre_tasks:
     - name: Wait for mock GitLab API

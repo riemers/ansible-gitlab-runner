@@ -1,5 +1,6 @@
 ---
 collections:
+  - name: ansible.posix
   - name: ansible.windows
   - name: community.docker
   - name: community.crypto

@@ -38,7 +38,9 @@ def verify_runner():
     if token.isalnum() and token.isupper():
         status = 200
     elif token.isalnum() and token.islower():
-        status = 403
+        # GitLab Runner 17+ verifies authentication tokens before registering.
+        # 404 means "not registered yet" so the client proceeds to registration.
+        status = 404
     else:
         status = 400
 
@@ -49,7 +51,7 @@ app.register_blueprint(bp)
 
 
 if __name__ == '__main__':
-    port = int(sys.argv[2])
+    port = int(sys.argv[-1])
 
     logging.basicConfig(level=logging.DEBUG)
 

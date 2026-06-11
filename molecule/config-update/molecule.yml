@@ -33,7 +33,7 @@ platforms:
 provisioner:
   name: ansible
   env:
-    EXPECTED_TOML: expected/initial.toml
+    EXPECTED_TOML: ../default/expected/updated.toml
   inventory:
     hosts:
       all:

@@ -1,0 +1,27 @@
+---
+- name: Prepare runner host for GitLab Runner role tests
+  hosts: runner
+  become: true
+  tasks:
+    - name: Wait for mock GitLab API
+      ansible.builtin.wait_for:
+        host: mock
+        port: 8000
+        delay: 2
+        timeout: 120
+
+    - name: Install test dependencies
+      ansible.builtin.apt:
+        name:
+          - ca-certificates
+          - curl
+          - docker.io
+          - gnupg
+        state: present
+        update_cache: true
+
+    - name: Start Docker
+      ansible.builtin.service:
+        name: docker
+        state: started
+        enabled: true
