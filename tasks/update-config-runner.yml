@@ -929,6 +929,18 @@
     - restart_gitlab_runner_macos
 
 #### [runners.feature_flags] section #####
+- name: "Remove unmanaged feature flag section {{ runn_name_prefix }}"
+  ansible.builtin.replace:
+    path: "{{ temp_runner_config.path }}"
+    regexp: '(?m)(?<!# BEGIN runners\.feature_flags\n)^[ \t]*\[runners\.feature_flags\][ \t]*(?:#.*)?(?:\n|\Z)(?:(?![ \t]*\[)(?:[^\n]+(?:\n|\Z)|\n))*'
+    replace: ""
+  when: gitlab_runner.feature_flags is defined
+  check_mode: false
+  no_log: "{{ gitlab_runner_no_log_secrets | default(false) }}"
+  notify:
+    - restart_gitlab_runner
+    - restart_gitlab_runner_macos
+
 - name: "Set feature flag options {{ runn_name_prefix }}"
   ansible.builtin.blockinfile:
     path: "{{ temp_runner_config.path }}"
