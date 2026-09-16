@@ -1,5 +1,5 @@
 ---
-gitlab_runner_arch: "{{ (ansible_machine == 'arm64') | ternary('arm64', 'amd64') }}"
+gitlab_runner_arch: "{{ (ansible_facts['machine'] == 'arm64') | ternary('arm64', 'amd64') }}"
 
 # it is not recommended to use system mode on macos
 gitlab_runner_system_mode: false
