@@ -7,7 +7,7 @@ gitlab_runner_restart_state: reloaded
 
 tls_ca_file: /usr/share/ca-certificates/gitlab-server.crt
 
-# on debian buster and ubuntu focal, jammy and noble
+# on debian buster and ubuntu focal, jammy, noble and resolute
 gitlab_runner_remove_bash_logout_releases:
   - buster
   - bullseye
@@ -15,6 +15,7 @@ gitlab_runner_remove_bash_logout_releases:
   - focal
   - jammy
   - noble
+  - resolute
 
 gitlab_runner_remove_bash_logout: >-
   {{ ansible_facts['distribution_release']
