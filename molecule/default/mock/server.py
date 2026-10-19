@@ -35,12 +35,12 @@ def verify_runner():
     res = {}
 
     token = req['token']
-    if token.isalnum() and token.isupper():
+    if token.isalnum():
+        # Authentication tokens (`register --token`) are only verified, never
+        # registered. Like real GitLab, answer 200 with the runner's details;
+        # GitLab Runner 19.5+ treats anything else (including 404) as fatal.
+        res = {'id': 1, 'token': token, 'token_expires_at': None}
         status = 200
-    elif token.isalnum() and token.islower():
-        # GitLab Runner 17+ verifies authentication tokens before registering.
-        # 404 means "not registered yet" so the client proceeds to registration.
-        status = 404
     else:
         status = 400
 

@@ -1,0 +1,56 @@
+---
+name: Galaxy
+
+# Galaxy (galaxy_ng) no longer imports roles on its own; every import has to be
+# triggered. It turns git tags into role versions, so we import whenever a
+# version tag is pushed. Use "Run workflow" to re-import a tag by hand.
+
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: "Tag (or branch) to import, e.g. v2.1.3"
+        required: true
+
+concurrency:
+  group: galaxy
+  cancel-in-progress: false
+
+jobs:
+  import:
+    name: Import ${{ matrix.role_name }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      max-parallel: 1
+      matrix:
+        # Both names are kept in sync on purpose:
+        #   gitlab-runner  - the name most playbooks use (see README)
+        #   gitlab_runner  - role_name in meta/main.yml, lint-friendly
+        # Every import with a different name creates a separate role on
+        # Galaxy, so never import under any other name.
+        role_name:
+          - gitlab-runner
+          - gitlab_runner
+    steps:
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+
+      - name: Install ansible-core
+        run: pip install ansible-core
+
+      - name: Import role on Galaxy
+        env:
+          GALAXY_API_KEY: ${{ secrets.GALAXY_API_KEY }}
+          REF: ${{ inputs.ref || github.ref_name }}
+        run: >-
+          ansible-galaxy role import
+          --token "$GALAXY_API_KEY"
+          --branch "$REF"
+          --role-name "${{ matrix.role_name }}"
+          "${{ github.repository_owner }}"
+          "${{ github.event.repository.name }}"
