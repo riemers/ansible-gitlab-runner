@@ -99,8 +99,8 @@
       when: not gitlab_runner_macos_install_from_homebrew
       ansible.builtin.file:
         path: "{{ gitlab_runner_executable }}"
-        owner: "{{ ansible_user_id | string }}"
-        group: "{{ ansible_user_gid | string }}"
+        owner: "{{ ansible_facts['user_id'] | string }}"
+        group: "{{ ansible_facts['user_gid'] | string }}"
         mode: +x
       become: true
 
