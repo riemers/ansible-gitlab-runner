@@ -33,7 +33,7 @@
         path: /usr/local/var/log
         state: directory
         mode: "0755"
-        owner: "{{ ansible_user_id | string }}"
+        owner: "{{ ansible_facts['user_id'] | string }}"
 
     - name: "(MacOS) Precreate directory {{ gitlab_runner_directory }}"
       become: true
