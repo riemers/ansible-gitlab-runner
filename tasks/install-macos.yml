@@ -77,8 +77,17 @@
     - gitlab_runner_exists
     - gitlab_runner_existing_version != gitlab_runner_wanted_version or gitlab_runner_wanted_version == 'latest'
   block:
+    - name: "(MacOS) Check GitLab Runner status before upgrade"
+      ansible.builtin.command: "{{ gitlab_runner_executable }} status"
+      register: gitlab_runner_status
+      changed_when: false
+      failed_when: >
+        'Service is running' not in (gitlab_runner_status.stdout ~ gitlab_runner_status.stderr)
+        and 'Service has stopped' not in (gitlab_runner_status.stdout ~ gitlab_runner_status.stderr)
+
     - name: "(MacOS) Stop GitLab Runner"
       ansible.builtin.command: "{{ gitlab_runner_executable }} stop"
+      when: "'Service has stopped' not in gitlab_runner_status.stderr"
 
     - name: "(MacOS) Download GitLab Runner"
       when: not gitlab_runner_macos_install_from_homebrew
