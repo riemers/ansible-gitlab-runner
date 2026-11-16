@@ -5,7 +5,10 @@
 {% if gitlab_runner.autoscaler.plugin_config.project is defined %}
   project = "{{ gitlab_runner.autoscaler.plugin_config.project }}"
 {% endif %}
-{% if gitlab_runner.autoscaler.plugin_config.zone is defined %}
+{% if gitlab_runner.autoscaler.plugin_config.region | default('') %}
+  region = "{{ gitlab_runner.autoscaler.plugin_config.region }}"
+{% endif %}
+{% if gitlab_runner.autoscaler.plugin_config.zone | default('') %}
   zone = "{{ gitlab_runner.autoscaler.plugin_config.zone }}"
 {% endif %}
 {% if gitlab_runner.autoscaler.plugin_config.credentials_file is defined %}
