@@ -303,7 +303,7 @@ sentry_dsn = "{{ gitlab_runner_sentry_dsn }}"
 {% endif %}
 {% endif %}
 {#### [runners.autoscaler] section ####}
-{% if gitlab_runner.machine_autoscaling is defined %}
+{% if gitlab_runner.autoscaler is defined %}
   [runners.autoscaler]
     plugin = "{{ gitlab_runner.autoscaler.plugin }}" # for >= 16.11, ensure you run `gitlab-runner fleeting install` to automatically install the plugin
     capacity_per_instance = {{ gitlab_runner.autoscaler.capacity_per_instance }}
