@@ -6,6 +6,7 @@
   register: runner_config_file
 
 - name: "Get pre-existing runner configs"
+  no_log: "{{ gitlab_runner_no_log_secrets | default(false) }}"
   ansible.builtin.set_fact:
     runner_configs: "{{ (runner_config_file['content'] | b64decode).split('[[runners]]\n') }}"
 
@@ -18,6 +19,7 @@
   changed_when: false
 
 - name: "Write config section for each runner"
+  no_log: "{{ gitlab_runner_no_log_secrets | default(false) }}"
   vars:
     conf_name_prefix: "conf[{{ (runner_config_index | int) + 1 }}/{{ runner_configs | length }}]:"
   ansible.builtin.include_tasks: config-runner-container.yml

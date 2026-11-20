@@ -13,6 +13,7 @@
     registered_gitlab_runner_names: []
 
 - name: "Create list of configured runners"
+  no_log: "{{ gitlab_runner_no_log_secrets | default(false) }}"
   ansible.builtin.set_fact:
     registered_gitlab_runner_names: "{{ registered_gitlab_runner_names + [json_item['msg']] }}"
   vars:

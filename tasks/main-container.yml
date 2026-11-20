@@ -26,6 +26,7 @@
   ansible.builtin.import_tasks: list-configured-runners-container.yml
 
 - name: "(Container) Register GitLab Runner"
+  no_log: "{{ gitlab_runner_no_log_secrets | default(false) }}"
   ansible.builtin.include_tasks: register-runner-container.yml
   vars:
     actual_gitlab_runner_name: "{{ gitlab_runner.name | default(ansible_facts['hostname'] + '-' + gitlab_runner_index | string) }}"

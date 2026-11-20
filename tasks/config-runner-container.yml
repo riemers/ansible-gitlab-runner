@@ -9,6 +9,7 @@
   changed_when: false
 
 - name: "Isolate runner configuration {{ conf_name_prefix }}"
+  no_log: "{{ gitlab_runner_no_log_secrets | default(false) }}"
   ansible.builtin.copy:
     dest: "{{ temp_runner_config.path }}"
     content: "{{ runner_config }}"
@@ -17,6 +18,7 @@
   changed_when: false
 
 - name: "Update config"
+  no_log: "{{ gitlab_runner_no_log_secrets | default(false) }}"
   ansible.builtin.include_tasks: update-config-runner.yml
   vars:
     runn_name_prefix: "{{ conf_name_prefix }} runner[{{ (gitlab_runner_index | int) + 1 }}/{{ gitlab_runner_runners | length }}]:"
@@ -29,6 +31,7 @@
     loop_var: gitlab_runner
 
 - name: "Remove runner config {{ conf_name_prefix }}"
+  no_log: "{{ gitlab_runner_no_log_secrets | default(false) }}"
   ansible.builtin.file:
     path: "{{ temp_runner_config.path }}"
     state: absent
