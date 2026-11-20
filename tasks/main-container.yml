@@ -29,12 +29,12 @@
   no_log: "{{ gitlab_runner_no_log_secrets | default(false) }}"
   ansible.builtin.include_tasks: register-runner-container.yml
   vars:
+    gitlab_runner: "{{ gitlab_runner_runners[gitlab_runner_index] }}"
     actual_gitlab_runner_name: "{{ gitlab_runner.name | default(ansible_facts['hostname'] + '-' + gitlab_runner_index | string) }}"
   when: gitlab_runner.token is defined or gitlab_runner_registration_token | string | length > 0
-  loop: "{{ gitlab_runner_runners }}"
+  loop: "{{ range(gitlab_runner_runners | length) | list }}"
   loop_control:
-    index_var: gitlab_runner_index
-    loop_var: gitlab_runner
+    loop_var: gitlab_runner_index
 
 - name: "Unregister runners which are not longer configured"
   ansible.builtin.include_tasks: unregister-runner-if-not-longer-configured.yml

@@ -21,14 +21,14 @@
   no_log: "{{ gitlab_runner_no_log_secrets | default(false) }}"
   ansible.builtin.include_tasks: update-config-runner.yml
   vars:
+    gitlab_runner: "{{ gitlab_runner_runners[gitlab_runner_index] }}"
     runn_name_prefix: "{{ conf_name_prefix }} runner[{{ (gitlab_runner_index | int) + 1 }}/{{ gitlab_runner_runners | length }}]:"
   when:
     - ('name = "'+gitlab_runner.name|default(ansible_facts['hostname']+'-'+gitlab_runner_index|string)+'"') in runner_config
     - gitlab_runner.state|default('present') == 'present'
-  loop: "{{ gitlab_runner_runners }}"
+  loop: "{{ range(gitlab_runner_runners | length) | list }}"
   loop_control:
-    index_var: gitlab_runner_index
-    loop_var: gitlab_runner
+    loop_var: gitlab_runner_index
 
 - name: "Remove runner config {{ conf_name_prefix }}"
   no_log: "{{ gitlab_runner_no_log_secrets | default(false) }}"
