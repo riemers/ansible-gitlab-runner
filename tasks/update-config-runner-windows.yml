@@ -394,6 +394,29 @@
   check_mode: false
   notify: restart_gitlab_runner_windows
 
+#### [runners.custom_build_dir] section #####
+- name: "Set custom_build_dir section {{ runn_name_prefix }}"
+  community.windows.win_lineinfile:
+    dest: "{{ temp_runner_config.path }}"
+    regexp: ^\s*\[runners\.custom_build_dir\]
+    line: "  [runners.custom_build_dir]"
+    state: "{{ 'present' if gitlab_runner.custom_build_dir_enabled is defined else 'absent' }}"
+    insertafter: EOF
+    backrefs: false
+  check_mode: false
+  notify: restart_gitlab_runner_windows
+
+- name: "Set custom_build_dir enabled option {{ runn_name_prefix }}"
+  community.windows.win_lineinfile:
+    dest: "{{ temp_runner_config.path }}"
+    regexp: ^\s*enabled =
+    line: "    enabled = {{ gitlab_runner.custom_build_dir_enabled | default(false) | lower }}"
+    state: "{{ 'present' if gitlab_runner.custom_build_dir_enabled is defined else 'absent' }}"
+    insertafter: ^\s*\[runners\.custom_build_dir\]
+    backrefs: false
+  check_mode: false
+  notify: restart_gitlab_runner_windows
+
 - name: "Remove empty lines"
   ansible.windows.win_shell: (Get-Content {{ temp_runner_config.path }}) | ? {$_.trim() -ne "" } | Set-Content {{ temp_runner_config.path }}
 
