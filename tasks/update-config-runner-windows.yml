@@ -249,6 +249,7 @@
   notify: restart_gitlab_runner_windows
 
 - name: "Set cache s3 access key {{ runn_name_prefix }}"
+  no_log: "{{ gitlab_runner_no_log_secrets | default(false) }}"
   community.windows.win_lineinfile:
     dest: "{{ temp_runner_config.path }}"
     regexp: ^\s*AccessKey =.*
@@ -260,6 +261,7 @@
   notify: restart_gitlab_runner_windows
 
 - name: "Set cache s3 secret key {{ runn_name_prefix }}"
+  no_log: "{{ gitlab_runner_no_log_secrets | default(false) }}"
   community.windows.win_lineinfile:
     dest: "{{ temp_runner_config.path }}"
     regexp: ^\s*SecretKey =.*
@@ -348,6 +350,7 @@
   notify: restart_gitlab_runner_windows
 
 - name: "Set ssh password option {{ runn_name_prefix }}"
+  no_log: "{{ gitlab_runner_no_log_secrets | default(false) }}"
   community.windows.win_lineinfile:
     dest: "{{ temp_runner_config.path }}"
     regexp: ^\s*password =.*

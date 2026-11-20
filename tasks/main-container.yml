@@ -4,6 +4,7 @@
   when: gitlab_runner_container_install
 
 - name: "(Container) Delete runners which were removed in GitLab"
+  no_log: "{{ gitlab_runner_no_log_secrets | default(false) }}"
   community.docker.docker_container:
     name: "{{ gitlab_runner_container_name }}-check"
     image: "{{ gitlab_runner_container_image }}:{{ gitlab_runner_container_tag }}"

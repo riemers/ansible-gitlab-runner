@@ -3,6 +3,7 @@
   ansible.builtin.import_tasks: install-windows.yml
 
 - name: "(Windows) Delete runners which were removed in GitLab"
+  no_log: "{{ gitlab_runner_no_log_secrets | default(false) }}"
   ansible.windows.win_command: "{{ gitlab_runner_executable }} verify --delete"
   args:
     chdir: "{{ gitlab_runner_config_file_location }}"

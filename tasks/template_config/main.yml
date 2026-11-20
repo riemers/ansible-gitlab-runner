@@ -3,6 +3,7 @@
   # Using template needs some data from registration
   block:
     - name: "(Update config: template) Read config.toml file"
+      no_log: "{{ gitlab_runner_no_log_secrets | default(false) }}"
       ansible.builtin.slurp:
         src: "{{ gitlab_runner_config_file }}"
       register: runner_config_file

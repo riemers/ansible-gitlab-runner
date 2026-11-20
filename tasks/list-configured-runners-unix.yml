@@ -1,5 +1,6 @@
 ---
 - name: "List configured runners as json"
+  no_log: "{{ gitlab_runner_no_log_secrets | default(false) }}"
   ansible.builtin.command: "{{ gitlab_runner_executable }} --log-format json list"
   register: registered_runners_json_result
   changed_when: false

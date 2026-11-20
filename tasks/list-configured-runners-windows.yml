@@ -1,5 +1,6 @@
 ---
 - name: "List configured runners as json"
+  no_log: "{{ gitlab_runner_no_log_secrets | default(false) }}"
   ansible.windows.win_command: "{{ gitlab_runner_executable }} --log-format json list"
   args:
     chdir: "{{ gitlab_runner_config_file_location }}"
