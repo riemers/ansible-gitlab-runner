@@ -11,6 +11,7 @@
         - vars
 
 - name: "Validate GitLab Runner configurations"
+  no_log: "{{ gitlab_runner_no_log_secrets | default(false) }}"
   ansible.builtin.include_tasks: validate-runner-config.yml
   vars:
     actual_gitlab_runner_name: "{{ gitlab_runner.name | default(ansible_facts['hostname'] + '-' + gitlab_runner_index | string) }}"

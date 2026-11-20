@@ -1,5 +1,6 @@
 ---
 - name: "Get existing config.toml"
+  no_log: "{{ gitlab_runner_no_log_secrets | default(false) }}"
   ansible.builtin.slurp:
     src: "{{ gitlab_runner_config_file }}"
   register: runner_config_file
