@@ -103,7 +103,7 @@
       --builds-dir '{{ gitlab_runner.builds_dir }}'
       {% endif %}
       {% if gitlab_runner.custom_build_dir_enabled | default(false) %}
-      --custom_build_dir-enabled
+      --custom_build_dir-enabled=true
       {% endif %}
       {% if gitlab_runner.cache_dir | default(false) %}
       --cache-dir '{{ gitlab_runner.cache_dir }}'
