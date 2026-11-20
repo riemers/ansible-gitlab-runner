@@ -3,6 +3,12 @@
     capacity_per_instance = {{ gitlab_runner.autoscaler.capacity_per_instance }}
     max_use_count = {{ gitlab_runner.autoscaler.max_use_count }}
     max_instances = {{ gitlab_runner.autoscaler.max_instances }}
+{# to_json, not tojson: must match tasks/line-config-runner.yml #}
+{% if 'runners.autoscaler' in gitlab_runner.extra_configs | default({}) %}
+{% for key, value in gitlab_runner.extra_configs['runners.autoscaler'].items() %}
+    {{ key }} = {{ value | to_json }}
+{% endfor %}
+{% endif %}
 
     {{ lookup('template', 'config.runners.autoscaler/fleeting.plugin.' ~ gitlab_runner.autoscaler.plugin.split('/')[-1].split(':')[0] ~ '.j2') }}
 

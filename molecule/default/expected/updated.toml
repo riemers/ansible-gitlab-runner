@@ -18,4 +18,16 @@ check_interval = 0
     disable_cache = false
     pull_policy = "always"
     volumes = ["/cache"]
+  [runners.autoscaler]
+    plugin = "aws"
+    capacity_per_instance = 1
+    max_use_count = 1
+    max_instances = 1
+    instance_ready_command = "cloud-init status --wait"
+    [runners.autoscaler.plugin_config]
+      name = "example-asg"
+    [runners.autoscaler.connector_config]
+      username = "ubuntu"
+    [[runners.autoscaler.policy]]
+      idle_count = 0
 
