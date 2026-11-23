@@ -13,3 +13,18 @@ gitlab_runner_runners:
       - privileged
     docker_volumes:
       - /cache
+    autoscaler:
+      plugin: aws
+      capacity_per_instance: 1
+      max_use_count: 1
+      max_instances: 1
+      plugin_config:
+        name: example-asg
+      connector_config:
+        username: ubuntu
+      policies:
+        - idle_count: 0
+    extra_configs:
+      runners.autoscaler:
+        instance_ready_command: "cloud-init status --wait"
+        max_instances: 2

@@ -303,12 +303,24 @@ sentry_dsn = "{{ gitlab_runner_sentry_dsn }}"
 {% endif %}
 {% endif %}
 {#### [runners.autoscaler] section ####}
-{% if gitlab_runner.machine_autoscaling is defined %}
+{% if gitlab_runner.autoscaler is defined %}
+{% set autoscaler_extra = (gitlab_runner.extra_configs | default({}))['runners.autoscaler'] | default({}) %}
   [runners.autoscaler]
+{% if 'plugin' not in autoscaler_extra %}
     plugin = "{{ gitlab_runner.autoscaler.plugin }}" # for >= 16.11, ensure you run `gitlab-runner fleeting install` to automatically install the plugin
+{% endif %}
+{% if 'capacity_per_instance' not in autoscaler_extra %}
     capacity_per_instance = {{ gitlab_runner.autoscaler.capacity_per_instance }}
+{% endif %}
+{% if 'max_use_count' not in autoscaler_extra %}
     max_use_count = {{ gitlab_runner.autoscaler.max_use_count }}
+{% endif %}
+{% if 'max_instances' not in autoscaler_extra %}
     max_instances = {{ gitlab_runner.autoscaler.max_instances }}
+{% endif %}
+{% for key, value in autoscaler_extra.items() %}
+    {{ key }} = {{ value | tojson }}
+{% endfor %}
     [runners.autoscaler.plugin_config]
 {% if gitlab_runner.autoscaler.plugin_config.name is defined %}
       name = "{{ gitlab_runner.autoscaler.plugin_config.name }}"
