@@ -22,7 +22,7 @@ check_interval = 0
     plugin = "aws"
     capacity_per_instance = 1
     max_use_count = 1
-    max_instances = 1
+    max_instances = 2
     instance_ready_command = "cloud-init status --wait"
     [runners.autoscaler.plugin_config]
       name = "example-asg"

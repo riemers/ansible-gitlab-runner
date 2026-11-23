@@ -27,3 +27,4 @@ gitlab_runner_runners:
     extra_configs:
       runners.autoscaler:
         instance_ready_command: "cloud-init status --wait"
+        max_instances: 2
