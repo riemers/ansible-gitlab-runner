@@ -11,3 +11,18 @@
   loop_control:
     label: "{{ setting.name }}"
     loop_var: setting
+
+- name: "Check googlecloud autoscaler sets exactly one of region or zone: {{ actual_gitlab_runner_name }}"
+  ansible.builtin.assert:
+    that:
+      # Empty or null values count as unset, as in the plugin.
+      - >-
+        [gitlab_runner.autoscaler.plugin_config.region | default(''),
+        gitlab_runner.autoscaler.plugin_config.zone | default('')] | select | list | length == 1
+    fail_msg: >-
+      Runner {{ actual_gitlab_runner_name }}: the googlecloud fleeting plugin needs exactly one of
+      autoscaler.plugin_config.region (regional instance group) or autoscaler.plugin_config.zone (zonal instance group).
+    quiet: true
+  when:
+    - gitlab_runner.autoscaler.plugin is defined
+    - gitlab_runner.autoscaler.plugin.split('/')[-1].split(':')[0] == 'googlecloud'
